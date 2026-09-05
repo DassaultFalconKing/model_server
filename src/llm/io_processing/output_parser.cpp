@@ -453,13 +453,47 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
         // If we are here, it means we have incomplete start tag for either reasoning or tool parser, so we wait for more chunks
         return std::nullopt;
     } else if (processingPhase == REASONING) {
-        // If we are in the REASONING phase, we check if parsing end tag is found and if so, switch to UNKNOWN phase.
+        // Normal transition: explicit reasoning end tag wins and preserves any trailing bytes.
         TagLookupStatus endTagStatus = streamOutputCache.lookupTag(reasoningParser->getParsingConfig().endTag);
         if (endTagStatus == TagLookupStatus::FOUND_COMPLETE) {
-            // Switch back to UNKNOWN phase (we can have either CONTENT or TOOL_CALLS next)
             return parseReasoningChunk(tokens, finishReason, UNKNOWN);
-        } else if (endTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
-            return std::nullopt;  // Wait for more chunks to determine if end tag is complete
+        }
+
+        // Robust transition: a structural tool-call opener is itself sufficient evidence
+        // that reasoning has ended. This is deliberately generic rather than Gemma-specific:
+        // a parser-owned tool start tag must never be emitted as reasoning text merely because
+        // the model omitted its reasoning close tag.
+        if (applyToolParser) {
+            TagLookupStatus toolStartStatus = streamOutputCache.lookupTags(toolParser->getParsingConfig().startTags);
+            if (toolStartStatus == TagLookupStatus::FOUND_COMPLETE) {
+                const std::string original = streamOutputCache.getBuffer();
+                size_t toolPos = std::string::npos;
+                for (const auto& tag : toolParser->getParsingConfig().startTags) {
+                    const size_t pos = original.find(tag);
+                    if (pos != std::string::npos && (toolPos == std::string::npos || pos < toolPos)) {
+                        toolPos = pos;
+                    }
+                }
+
+                if (toolPos != std::string::npos && toolPos > 0) {
+                    streamOutputCache.clear();
+                    streamOutputCache.add(original.substr(0, toolPos));
+                    auto reasoningDelta = parseReasoningChunk(tokens, finishReason, REASONING);
+                    streamOutputCache.add(original.substr(toolPos));
+                    if (reasoningDelta.has_value()) {
+                        return reasoningDelta;
+                    }
+                }
+
+                return parseToolCallChunk(tokens, finishReason, TOOL_CALLS_PROCESSING_TOOL);
+            }
+            if (toolStartStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
+                return std::nullopt;
+            }
+        }
+
+        if (endTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
+            return std::nullopt;
         }
         return parseReasoningChunk(tokens, finishReason);
     } else if (processingPhase == CONTENT) {
