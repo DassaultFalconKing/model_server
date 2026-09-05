@@ -54,18 +54,15 @@ size_t longestTrailingTagPrefix(const std::string& text, const std::string& tag)
     }
     return 0;
 }
+}  // namespace
 
-size_t structuralTagHoldbackLength(const std::string& text) {
+size_t Gemma4ToolParser::structuralTagHoldbackLength(const std::string& text) {
     size_t holdback = 0;
-    for (const std::string& tag : {
-             Gemma4ToolParser::TOOL_CALL_START_TAG,
-             Gemma4ToolParser::TURN_END_TAG,
-             Gemma4ToolParser::TOOL_RESPONSE_START_TAG}) {
+    for (const std::string& tag : {TOOL_CALL_START_TAG, TURN_END_TAG, TOOL_RESPONSE_START_TAG}) {
         holdback = std::max(holdback, longestTrailingTagPrefix(text, tag));
     }
     return holdback;
 }
-}  // namespace
 
 std::string Gemma4ToolParser::parseArrayParameter(const std::string& argumentStr) {
     size_t pos = 1;
