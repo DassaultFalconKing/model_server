@@ -1,0 +1,20 @@
+repository: DassaultFalconKing/model_server
+workspace: C:\git\model_server-gemma4-reviewed
+branch: fix/gemma4-rc1-reviewed-contracts
+remote_branch: origin/fix/gemma4-rc1-reviewed-contracts
+SOURCE_HEAD: fb1d104f5dccefa8ea770dc913d8cdedbf1642eb
+PR: #4
+PR_BASE / merge-base / origin/integration/gemma4-2026.4-rc1-contiguous: 0a537f08987a3df4c0254c1614162c06ac20b968
+OVMS_BASELINE: 530dc63f816507d18bc14629e8cffeb55e3985e6
+runtime_proven_predecessor: 0a537f08987a3df4c0254c1614162c06ac20b968
+is_ancestor_of_predecessor: yes (exit 0)
+commits_after_handoff_fb1d104f: none
+handoff_HEAD_matches_tested_HEAD: yes
+fetched_at: 2026-09-05T22:20+02:00
+pre_build_HEAD: fb1d104f5dccefa8ea770dc913d8cdedbf1642eb
+post_runtime_HEAD: fb1d104f5dccefa8ea770dc913d8cdedbf1642eb
+notes:
+- windows_set_ovms_version.py modified src/version.hpp during build; restored after packaging.
+- windows_change_test_configs.py modified src/test configs; restored after unit tests.
+- windows_build.bat VS path was temporarily patched by build-windows.ps1 and restored.
+- product source SHA for ovms.exe --version is 2026.4.0.fb1d104f

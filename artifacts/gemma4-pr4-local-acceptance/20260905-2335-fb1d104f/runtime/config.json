@@ -1,0 +1,11 @@
+{
+    "model_config_list":  [
+
+                          ],
+    "mediapipe_config_list":  [
+                                  {
+                                      "name":  "gemma4-26-heretic",
+                                      "graph_path":  "C:/git/gemmamonster-acceptance/ovms/gemma4-diagnostic-pack/runtime/gemma4-26-heretic/vlm-stable/graph.pbtxt"
+                                  }
+                              ]
+}

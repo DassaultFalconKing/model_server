@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [],
+  "finish_reason": null,
+  "http_status": 400,
+  "error": "HTTPError 400",
+  "extra": {
+    "note": "auto remains optional; API error or normal completion both acceptable"
+  }
+}

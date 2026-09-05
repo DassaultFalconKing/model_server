@@ -1,0 +1,28 @@
+{
+  "status": "FAIL",
+  "issues": [
+    "ARGUMENTS_INVALID_JSON",
+    "FINISH_length"
+  ],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "vB8Vk2lKm",
+      "type": "function",
+      "function": {
+        "name": "write_file",
+        "arguments": ""
+      }
+    }
+  ],
+  "finish_reason": "length",
+  "http_status": 200,
+  "error": "",
+  "extra": {
+    "body_bytes": 4600,
+    "models_after_status": 200,
+    "trivial_after_status": 200,
+    "trivial_after_error": "",
+    "trivial_after_body": "{\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"pong\",\"role\":\"assistant\",\"tool_calls\":[]}}],\"created\":1788644404,\"model\":\"gemma4-26-heretic\",\"object\":\"chat.completion\",\"usage\":{\"prompt_tokens\":20,\"completion_tokens\":2,\"total_tokens\":22},\"__verbose\":{\"prompt\":\"<bos><|turn>user\\nReply with the single word pong.<turn|>\\n<|turn>model\\n<|channel>thought\\n<channel|>\",\"content\":\"pong\"}}"
+  }
+}

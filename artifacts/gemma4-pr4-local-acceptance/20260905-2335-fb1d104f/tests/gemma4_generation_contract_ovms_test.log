@@ -1,0 +1,8 @@
+[WINDOWS DEBUG] Changed path: /ovms/src/test/configs/config_cpu_dummy.json to path: C:/git/model_server-gemma4-reviewed/src/test/configs/config_cpu_dummy.json for Windows
+[WINDOWS DEBUG] Changed path: /tmp/models/dummy1 to path: C:/git/model_server-gemma4-reviewed/tmp/models/dummy1 for Windows
+[WINDOWS DEBUG] Changed path: /tmp/models/dummy1 to path: C:/git/model_server-gemma4-reviewed/tmp/models/dummy1 for Windows
+[WINDOWS DEBUG] Changed path: /ovms/src/test/llm_testing/facebook/opt-125m to path: C:/git/model_server-gemma4-reviewed/src/test/llm_testing/facebook/opt-125m for Windows
+Note: Google Test filter = Gemma4GenerationContractTest.*
+[==========] Running 0 tests from 0 test suites.
+[==========] 0 tests from 0 test suites ran. (0 ms total)
+[  PASSED  ] 0 tests.

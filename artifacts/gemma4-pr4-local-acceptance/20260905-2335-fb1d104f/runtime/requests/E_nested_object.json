@@ -1,0 +1,64 @@
+{
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Create event Review on 2026-09-06 at hour 14 with attendees Ada and Linus. Use the tool."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "create_event",
+        "description": "Create a calendar event",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "event": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "when": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "type": "string"
+                    },
+                    "hour": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "date",
+                    "hour"
+                  ]
+                },
+                "attendees": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "when",
+                "attendees"
+              ]
+            }
+          },
+          "required": [
+            "event"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "required",
+  "temperature": 0,
+  "max_tokens": 512,
+  "stream": false
+}

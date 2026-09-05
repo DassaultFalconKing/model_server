@@ -1,0 +1,1 @@
+{"error":"Mediapipe execution failed. MP status - INVALID_ARGUMENT: CalculatorGraph::Run() failed: \nCalculator::Process() for node \"LLMExecutor\" failed: Gemma4 response_format cannot be combined with active tool generation constraints"}

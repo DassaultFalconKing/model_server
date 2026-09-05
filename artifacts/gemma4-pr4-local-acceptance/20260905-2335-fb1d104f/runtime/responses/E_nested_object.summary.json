@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "7Ilb2EC72",
+      "type": "function",
+      "function": {
+        "name": "create_event",
+        "arguments": "{\"event\":{\"title\":\"Review\",\"when\":{\"date\":\"2026-09-06\",\"hour\":14},\"attendees\":[\"Ada\",\"Linus\"]}}"
+      }
+    }
+  ],
+  "finish_reason": "tool_calls",
+  "http_status": 200,
+  "error": "",
+  "extra": {}
+}

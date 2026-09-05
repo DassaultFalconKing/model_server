@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "The weather in Berlin is currently 21°C.",
+  "tool_calls": [],
+  "finish_reason": "stop",
+  "http_status": 200,
+  "error": "",
+  "extra": {
+    "turn1_finish": "tool_calls",
+    "turn2_content": "The weather in Berlin is currently 21°C."
+  }
+}

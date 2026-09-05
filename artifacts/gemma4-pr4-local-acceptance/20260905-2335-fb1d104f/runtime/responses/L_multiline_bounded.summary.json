@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "MkF76HGgM",
+      "type": "function",
+      "function": {
+        "name": "write_file",
+        "arguments": "{\"path\":\"output.txt\",\"content\":\"function demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\"}"
+      }
+    }
+  ],
+  "finish_reason": "tool_calls",
+  "http_status": 200,
+  "error": "",
+  "extra": {
+    "body_bytes": 1200,
+    "generated_content_len": 1169
+  }
+}

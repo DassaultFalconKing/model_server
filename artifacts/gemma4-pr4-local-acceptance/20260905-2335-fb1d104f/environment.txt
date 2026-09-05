@@ -1,0 +1,34 @@
+captured_at: 2026-09-05T22:46:52+02:00
+hostname: MSI
+os: Microsoft Windows 11 Home 10.0.26200
+cpu: Intel(R) Core(TM) Ultra 7 258V
+ram_bytes: 33866633216
+gpu: Intel(R) Arc(TM) 140V GPU (16GB)
+python: Python 3.12.10 (C:\opt\Python312)
+bazel: 6.4.0
+cmake: 4.3.3
+cl: Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35228 for x64
+msvc_toolset: 14.44.35207
+vs_path: C:\BuildTools
+openvino: 2026.4.0-22930-61afcb26271-releases/2026/4
+openvino_genai: 2026.4.0.0-3401-5f7f1278107
+ovms_version_string: OpenVINO Model Server 2026.4.0.fb1d104f
+bazel_build_flags: --config=win_mp_on_py_on
+model: Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov
+model_local_path: C:\llm\models\OpenVINO\Wondernutts\gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov
+binary_path: C:\llm\ovms-gemma4-pr4-fb1d104f\ovms.exe
+binary_sha256: 3AF3838FFD2588BA0CADF60E3BE598C4CD80220F1BDDC4720686B443F4BFE739
+binary_size_bytes: 22734848
+deploy_dir: C:\llm\ovms-gemma4-pr4-fb1d104f
+profile: vlm-stable / device=GPU / chat_template_mode=JINJA / enable_tool_guided_generation unset (graph default false)
+auto_detected_tool_parser: gemma4
+auto_detected_reasoning_parser: gemma4
+server_start: 2026-09-05T23:35:44+02:00
+model_available: 2026-09-05T23:36:22+02:00
+startup_duration_s: ~37.5
+rest_port: 8000
+log_level: TRACE
+verbose_response: enabled (trivial-after payload contains __verbose)
+GPU Engine/Adapter counters: present (see metrics/gpu-counters-used.txt)
+GPU Engine Utilization sampled values stayed 0; instance resolution via Get-Counter wildcards is not treated as a reliable Arc busy%.
+process working set peak during load: 17762512896 bytes

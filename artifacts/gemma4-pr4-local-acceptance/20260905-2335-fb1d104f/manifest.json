@@ -1,0 +1,472 @@
+﻿{
+    "repository":  "DassaultFalconKing/model_server",
+    "branch":  "fix/gemma4-rc1-reviewed-contracts",
+    "source_sha":  "fb1d104f5dccefa8ea770dc913d8cdedbf1642eb",
+    "pr_number":  4,
+    "pr_base_sha":  "0a537f08987a3df4c0254c1614162c06ac20b968",
+    "ovms_baseline_sha":  "530dc63f816507d18bc14629e8cffeb55e3985e6",
+    "model_name":  "Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov",
+    "model_local_path":  "C:/llm/models/OpenVINO/Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov",
+    "binary_path":  "C:/llm/ovms-gemma4-pr4-fb1d104f/ovms.exe",
+    "binary_sha256":  "3AF3838FFD2588BA0CADF60E3BE598C4CD80220F1BDDC4720686B443F4BFE739",
+    "build_result":  "PASS",
+    "unit_test_result":  "FAIL",
+    "parser_regression_result":  "PASS",
+    "runtime_matrix_result":  "PASS",
+    "novaclaw_result":  "PASS",
+    "bounded_multiline_result":  "PASS",
+    "stress_result":  "FAIL",
+    "overall_acceptance_result":  "NOT_ACCEPTED",
+    "bundle_path":  "artifacts/gemma4-pr4-local-acceptance/gemma4-pr4-local-acceptance-fb1d104f-20260905-2335.zip",
+    "bundle_sha256":  "41A5019F2A98C38D8B9C7105D48377C4AE301B394350CFC157AA54F1871C6058",
+    "overall_reason":  "Mandatory Bazel target //src/test/llm/generation_config:gemma4_generation_contract_test failed analysis: //src:test_platform_utils is not visible. Runtime/parser gates passed. GPU long-generation stress failed separately with finish_reason=length.",
+    "artifact_inventory":  [
+                               {
+                                   "path":  "build/binary-sha256.txt",
+                                   "bytes":  69,
+                                   "sha256":  "10BF12EDFC5E93F70DFC735870C153979D90F51EE4899C4B5DA7EAB433CF51F8"
+                               },
+                               {
+                                   "path":  "build/binary-size.txt",
+                                   "bytes":  13,
+                                   "sha256":  "BF0C120158B17BDB895169408A57360386C2DA3A9F9F6626A1E8ED724C39EC8A"
+                               },
+                               {
+                                   "path":  "build/build.log",
+                                   "bytes":  208261,
+                                   "sha256":  "8833CDD5BA929A59E5E0561095C6E69EB4ACC6ABAF18494CEA9DAF929B9E99FF"
+                               },
+                               {
+                                   "path":  "build/build-command.txt",
+                                   "bytes":  392,
+                                   "sha256":  "308552781913783B266697626D132C444DA62F0514CA3767DC269042BAD8C828"
+                               },
+                               {
+                                   "path":  "build/build-end.txt",
+                                   "bytes":  38,
+                                   "sha256":  "9D9E31E1855F2FBE04C4C6110D4A14CB4F90CADF98B6A99026BC83B1F94ACEFB"
+                               },
+                               {
+                                   "path":  "build/build-exit-code.txt",
+                                   "bytes":  6,
+                                   "sha256":  "9585FBECE5C402088F2D6A2DEF7E60D1C7FFECC24B16D32D5823A064B008935B"
+                               },
+                               {
+                                   "path":  "build/build-start.txt",
+                                   "bytes":  38,
+                                   "sha256":  "01F640C8E93C3A11C653ECD9ABA7C12665BC837CA56E7FA199B4FEB6B2E8F94C"
+                               },
+                               {
+                                   "path":  "build/ovms-version.txt",
+                                   "bytes":  202,
+                                   "sha256":  "E1C27910FE90D373DF21866CEAA2720C6D9011AE9D7CB2AFB16B023BEED828CB"
+                               },
+                               {
+                                   "path":  "build/win_environment.log",
+                                   "bytes":  8753,
+                                   "sha256":  "4B827827EB9FD38D47D0F60FBA999B7367EB55ACA5714DBB10445558DE265F4B"
+                               },
+                               {
+                                   "path":  "environment.txt",
+                                   "bytes":  1695,
+                                   "sha256":  "11193C40C8C78CD17FB7776593700E2DBCFBD52C35D0D04F484F66F1FC4AAABA"
+                               },
+                               {
+                                   "path":  "git-state.txt",
+                                   "bytes":  1117,
+                                   "sha256":  "4FA7677C4395ED3CA9EA7D4D28B28CF05F289A1BD70D07334E6A7EE3419DE962"
+                               },
+                               {
+                                   "path":  "metrics/gpu-counter-sets.txt",
+                                   "bytes":  141,
+                                   "sha256":  "4D2830E167C2DB71723D62B87C26078B04C602A231746F2392A4136248EF8E93"
+                               },
+                               {
+                                   "path":  "metrics/gpu-counters-used.txt",
+                                   "bytes":  444,
+                                   "sha256":  "4FDED01FA8D1418250ED3933C6BCBFAFEE8164F1910ACA815BFD8AFA0D3A716F"
+                               },
+                               {
+                                   "path":  "metrics/host-metrics.csv",
+                                   "bytes":  5405,
+                                   "sha256":  "C4712613B571CF17E768FF08AA3442F52CD5B529DD1CB8F29826B01FB4E6C546"
+                               },
+                               {
+                                   "path":  "metrics/metrics-summary.json",
+                                   "bytes":  45295,
+                                   "sha256":  "FF6F20BA50857BB621F547B7322B558BA1D8412760644CBBD2FBE22C2586CC61"
+                               },
+                               {
+                                   "path":  "metrics/runtime-metrics.csv",
+                                   "bytes":  2035,
+                                   "sha256":  "C42C57E83C6E6852E18D92B39D8818603F31EEAC276AFE05705F112A41FCF96F"
+                               },
+                               {
+                                   "path":  "REPORT.md",
+                                   "bytes":  10192,
+                                   "sha256":  "4FE57F3C2D753648F212C10491F8907BD479F61C538E2A9C173D09477CBC8F7D"
+                               },
+                               {
+                                   "path":  "runtime/config.json",
+                                   "bytes":  438,
+                                   "sha256":  "B52D10D5B284019574AEA535AF8B55617587038880A1EC65AFB9E42EF0F9A4E9"
+                               },
+                               {
+                                   "path":  "runtime/graph.pbtxt",
+                                   "bytes":  1636,
+                                   "sha256":  "C149FF0B829FBE882A15F4ACE3C6279E6C0AC94257322EEED842B971AB5D0635"
+                               },
+                               {
+                                   "path":  "runtime/matrix-summary.json",
+                                   "bytes":  45244,
+                                   "sha256":  "AAE9DAD67B23DF8D53BED4C0BE34B1B38BF157EFB1F14095882A0CFB72429061"
+                               },
+                               {
+                                   "path":  "runtime/models-response.json",
+                                   "bytes":  114,
+                                   "sha256":  "363462E7BFF1BF7486E14585626E8703EB5549B5F9250D1FFD7B5ECFB503D28F"
+                               },
+                               {
+                                   "path":  "runtime/novaclaw/turn1-request.json",
+                                   "bytes":  1164,
+                                   "sha256":  "AAB3ECB76C634F8F509D13F6DED293659EA95E2182A5A44C7705D7CD6AD5839B"
+                               },
+                               {
+                                   "path":  "runtime/novaclaw/turn1-response.json",
+                                   "bytes":  1050,
+                                   "sha256":  "BB3DB71D76E65E2B23DC3529D36D776B63DCE7D5FFB99F38A9D63BF706848A6C"
+                               },
+                               {
+                                   "path":  "runtime/novaclaw/turn2-request.json",
+                                   "bytes":  1948,
+                                   "sha256":  "B7F911E4F438B6AB0DAEDC7FB7B8D1F7AEE9DC8F5455B9F8EB188A3B89AA7434"
+                               },
+                               {
+                                   "path":  "runtime/novaclaw/turn2-response.json",
+                                   "bytes":  1497,
+                                   "sha256":  "84689E5814B666D89BDE2B487FFE0B68C5306F0528CF507C8648C607D7BE6AD8"
+                               },
+                               {
+                                   "path":  "runtime/requests/A_none.json",
+                                   "bytes":  679,
+                                   "sha256":  "B419C4A6E1E9A3BA647BDD6E604E6C31151957F75D54C8672DDB60AF76741031"
+                               },
+                               {
+                                   "path":  "runtime/requests/B_auto_optional.json",
+                                   "bytes":  660,
+                                   "sha256":  "E9B94A6E3CFB525DBE1F70037AFD7D9CEFF759EC53CECD3385FB37E29C3FF3AB"
+                               },
+                               {
+                                   "path":  "runtime/requests/B_auto_tool_expected.json",
+                                   "bytes":  697,
+                                   "sha256":  "9976863D91B53EF8B9767AD6DBAED049381C4E8BE5CFFCA40EBB253DD361BA27"
+                               },
+                               {
+                                   "path":  "runtime/requests/C_required.json",
+                                   "bytes":  791,
+                                   "sha256":  "7666D3068F0A73F23357FFED29EBEBD25CF70637F683980897820E827908308C"
+                               },
+                               {
+                                   "path":  "runtime/requests/D_named.json",
+                                   "bytes":  1231,
+                                   "sha256":  "E1736467ECAA79373712B8705759A94A3AF44551685BFEB1CC3F164B649A85D0"
+                               },
+                               {
+                                   "path":  "runtime/requests/E_nested_object.json",
+                                   "bytes":  1589,
+                                   "sha256":  "56FBECEB107E8154B630F1AF04AE3A7B864B82DF98A3DB84DD05AA33E028BF21"
+                               },
+                               {
+                                   "path":  "runtime/requests/F_arrays.json",
+                                   "bytes":  987,
+                                   "sha256":  "4EF0E0C9C11283A30D4DDE93D6B2AF05A2E6697087F949C81C9A253767E6901A"
+                               },
+                               {
+                                   "path":  "runtime/requests/failclosed_auto_plus_response_format.json",
+                                   "bytes":  704,
+                                   "sha256":  "32FE78E6870EFED13C7FEF7F8086A9485152B9871ECF83B6540837410A59737E"
+                               },
+                               {
+                                   "path":  "runtime/requests/failclosed_required_plus_response_format.json",
+                                   "bytes":  708,
+                                   "sha256":  "486553AC537AA1E957193FF2A854C1ABEA372DCD2259164B6853396AAC9D5257"
+                               },
+                               {
+                                   "path":  "runtime/requests/G_quoting.json",
+                                   "bytes":  787,
+                                   "sha256":  "F87A8F47D2BD4E9DACCBF8A31086C800BB0C4989701EB5B04FC8AA047460CB63"
+                               },
+                               {
+                                   "path":  "runtime/requests/GPU_LONG_GENERATION_STABILITY.json",
+                                   "bytes":  5722,
+                                   "sha256":  "B2540BADA769753579BD45DA4BC10BF45E80CA4017F94580B0267794A87FDD26"
+                               },
+                               {
+                                   "path":  "runtime/requests/H_parallel_calls.json",
+                                   "bytes":  696,
+                                   "sha256":  "1C9642E747E04165C9F4C3C6BFEA093B47BA2A2E479A1C9F3E65539EC5690E60"
+                               },
+                               {
+                                   "path":  "runtime/requests/I_streaming.json",
+                                   "bytes":  657,
+                                   "sha256":  "6EB610868219C88ADF8F715CD586EAAA70E54F7B3B55E4A1FA7D79E877FD2E84"
+                               },
+                               {
+                                   "path":  "runtime/requests/J_roundtrip_turn1.json",
+                                   "bytes":  646,
+                                   "sha256":  "C0BD77906E2737F47B5724056DD7355B7751EB786FFBE92E820F2D2E6BD47423"
+                               },
+                               {
+                                   "path":  "runtime/requests/J_tool_roundtrip.json",
+                                   "bytes":  1083,
+                                   "sha256":  "9EB2BF15650F9CB27D8F3350164A124E6D81AB8E47CBEA0D9DBE0F5BA7D78967"
+                               },
+                               {
+                                   "path":  "runtime/requests/K_later_turn_agent.json",
+                                   "bytes":  1948,
+                                   "sha256":  "B7F911E4F438B6AB0DAEDC7FB7B8D1F7AEE9DC8F5455B9F8EB188A3B89AA7434"
+                               },
+                               {
+                                   "path":  "runtime/requests/L_multiline_bounded.json",
+                                   "bytes":  2070,
+                                   "sha256":  "86AE5CC6287BF3CF1759044B81F1E19C2968F24FAF52C3E8184E6934A3DD6F55"
+                               },
+                               {
+                                   "path":  "runtime/responses/A_none.raw.json",
+                                   "bytes":  423,
+                                   "sha256":  "67394FA79B1FE524A4A92B62C713A3A11FC295D694ED44EAC12098120CC259E5"
+                               },
+                               {
+                                   "path":  "runtime/responses/A_none.summary.json",
+                                   "bytes":  1727,
+                                   "sha256":  "B5B6994D5644ED9C9A9AAEC5D870FF1A76B0FF0DFF21904ED776FED5807ECAE2"
+                               },
+                               {
+                                   "path":  "runtime/responses/B_auto_optional.raw.json",
+                                   "bytes":  651,
+                                   "sha256":  "87A61222C1F4988CA6A86AAC3A7FAAC043E6FADA55D5C29B010159D1EC1F0626"
+                               },
+                               {
+                                   "path":  "runtime/responses/B_auto_optional.summary.json",
+                                   "bytes":  170,
+                                   "sha256":  "0BBD3083E90248A0E3C23F775FE375E8FED66C64026C80328F9E93109F47A8E8"
+                               },
+                               {
+                                   "path":  "runtime/responses/B_auto_tool_expected.raw.json",
+                                   "bytes":  791,
+                                   "sha256":  "16CBCC5C2479E93F4DDFFB822CB975DD2F984447D44F4C45E33222592D24828A"
+                               },
+                               {
+                                   "path":  "runtime/responses/B_auto_tool_expected.summary.json",
+                                   "bytes":  350,
+                                   "sha256":  "5C0BEE5336139E7D658AB582239C77BB7091FA385AFAB525D16DB9B879B5E16C"
+                               },
+                               {
+                                   "path":  "runtime/responses/C_required.raw.json",
+                                   "bytes":  882,
+                                   "sha256":  "32E2386AAE69B1F57647846B28521EE8593F99BFED05B88AFDC0EF78FDF31CEA"
+                               },
+                               {
+                                   "path":  "runtime/responses/C_required.summary.json",
+                                   "bytes":  3906,
+                                   "sha256":  "4D9A9EC8B2DA3C13C633239C6CB8C19C7F4201ED8CD00FDBAF612360101A12D9"
+                               },
+                               {
+                                   "path":  "runtime/responses/D_named.raw.json",
+                                   "bytes":  837,
+                                   "sha256":  "EFF803DEB905137F78CBB4BF700DD935ACAE7686AB5A6A608558F3B96AD9202D"
+                               },
+                               {
+                                   "path":  "runtime/responses/D_named.summary.json",
+                                   "bytes":  4119,
+                                   "sha256":  "CD08C671ACB25FA44D433DD50C23D9B44E77424C195EFED9F6C651CCC455D7AD"
+                               },
+                               {
+                                   "path":  "runtime/responses/E_nested_object.raw.json",
+                                   "bytes":  1230,
+                                   "sha256":  "38A3648B77067A69DF2A9F5D2B239BD85724C2AA7585E8980F7A1D8BDEE57429"
+                               },
+                               {
+                                   "path":  "runtime/responses/E_nested_object.summary.json",
+                                   "bytes":  445,
+                                   "sha256":  "8CF9D4377D0DC680F432B18463F4AE4469239E2C0504E7AC0E204FAA629E7075"
+                               },
+                               {
+                                   "path":  "runtime/responses/F_arrays.raw.json",
+                                   "bytes":  1032,
+                                   "sha256":  "12CCECEB69878EB6FB272B6166A222F9D5E52904D645E812FF3520C56107FD74"
+                               },
+                               {
+                                   "path":  "runtime/responses/F_arrays.summary.json",
+                                   "bytes":  439,
+                                   "sha256":  "01420406870004C8AD49E4F2FF1EF6984B25706F7666F6321D3C3A967A92BA17"
+                               },
+                               {
+                                   "path":  "runtime/responses/failclosed_auto_plus_response_format.raw.json",
+                                   "bytes":  239,
+                                   "sha256":  "7CF1BF507070D4F97BD400CAB1A1AB08506E321D70D49C75D955A0526906D043"
+                               },
+                               {
+                                   "path":  "runtime/responses/failclosed_auto_plus_response_format.summary.json",
+                                   "bytes":  265,
+                                   "sha256":  "22B1028EA6813294579A36A6FFAC143C9C2859EC5950AB2275942D65AAB5CC74"
+                               },
+                               {
+                                   "path":  "runtime/responses/failclosed_required_plus_response_format.raw.json",
+                                   "bytes":  239,
+                                   "sha256":  "7CF1BF507070D4F97BD400CAB1A1AB08506E321D70D49C75D955A0526906D043"
+                               },
+                               {
+                                   "path":  "runtime/responses/failclosed_required_plus_response_format.summary.json",
+                                   "bytes":  176,
+                                   "sha256":  "B6BD83C6946FB6D6336C66A6D0C0EEDCC097EF2EF76EC4211816EE0E29867A3B"
+                               },
+                               {
+                                   "path":  "runtime/responses/G_quoting.raw.json",
+                                   "bytes":  985,
+                                   "sha256":  "3EC041EAD894D0B42F48653CBD58FCA8C863F3F7B37B900F53F9D5F22A7CFD77"
+                               },
+                               {
+                                   "path":  "runtime/responses/G_quoting.summary.json",
+                                   "bytes":  456,
+                                   "sha256":  "F9D193E01757AEF02C3CF5E2A5434D34C054E97ECCF9184E949878A248F0C4CA"
+                               },
+                               {
+                                   "path":  "runtime/responses/GPU_LONG_GENERATION_STABILITY.raw.json",
+                                   "bytes":  5747,
+                                   "sha256":  "4D44991C5E403143B7FC717681B7F4308E558AD0564D7B0ABB92C2A3988DB14B"
+                               },
+                               {
+                                   "path":  "runtime/responses/GPU_LONG_GENERATION_STABILITY.summary.json",
+                                   "bytes":  1010,
+                                   "sha256":  "86CBE5F97AD300D9AC387FB0BB6E76031F797747E1771FE6B3501B762BBA7B29"
+                               },
+                               {
+                                   "path":  "runtime/responses/H_parallel_calls.raw.json",
+                                   "bytes":  897,
+                                   "sha256":  "4B49D505B0CC109176D369414D7D77391334F583389C79E19A5C2BBD84FB4D15"
+                               },
+                               {
+                                   "path":  "runtime/responses/H_parallel_calls.summary.json",
+                                   "bytes":  547,
+                                   "sha256":  "D4CB5C69B874739A00C022F95FAAF3449189252CC7A3A5D51C97B8AE2F6AA1A0"
+                               },
+                               {
+                                   "path":  "runtime/responses/J_roundtrip_turn1.raw.json",
+                                   "bytes":  736,
+                                   "sha256":  "C5B261698CCC61FAB08705CF44C8E63F8C14C13E9BDF32AD53E3AF259BD1F15E"
+                               },
+                               {
+                                   "path":  "runtime/responses/J_tool_roundtrip.raw.json",
+                                   "bytes":  887,
+                                   "sha256":  "3F13D6061DEA908027D1C43F5E89668464246AB849061C963A94DD8765E609D4"
+                               },
+                               {
+                                   "path":  "runtime/responses/J_tool_roundtrip.summary.json",
+                                   "bytes":  311,
+                                   "sha256":  "B6D41431CD48B1BD05F78D7A8F96DC62A3298AEC1B20E05925EE876A632834E9"
+                               },
+                               {
+                                   "path":  "runtime/responses/K_later_turn_agent.raw.json",
+                                   "bytes":  1497,
+                                   "sha256":  "84689E5814B666D89BDE2B487FFE0B68C5306F0528CF507C8648C607D7BE6AD8"
+                               },
+                               {
+                                   "path":  "runtime/responses/K_later_turn_agent.summary.json",
+                                   "bytes":  443,
+                                   "sha256":  "679BADBE85D95706DD00419727A48981443463C4FD339CCB0DFF72BB86F7C914"
+                               },
+                               {
+                                   "path":  "runtime/responses/L_multiline_bounded.raw.json",
+                                   "bytes":  3450,
+                                   "sha256":  "768768D66A3F9C45337CD96161FAF0B3B275FBC391F3C3E59E710FC73548F413"
+                               },
+                               {
+                                   "path":  "runtime/responses/L_multiline_bounded.summary.json",
+                                   "bytes":  1745,
+                                   "sha256":  "3E9A5353AF8EB25F9BE6CE7771DAA1668DB07DA4E631CA4DB5C9936895D0F829"
+                               },
+                               {
+                                   "path":  "runtime/server.log",
+                                   "bytes":  1609737,
+                                   "sha256":  "43798C300182542B97D5DE3BA8E41A7ED8CD918E6BEEF94C0459772335E9FD16"
+                               },
+                               {
+                                   "path":  "runtime/streaming/I_streaming.events.json",
+                                   "bytes":  1913,
+                                   "sha256":  "62E7B3D67A925BCC1E31D851E21DCF6EC4994106F90936B78BD63F82AA18E089"
+                               },
+                               {
+                                   "path":  "runtime/streaming/I_streaming.sse.txt",
+                                   "bytes":  1244,
+                                   "sha256":  "92BFFBC4212C679A9EE762EC217FA10FB8134784E84159E029B1C8E7B56B6A79"
+                               },
+                               {
+                                   "path":  "stress/models-after.json",
+                                   "bytes":  109,
+                                   "sha256":  "9C634963FE22D9C88D6A2E98B99CBD6F9A20D6F56F9F3F1F122FA57468F9F525"
+                               },
+                               {
+                                   "path":  "stress/request.json",
+                                   "bytes":  5722,
+                                   "sha256":  "B2540BADA769753579BD45DA4BC10BF45E80CA4017F94580B0267794A87FDD26"
+                               },
+                               {
+                                   "path":  "stress/response.raw.json",
+                                   "bytes":  5747,
+                                   "sha256":  "4D44991C5E403143B7FC717681B7F4308E558AD0564D7B0ABB92C2A3988DB14B"
+                               },
+                               {
+                                   "path":  "stress/trivial-after.raw.json",
+                                   "bytes":  418,
+                                   "sha256":  "D9475357B22E0EE7405ED39C73B131C834E2A35F8CAB626CADA35CA2275B909F"
+                               },
+                               {
+                                   "path":  "tests/gemma4_generation_contract_bazel.log",
+                                   "bytes":  11065,
+                                   "sha256":  "7EE3811C22C34A918034E6D21C00FD3DFC4B8940064B212DA0F1DCE39AE3F091"
+                               },
+                               {
+                                   "path":  "tests/gemma4_generation_contract_ovms_test.log",
+                                   "bytes":  785,
+                                   "sha256":  "47FE80EAB5C6F7E3E9C257780858DA00179F166D3E62E92CE760076AA742DB4E"
+                               },
+                               {
+                                   "path":  "tests/gemma4_output_parser.log.gz",
+                                   "bytes":  22338,
+                                   "sha256":  "BB4BF5A893581646B297260D1B976EF7A9C37CD7CA2F45AC93B5AD2E86724C63"
+                               },
+                               {
+                                   "path":  "tests/gemma4_reviewed_contract.log.gz",
+                                   "bytes":  17033,
+                                   "sha256":  "DA7FA8B4D7FD2C09D7ECF14F480FE9102870F0FE1B98304D9D8B8CC4F8287D22"
+                               },
+                               {
+                                   "path":  "tests/http_openai_chat_tool_adjacent.log",
+                                   "bytes":  932,
+                                   "sha256":  "439421BFA414DECEEBB5B7A76EA0E5EB596D0702756FFE7F0A9A6A75729AE1E8"
+                               },
+                               {
+                                   "path":  "tests/http_openai_handler_adjacent.log.gz",
+                                   "bytes":  3769,
+                                   "sha256":  "DFACD1CDFA40573309B0547F43883310DFD665A68F289C601112DBA64BD6F189"
+                               },
+                               {
+                                   "path":  "tests/unit-tests.log",
+                                   "bytes":  12350,
+                                   "sha256":  "C61FCEBA529C3A97E9D0E377A4C2FCFE11ACAE7DAB63C4584E18724890C9886D"
+                               },
+                               {
+                                   "path":  "tests/unit-tests-summary.json",
+                                   "bytes":  2565,
+                                   "sha256":  "9555092A69A5E2F1B0B5FCE92EDDF96EC326A382F84D9DE4BDF926722FC32718"
+                               },
+                               {
+                                   "path":  "tests/windows_change_test_configs.log",
+                                   "bytes":  18866,
+                                   "sha256":  "33C5DB55996A0D79B98E6DB92B4013C9BF8F59AC78EA8E58544405A15B306AD9"
+                               }
+                           ],
+    "bundle_path":  "artifacts/gemma4-pr4-local-acceptance/gemma4-pr4-local-acceptance-fb1d104f-20260905-2335.zip"
+}
+
