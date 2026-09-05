@@ -116,6 +116,24 @@ TEST_F(Gemma4HereticOutputParserTest, CompleteToolCallDeliveredInOneStreamingChu
     EXPECT_TRUE(collected.content.empty());
 }
 
+TEST_F(Gemma4HereticOutputParserTest, FinalChunkCarriesNameArgumentsAndFinishWithoutLosingEither) {
+    CollectedDeltas collected;
+
+    // Mirrors the chunk shape that exposed vLLM #45449: the tool name arrives
+    // without the opening brace, then the final backend chunk contains both the
+    // arguments and the end marker. OVMS must not require a later flush to make
+    // the already-finished call identifiable.
+    feed(collected, "<|tool_call>", ov::genai::GenerationFinishReason::NONE);
+    feed(collected, "call:get_user_profile", ov::genai::GenerationFinishReason::NONE);
+    feed(collected, "{}<tool_call|>", ov::genai::GenerationFinishReason::STOP);
+
+    ASSERT_EQ(collected.names.size(), 1);
+    EXPECT_EQ(collected.names[0], "get_user_profile");
+    ASSERT_EQ(collected.arguments.size(), 1);
+    EXPECT_EQ(collected.arguments[0], "{}");
+    EXPECT_TRUE(collected.content.empty());
+}
+
 TEST_F(Gemma4HereticOutputParserTest, TruncatedStringArgumentIsRecoveredOnGenerationEnd) {
     CollectedDeltas collected;
 
