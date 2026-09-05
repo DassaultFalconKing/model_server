@@ -343,7 +343,15 @@ bool Gemma4ToolParser::parseToolCallParametersState() {
 
 bool Gemma4ToolParser::parseInToolCallEndedState() {
     size_t nextToolCallPos = this->streamingContent.find(TOOL_CALL_NAME_PREFIX, this->streamingPosition);
-    size_t toolCallEndTagPos = this->streamingContent.find(TOOL_CALL_END_TAG, this->streamingPosition);
+    const size_t canonicalEndPos = this->streamingContent.find(TOOL_CALL_END_TAG, this->streamingPosition);
+    const size_t turnEndPos = this->streamingContent.find(TURN_END_TAG, this->streamingPosition);
+    size_t toolCallEndTagPos = canonicalEndPos;
+    size_t toolCallEndTagLength = TOOL_CALL_END_TAG.length();
+    if (turnEndPos != std::string::npos && (toolCallEndTagPos == std::string::npos || turnEndPos < toolCallEndTagPos)) {
+        toolCallEndTagPos = turnEndPos;
+        toolCallEndTagLength = TURN_END_TAG.length();
+    }
+
     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Current state: ToolCallEnded. Streaming content from current position: {}", this->streamingContent.substr(this->streamingPosition));
     if (nextToolCallPos != std::string::npos && (toolCallEndTagPos == std::string::npos || nextToolCallPos < toolCallEndTagPos)) {
         this->streamingPosition = nextToolCallPos;
@@ -353,7 +361,7 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
     }
     if (toolCallEndTagPos != std::string::npos) {
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}", toolCallEndTagPos);
-        this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
+        this->streamingPosition = toolCallEndTagPos + toolCallEndTagLength;
         this->currentState = State::AfterToolCall;
         return true;
     }
@@ -555,6 +563,10 @@ void Gemma4ToolParser::parse(ParsedOutput& parsedOutput, const std::vector<int64
     std::vector<std::pair<size_t, size_t>> toolCallPositions;
     size_t pos = 0;
 
+    const auto vocab = tokenizer.get_vocab();
+    const auto turnEndTokenIt = vocab.find(TURN_END_TAG);
+    const std::optional<int64_t> turnEndTokenId = turnEndTokenIt == vocab.end() ? std::nullopt : std::optional<int64_t>(turnEndTokenIt->second);
+
     while (pos != std::string::npos) {
         size_t start = std::string::npos;
         size_t end = std::string::npos;
@@ -565,9 +577,17 @@ void Gemma4ToolParser::parse(ParsedOutput& parsedOutput, const std::vector<int64
         } else {
             break;
         }
-        auto itArgs = std::find(generatedTokens.begin() + start, generatedTokens.end(), eotTokenId);
-        if (itArgs != generatedTokens.end()) {
-            end = std::distance(generatedTokens.begin(), itArgs);
+
+        auto canonicalEndIt = std::find(generatedTokens.begin() + start, generatedTokens.end(), eotTokenId);
+        auto selectedEndIt = canonicalEndIt;
+        if (turnEndTokenId.has_value()) {
+            auto turnEndIt = std::find(generatedTokens.begin() + start, generatedTokens.end(), turnEndTokenId.value());
+            if (turnEndIt != generatedTokens.end() && (selectedEndIt == generatedTokens.end() || turnEndIt < selectedEndIt)) {
+                selectedEndIt = turnEndIt;
+            }
+        }
+        if (selectedEndIt != generatedTokens.end()) {
+            end = std::distance(generatedTokens.begin(), selectedEndIt);
         } else {
             break;
         }
