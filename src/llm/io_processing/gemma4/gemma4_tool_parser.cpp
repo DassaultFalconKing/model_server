@@ -354,9 +354,8 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
         this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
         this->currentState = State::AfterToolCall;
     } else {
-        this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
-        this->currentState = State::AfterToolCall;
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}, returning to content state", toolCallEndTagPos);
+        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Waiting for more data in ToolCallEnded state; no complete next tool call prefix or end tag found from position: {}", this->streamingPosition);
+        return false;
     }
     return true;
 }
