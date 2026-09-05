@@ -42,6 +42,29 @@ std::string serialize(const std::optional<rapidjson::Document>& doc) {
 }
 }  // namespace
 
+TEST(Gemma4StreamingHardeningTest, SplitToolCallStartTagDoesNotLeakIntoContent) {
+    ov::genai::Tokenizer tokenizer(tokenizerPath);
+    const ToolsSchemas_t emptyToolsSchema{};
+    OutputParser parser(tokenizer, "gemma4", "gemma4", emptyToolsSchema);
+
+    auto contentDelta = parser.parseChunk("before", {}, true, ov::genai::GenerationFinishReason::NONE);
+    ASSERT_TRUE(contentDelta.has_value());
+    EXPECT_EQ(serialize(contentDelta), R"({"delta":{"content":"before"}})");
+
+    // A proxy/harness may split decoded special-token text at arbitrary byte
+    // boundaries. A partial opener must be retained until it can be classified.
+    EXPECT_FALSE(parser.parseChunk("<|tool_", {}, true, ov::genai::GenerationFinishReason::NONE).has_value());
+    EXPECT_FALSE(parser.parseChunk("call>call:ls", {}, true, ov::genai::GenerationFinishReason::NONE).has_value());
+
+    auto firstDelta = parser.parseChunk("{a:", {}, true, ov::genai::GenerationFinishReason::NONE);
+    ASSERT_TRUE(firstDelta.has_value());
+    EXPECT_NE(serialize(firstDelta).find("\"name\":\"ls\""), std::string::npos);
+
+    auto argsDelta = parser.parseChunk("true}", {}, true, ov::genai::GenerationFinishReason::NONE);
+    ASSERT_TRUE(argsDelta.has_value());
+    EXPECT_NE(serialize(argsDelta).find("{\\\"a\\\":true}"), std::string::npos);
+}
+
 TEST(Gemma4StreamingHardeningTest, SplitToolCallEndTagDoesNotLeakIntoContent) {
     ov::genai::Tokenizer tokenizer(tokenizerPath);
     const ToolsSchemas_t emptyToolsSchema{};
@@ -58,9 +81,6 @@ TEST(Gemma4StreamingHardeningTest, SplitToolCallEndTagDoesNotLeakIntoContent) {
     ASSERT_TRUE(argsDelta.has_value());
     EXPECT_NE(serialize(argsDelta).find("{\\\"a\\\":true}"), std::string::npos);
 
-    // A transport/proxy is allowed to re-chunk the decoded text at arbitrary byte
-    // boundaries. Seeing only a prefix of <tool_call|> must keep the parser in the
-    // completed-tool state instead of turning that prefix into assistant content.
     EXPECT_FALSE(parser.parseChunk("<tool_", {}, true, ov::genai::GenerationFinishReason::NONE).has_value());
     EXPECT_FALSE(parser.parseChunk("call|>", {}, true, ov::genai::GenerationFinishReason::NONE).has_value());
 
