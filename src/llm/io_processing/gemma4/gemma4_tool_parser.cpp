@@ -42,6 +42,23 @@ const int64_t Gemma4ToolParser::eotTokenId = 49;  // <tool_call|>
 const int64_t Gemma4ToolParser::reasoningTokenId = 100;     // <|channel>
 const int64_t Gemma4ToolParser::reasoningEndTokenId = 101;  // <channel|>
 
+namespace {
+bool tryParseGuidedJsonArguments(const std::string& argumentsStr, std::string& outJson) {
+    const std::string guidedArguments = "{" + argumentsStr + "}";
+    rapidjson::Document guidedArgsDoc;
+    guidedArgsDoc.Parse(guidedArguments.c_str());
+    if (guidedArgsDoc.HasParseError() || !guidedArgsDoc.IsObject()) {
+        return false;
+    }
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    guidedArgsDoc.Accept(writer);
+    outJson = buffer.GetString();
+    return true;
+}
+}  // namespace
+
 std::string Gemma4ToolParser::parseArrayParameter(const std::string& argumentStr) {
     size_t pos = 1;
     std::string parsedArguments = "[";
@@ -210,13 +227,48 @@ std::pair<std::string, std::string> Gemma4ToolParser::parseSingleArgument(const 
     return argument;
 }
 
+std::string Gemma4ToolParser::maskStringValues(const std::string& text) {
+    std::string masked = text;
+    size_t pos = 0;
+    while (true) {
+        const size_t openPos = text.find(TOOL_ARGS_STRING_INDICATOR, pos);
+        if (openPos == std::string::npos)
+            break;
+        const size_t valueStart = openPos + TOOL_ARGS_STRING_INDICATOR.size();
+        const size_t closePos = text.find(TOOL_ARGS_STRING_INDICATOR, valueStart);
+        // Value not closed yet (still streaming): mask through the current buffer end too,
+        // otherwise its already-received tail would desync quote/brace tracking; a later
+        // call re-masks from scratch once the closing delimiter has arrived.
+        const size_t maskEnd = (closePos == std::string::npos) ? text.size() : closePos;
+        for (size_t i = valueStart; i < maskEnd; i++) {
+            switch (masked[i]) {
+            case '"':
+            case '\'':
+            case '{':
+            case '}':
+            case '[':
+            case ']':
+                masked[i] = '\x01';
+                break;
+            default:
+                break;
+            }
+        }
+        if (closePos == std::string::npos)
+            break;
+        pos = closePos + TOOL_ARGS_STRING_INDICATOR.size();
+    }
+    return masked;
+}
+
 std::vector<std::pair<std::string, std::string>> Gemma4ToolParser::parseArguments(const std::string& argumentsStr) {
     std::vector<std::string> args;
     std::vector<std::pair<std::string, std::string>> parsedArgs;
 
+    const std::string maskedArgumentsStr = maskStringValues(argumentsStr);
     size_t argPos = 0;
     while (argPos < argumentsStr.length()) {
-        size_t commaPos = findInStringRespectingSpecialChars(argumentsStr, TOOL_ARGS_SEPARATOR_STR, argPos);
+        size_t commaPos = findInStringRespectingSpecialChars(maskedArgumentsStr, TOOL_ARGS_SEPARATOR_STR, argPos);
         if (commaPos == std::string::npos) {
             auto remainingStr = argumentsStr.substr(argPos);
             args.push_back(remainingStr);
@@ -278,13 +330,25 @@ bool Gemma4ToolParser::parseToolCallParametersState() {
     if (this->streamingContent.back() == TOOL_ARGS_END_INDICATOR.back()) {
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Tool arguments end indicator found at the end of streaming content, attempting to parse arguments: {}", this->streamingContent.substr(this->streamingPosition));
     }
-    size_t pos = findInStringRespectingSpecialChars(this->streamingContent, TOOL_ARGS_END_INDICATOR, this->streamingPosition);
+    const std::string maskedStreamingContent = maskStringValues(this->streamingContent);
+    size_t pos = findInStringRespectingSpecialChars(maskedStreamingContent, TOOL_ARGS_END_INDICATOR, this->streamingPosition);
     if (pos == std::string::npos) {
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Tool arguments end indicator not found in streaming content starting from position: {}", this->streamingPosition);
         return false;
     }
     std::string argumentsStr = this->streamingContent.substr(this->streamingPosition, pos - this->streamingPosition);
     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed arguments string: {}", argumentsStr);
+
+    // Gemma4 constrained generation uses JSONSchema as the tag body, so the
+    // generated argument payload is ordinary JSON rather than Gemma's native
+    // key:<|\"|>value<|\"|> dialect. Preserve the native path as fallback.
+    if (tryParseGuidedJsonArguments(argumentsStr, this->toolCall.arguments)) {
+        this->currentState = State::ToolCallEnded;
+        this->streamingPosition = pos + TOOL_ARGS_END_INDICATOR.length();
+        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed Gemma4 guided JSON arguments directly: {}", this->toolCall.arguments);
+        return true;
+    }
+
     std::vector<std::pair<std::string, std::string>> arguments = parseArguments(argumentsStr);
 
     rapidjson::Document argsDoc(rapidjson::kObjectType);
@@ -364,7 +428,9 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
             return ToolCallDelta{toolCallIndex, generateRandomId(), this->toolCall.name, ""};
         }
         if (this->currentState == State::ToolCallEnded) {
-            return wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            this->toolCall = ToolCall{};
+            return delta;
         }
         if (this->currentState == State::Content) {
             size_t contentEnd = this->streamingContent.find(TOOL_CALL_START_TAG, this->streamingPosition);
@@ -376,13 +442,12 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
             }
             this->streamingPosition += content.size();
 
-            if (finishReason != ov::genai::GenerationFinishReason::NONE) {
-                for (const std::string& tagToErase : {TURN_END_TAG, TOOL_RESPONSE_START_TAG}) {
-                    size_t tagPos = content.find(tagToErase);
-                    while (tagPos != std::string::npos) {
-                        content.erase(tagPos, tagToErase.length());
-                        tagPos = content.find(tagToErase, tagPos);
-                    }
+            // Structural/stop markers must never reach the client, on any chunk, not just the final flush.
+            for (const std::string& tagToErase : {TURN_END_TAG, TOOL_RESPONSE_START_TAG}) {
+                size_t tagPos = content.find(tagToErase);
+                while (tagPos != std::string::npos) {
+                    content.erase(tagPos, tagToErase.length());
+                    tagPos = content.find(tagToErase, tagPos);
                 }
             }
 
@@ -440,9 +505,15 @@ bool Gemma4ToolParser::parseSingleToolCall(const std::string& toolStr, ToolCall&
         int argsStrLen = toolStr.length() - argsPos - TOOL_ARGS_START_INDICATOR.length() - TOOL_ARGS_END_INDICATOR.length();
         std::string argsStr = toolStr.substr(argsPos + TOOL_ARGS_START_INDICATOR.length(), argsStrLen);
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed args string: {}", argsStr);
-        std::vector<std::pair<std::string, std::string>> arguments = parseArguments(argsStr);
 
         toolCall.name = toolName;
+        toolCall.id = generateRandomId();
+        if (tryParseGuidedJsonArguments(argsStr, toolCall.arguments)) {
+            SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed Gemma4 guided JSON arguments directly: {}", toolCall.arguments);
+            return true;
+        }
+
+        std::vector<std::pair<std::string, std::string>> arguments = parseArguments(argsStr);
         rapidjson::Document argsDoc(rapidjson::kObjectType);
         rapidjson::StringBuffer sb;
         rapidjson::Writer<rapidjson::StringBuffer> argsWriter(sb);
@@ -453,7 +524,6 @@ bool Gemma4ToolParser::parseSingleToolCall(const std::string& toolStr, ToolCall&
         }
         argsWriter.EndObject();
         toolCall.arguments = sb.GetString();
-        toolCall.id = generateRandomId();
         return true;
     }
     return false;
