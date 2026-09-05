@@ -345,20 +345,22 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
     size_t nextToolCallPos = this->streamingContent.find(TOOL_CALL_NAME_PREFIX, this->streamingPosition);
     size_t toolCallEndTagPos = this->streamingContent.find(TOOL_CALL_END_TAG, this->streamingPosition);
     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Current state: ToolCallEnded. Streaming content from current position: {}", this->streamingContent.substr(this->streamingPosition));
-    if (nextToolCallPos != std::string::npos && nextToolCallPos < toolCallEndTagPos) {
+    if (nextToolCallPos != std::string::npos && (toolCallEndTagPos == std::string::npos || nextToolCallPos < toolCallEndTagPos)) {
         this->streamingPosition = nextToolCallPos;
         this->currentState = State::ToolCallStarted;
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected next tool call at position: {}", nextToolCallPos);
-    } else if (toolCallEndTagPos != std::string::npos) {
+        return true;
+    }
+    if (toolCallEndTagPos != std::string::npos) {
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}", toolCallEndTagPos);
         this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
         this->currentState = State::AfterToolCall;
-    } else {
-        this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
-        this->currentState = State::AfterToolCall;
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}, returning to content state", toolCallEndTagPos);
+        return true;
     }
-    return true;
+    // The call arguments may already be complete while the end marker is still in flight.
+    // Keep the parser in ToolCallEnded and wait instead of doing arithmetic on npos and
+    // prematurely treating subsequent bytes as ordinary content.
+    return false;
 }
 
 bool Gemma4ToolParser::parseNewContent() {
@@ -404,16 +406,24 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
         this->streamingContent += chunk;
     }
 
-    if (parseNewContent()) {
-        if (this->currentState == State::ToolCallParameters) {
+    // A backend chunk is not guaranteed to align with Gemma4 parser states. In particular,
+    // `<|tool_call>call:name{...}<tool_call|>` can arrive as one decoded chunk. Drain
+    // non-emitting state transitions until we can emit one meaningful OpenAI delta or until
+    // no state/position progress is possible. We still emit at most one delta per call.
+    while (true) {
+        const State previousState = this->currentState;
+        const size_t previousPosition = this->streamingPosition;
+        const bool parsed = parseNewContent();
+
+        if (this->currentState == State::ToolCallParameters && previousState != State::ToolCallParameters) {
             return BaseOutputParser::wrapFirstDelta(this->toolCall.name, toolCallIndex);
         }
-        if (this->currentState == State::ToolCallEnded) {
+        if (this->currentState == State::ToolCallEnded && previousState != State::ToolCallEnded) {
             auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
             this->toolCall = ToolCall{};
             return delta;
         }
-        if (this->currentState == State::Content) {
+        if (parsed && this->currentState == State::Content) {
             size_t contentEnd = this->streamingContent.find(TOOL_CALL_START_TAG, this->streamingPosition);
             std::string content;
             if (contentEnd != std::string::npos) {
@@ -436,6 +446,11 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
         }
         if (this->currentState == State::AfterToolCall) {
             this->currentState = State::Content;
+        }
+
+        const bool advanced = this->currentState != previousState || this->streamingPosition != previousPosition;
+        if (!advanced) {
+            break;
         }
     }
 
