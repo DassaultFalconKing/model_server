@@ -455,8 +455,46 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
     }
 
     if (finishReason != ov::genai::GenerationFinishReason::NONE) {
+        // Recover a call only when the function name and argument-start brace were already
+        // generated and only structural closure is missing. Insert synthetic closure before
+        // any already-generated turn/tool marker so marker bytes never become argument data.
+        if (this->currentState == State::ToolCallParameters && this->toolCall.arguments.empty() && !this->toolCall.name.empty()) {
+            size_t closurePos = this->streamingContent.size();
+            for (const std::string& marker : {TOOL_CALL_END_TAG, TURN_END_TAG, TOOL_RESPONSE_START_TAG}) {
+                const size_t markerPos = this->streamingContent.find(marker, this->streamingPosition);
+                if (markerPos != std::string::npos) {
+                    closurePos = std::min(closurePos, markerPos);
+                }
+            }
+
+            size_t delimiterCount = 0;
+            size_t delimiterPos = this->streamingPosition;
+            while ((delimiterPos = this->streamingContent.find(TOOL_ARGS_STRING_INDICATOR, delimiterPos)) != std::string::npos && delimiterPos < closurePos) {
+                delimiterCount++;
+                delimiterPos += TOOL_ARGS_STRING_INDICATOR.size();
+            }
+            if (delimiterCount % 2 != 0) {
+                this->streamingContent.insert(closurePos, TOOL_ARGS_STRING_INDICATOR);
+                closurePos += TOOL_ARGS_STRING_INDICATOR.size();
+            }
+
+            const std::string maskedStreamingContent = maskStringValues(this->streamingContent);
+            const size_t closingBracePos = findInStringRespectingSpecialChars(maskedStreamingContent, TOOL_ARGS_END_INDICATOR, this->streamingPosition);
+            if (closingBracePos == std::string::npos || closingBracePos >= closurePos) {
+                this->streamingContent.insert(closurePos, TOOL_ARGS_END_INDICATOR);
+            }
+
+            if (parseToolCallParametersState() && this->currentState == State::ToolCallEnded && !this->toolCall.arguments.empty()) {
+                auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+                this->toolCall = ToolCall{};
+                return delta;
+            }
+        }
+
         if ((this->currentState == State::ToolCallParameters || this->currentState == State::ToolCallEnded) && !this->toolCall.arguments.empty()) {
-            return wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            this->toolCall = ToolCall{};
+            return delta;
         }
 
         if (this->currentState == State::Content && this->streamingPosition < this->streamingContent.size()) {
