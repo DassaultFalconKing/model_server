@@ -414,6 +414,19 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
         this->streamingContent += chunk;
     }
 
+    // If we enter a new parseChunk() already in ToolCallParameters, the function-name delta
+    // was necessarily emitted by the previous call. If we reach ToolCallParameters for the
+    // first time inside this invocation and finishReason is already terminal, no later SSE
+    // callback is guaranteed, so the final delta must carry both name and arguments.
+    const bool nameAlreadyEmittedAtEntry = this->currentState == State::ToolCallParameters;
+    auto wrapNameAndArgs = [this]() {
+        auto delta = BaseOutputParser::wrapFirstDelta(this->toolCall.name, this->toolCallIndex);
+        auto& function = delta["delta"]["tool_calls"][0]["function"];
+        rapidjson::Value argsValue(this->toolCall.arguments.c_str(), delta.GetAllocator());
+        function.AddMember("arguments", argsValue, delta.GetAllocator());
+        return delta;
+    };
+
     // A backend chunk is not guaranteed to align with Gemma4 parser states. In particular,
     // `<|tool_call>call:name{...}<tool_call|>` can arrive as one decoded chunk. Drain
     // non-emitting state transitions until we can emit one meaningful OpenAI delta or until
@@ -424,10 +437,14 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
         const bool parsed = parseNewContent();
 
         if (this->currentState == State::ToolCallParameters && previousState != State::ToolCallParameters) {
-            return BaseOutputParser::wrapFirstDelta(this->toolCall.name, toolCallIndex);
+            if (finishReason == ov::genai::GenerationFinishReason::NONE) {
+                return BaseOutputParser::wrapFirstDelta(this->toolCall.name, toolCallIndex);
+            }
+            // Terminal chunk: keep draining so we can return an identifiable complete call
+            // rather than consuming the finish signal with a name-only delta.
         }
         if (this->currentState == State::ToolCallEnded && previousState != State::ToolCallEnded) {
-            auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            auto delta = nameAlreadyEmittedAtEntry ? wrapDeltaArgs(this->toolCall.arguments, toolCallIndex) : wrapNameAndArgs();
             this->toolCall = ToolCall{};
             return delta;
         }
@@ -493,14 +510,14 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
             }
 
             if (parseToolCallParametersState() && this->currentState == State::ToolCallEnded && !this->toolCall.arguments.empty()) {
-                auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+                auto delta = nameAlreadyEmittedAtEntry ? wrapDeltaArgs(this->toolCall.arguments, toolCallIndex) : wrapNameAndArgs();
                 this->toolCall = ToolCall{};
                 return delta;
             }
         }
 
         if ((this->currentState == State::ToolCallParameters || this->currentState == State::ToolCallEnded) && !this->toolCall.arguments.empty()) {
-            auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            auto delta = nameAlreadyEmittedAtEntry ? wrapDeltaArgs(this->toolCall.arguments, toolCallIndex) : wrapNameAndArgs();
             this->toolCall = ToolCall{};
             return delta;
         }
