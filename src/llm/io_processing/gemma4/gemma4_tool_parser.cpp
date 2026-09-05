@@ -476,10 +476,10 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
     }
 
     if (parseNewContent()) {
-        if (this->currentState == State::ToolCallParameters) {
+        if (this->currentState == State::ToolCallParameters && finishReason == ov::genai::GenerationFinishReason::NONE) {
             // Do not expose an executable-looking tool call until its arguments have
             // been parsed into a complete, valid object. If generation is truncated
-            // here, the caller must observe finish_reason=length without tool_calls.
+            // here, the final flush below gets one chance to consume buffered args.
             return std::nullopt;
         }
         if (this->currentState == State::ToolCallEnded) {
