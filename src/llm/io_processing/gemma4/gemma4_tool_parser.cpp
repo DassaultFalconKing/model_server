@@ -477,10 +477,13 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
 
     if (parseNewContent()) {
         if (this->currentState == State::ToolCallParameters) {
-            return ToolCallDelta{toolCallIndex, generateRandomId(), this->toolCall.name, ""};
+            // Do not expose an executable-looking tool call until its arguments have
+            // been parsed into a complete, valid object. If generation is truncated
+            // here, the caller must observe finish_reason=length without tool_calls.
+            return std::nullopt;
         }
         if (this->currentState == State::ToolCallEnded) {
-            auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            ToolCallDelta delta{toolCallIndex, this->toolCall.id, this->toolCall.name, this->toolCall.arguments};
             this->toolCall = ToolCall{};
             return delta;
         }
@@ -514,13 +517,15 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
         // Unary/STOP flush can arrive after a chunk that only advanced one state
         // (e.g. parsed the tool name but not yet the immediately following "}").
         // Give the state machine one last chance to consume already-buffered data
-        // before deciding whether an arguments delta exists.
+        // before deciding whether a complete tool call exists.
         if (this->currentState == State::ToolCallParameters) {
             parseToolCallParametersState();
         }
 
-        if ((this->currentState == State::ToolCallParameters || this->currentState == State::ToolCallEnded) && !this->toolCall.arguments.empty()) {
-            return wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+        if (this->currentState == State::ToolCallEnded && !this->toolCall.arguments.empty()) {
+            ToolCallDelta delta{toolCallIndex, this->toolCall.id, this->toolCall.name, this->toolCall.arguments};
+            this->toolCall = ToolCall{};
+            return delta;
         }
 
         if (this->currentState == State::Content && this->streamingPosition < this->streamingContent.size()) {
