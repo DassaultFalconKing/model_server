@@ -91,6 +91,10 @@ private:
     // its closing delimiter has arrived.
     static std::string maskStringValues(const std::string& text);
 
+    // Returns the longest suffix of text that is a proper prefix of a structural
+    // marker. That suffix must be retained until the next transport chunk arrives.
+    static size_t structuralTagHoldbackLength(const std::string& text);
+
     std::pair<std::string, std::string> parseSingleArgument(const std::string& argumentStr);
     std::vector<std::pair<std::string, std::string>> parseArguments(const std::string& argumentsStr);
 
