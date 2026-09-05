@@ -79,6 +79,20 @@ TEST_F(Gemma4ReviewedContractTest, GuidedJsonTruncationNeverFabricatesArguments)
     }
 }
 
+TEST_F(Gemma4ReviewedContractTest, GuidedJsonTruncationDoesNotExposeExecutableToolCall) {
+    Gemma4ToolParser parser(*tokenizer);
+    const std::string truncated = R"(<|tool_call>call:write_file{"path":"output.txt","content":"unterminated)";
+
+    auto assertNoToolDelta = [](const std::optional<Delta>& delta) {
+        if (delta.has_value())
+            EXPECT_EQ(std::get_if<ToolCallDelta>(&*delta), nullptr);
+    };
+
+    assertNoToolDelta(parser.parseChunk(truncated, {}, ov::genai::GenerationFinishReason::NONE));
+    for (int i = 0; i < 4; ++i)
+        assertNoToolDelta(parser.parseChunk("", {}, ov::genai::GenerationFinishReason::STOP));
+}
+
 TEST_F(Gemma4ReviewedContractTest, InvalidGuidedJsonCannotFallBackToNativeCoercion) {
     EXPECT_THROW(parseArguments({R"(<|tool_call>call:f{"s":}<tool_call|>)"}), std::runtime_error);
 }
