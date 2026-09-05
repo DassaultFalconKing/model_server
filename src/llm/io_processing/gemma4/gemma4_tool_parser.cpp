@@ -321,17 +321,66 @@ bool Gemma4ToolParser::parseInToolCallState() {
     this->toolCall = ToolCall{generateRandomId(), toolName, ""};
     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed tool name: {}", toolName);
     this->streamingPosition = argsPos + TOOL_ARGS_START_INDICATOR.length();
+    argumentSyntax = ArgumentSyntax::Undetermined;
+    jsonScanPosition = streamingPosition;
+    jsonContainers = {'{'};
+    jsonInString = false;
+    jsonEscaped = false;
     this->currentState = State::ToolCallParameters;
     this->toolCallIndex++;
     return true;
+}
+
+size_t Gemma4ToolParser::findGuidedJsonEnd() {
+    for (; jsonScanPosition < streamingContent.size(); ++jsonScanPosition) {
+        const char c = streamingContent[jsonScanPosition];
+        if (jsonInString) {
+            if (jsonEscaped) {
+                jsonEscaped = false;
+            } else if (c == '\\') {
+                jsonEscaped = true;
+            } else if (c == '"') {
+                jsonInString = false;
+            }
+            continue;
+        }
+        if (c == '"') {
+            jsonInString = true;
+        } else if (c == '{' || c == '[') {
+            jsonContainers.push_back(c);
+        } else if (c == '}' || c == ']') {
+            if (jsonContainers.empty() || jsonContainers.back() != (c == '}' ? '{' : '['))
+                throw std::runtime_error("Invalid Gemma4 guided JSON argument structure");
+            jsonContainers.pop_back();
+            if (jsonContainers.empty())
+                return jsonScanPosition;
+        }
+    }
+    return std::string::npos;
 }
 
 bool Gemma4ToolParser::parseToolCallParametersState() {
     if (this->streamingContent.back() == TOOL_ARGS_END_INDICATOR.back()) {
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Tool arguments end indicator found at the end of streaming content, attempting to parse arguments: {}", this->streamingContent.substr(this->streamingPosition));
     }
-    const std::string maskedStreamingContent = maskStringValues(this->streamingContent);
-    size_t pos = findInStringRespectingSpecialChars(maskedStreamingContent, TOOL_ARGS_END_INDICATOR, this->streamingPosition);
+    if (argumentSyntax == ArgumentSyntax::Undetermined) {
+        // A JSON object begins with a quoted key or is empty. Native Gemma4 uses
+        // bare keys or <|"|> keys. Once selected, malformed JSON must not be
+        // silently coerced by the native fallback.
+        const size_t first = streamingContent.find_first_not_of(" \t\r\n", streamingPosition);
+        if (first == std::string::npos)
+            return false;
+        argumentSyntax = (streamingContent[first] == '"' || streamingContent[first] == '}')
+                             ? ArgumentSyntax::GuidedJson
+                             : ArgumentSyntax::Native;
+    }
+    size_t pos;
+    if (argumentSyntax == ArgumentSyntax::GuidedJson) {
+        pos = findGuidedJsonEnd();
+    } else {
+        const std::string maskedStreamingContent = maskStringValues(this->streamingContent);
+        pos = findInStringRespectingSpecialChars(maskedStreamingContent, TOOL_ARGS_END_INDICATOR, this->streamingPosition);
+    }
     if (pos == std::string::npos) {
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Tool arguments end indicator not found in streaming content starting from position: {}", this->streamingPosition);
         return false;
@@ -348,6 +397,9 @@ bool Gemma4ToolParser::parseToolCallParametersState() {
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed Gemma4 guided JSON arguments directly: {}", this->toolCall.arguments);
         return true;
     }
+
+    if (argumentSyntax == ArgumentSyntax::GuidedJson)
+        throw std::runtime_error("Invalid Gemma4 guided JSON arguments");
 
     std::vector<std::pair<std::string, std::string>> arguments = parseArguments(argumentsStr);
 
