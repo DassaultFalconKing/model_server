@@ -63,6 +63,10 @@ public:
         return tagsToErase;
     }
 
+    bool holdsIncompleteSpecialTagsInContent() const override {
+        return true;
+    }
+
     const std::vector<std::string>& getSpecialParsingStartTags() const override {
         static const std::vector<std::string> beginningOnlyTags = {};
         return beginningOnlyTags;

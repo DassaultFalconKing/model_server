@@ -55,5 +55,8 @@ public:
     const std::string& getParsingEndTag() const override {
         return parsingEndTag;
     }
+    bool endsReasoningOnToolStart() const override {
+        return true;
+    }
 };
 }  // namespace ovms

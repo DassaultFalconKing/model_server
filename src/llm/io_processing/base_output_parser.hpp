@@ -134,5 +134,18 @@ public:
         static const std::vector<std::string> emptyVector;
         return emptyVector;
     }
+
+    // Gemma4 CONTENT must hold incomplete <turn|> / <|tool_response> prefixes
+    // until the marker can be classified. Other parsers keep their existing
+    // CONTENT flush behavior.
+    virtual bool holdsIncompleteSpecialTagsInContent() const {
+        return false;
+    }
+
+    // Gemma4 may omit <channel|> and jump straight into <|tool_call>.
+    // Other parser pairs keep requiring their own reasoning end tag.
+    virtual bool endsReasoningOnToolStart() const {
+        return false;
+    }
 };
 }  // namespace ovms

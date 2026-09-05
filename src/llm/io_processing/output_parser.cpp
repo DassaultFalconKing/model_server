@@ -363,6 +363,26 @@ std::optional<rapidjson::Document> OutputParser::parseChunk(const std::string& c
         } else if (endTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
             return std::nullopt;  // Wait for more chunks to determine if end tag is complete
         }
+        if (applyToolParser && reasoningParser->endsReasoningOnToolStart()) {
+            TagLookupStatus toolStartTagStatus = streamOutputCache.lookupTags(toolParser->getParsingStartTags());
+            if (toolStartTagStatus == TagLookupStatus::FOUND_COMPLETE) {
+                const std::string original = streamOutputCache.getBuffer();
+                const std::string& toolStart = toolParser->getParsingStartTags()[0];
+                const size_t toolPos = original.find(toolStart);
+                if (toolPos != std::string::npos && toolPos > 0) {
+                    streamOutputCache.clear();
+                    streamOutputCache.add(original.substr(0, toolPos));
+                    auto reasoningDelta = parseReasoningChunk(tokens, finishReason, REASONING);
+                    streamOutputCache.add(original.substr(toolPos));
+                    if (reasoningDelta.has_value()) {
+                        return reasoningDelta;
+                    }
+                }
+                return parseToolCallChunk(tokens, finishReason);
+            } else if (toolStartTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
+                return std::nullopt;
+            }
+        }
         return parseReasoningChunk(tokens, finishReason);
     } else if (processingPhase == CONTENT) {
         // If we are in the CONTENT phase, we check if tool parser start tag is found and if so, switch to TOOL_CALLS phase.
@@ -373,6 +393,12 @@ std::optional<rapidjson::Document> OutputParser::parseChunk(const std::string& c
                 return parseToolCallChunk(tokens, finishReason);
             } else if (toolStartTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
                 return std::nullopt;  // Wait for more chunks to determine if end tag is complete
+            }
+            if (toolParser->holdsIncompleteSpecialTagsInContent()) {
+                TagLookupStatus specialTagStatus = streamOutputCache.lookupTags(toolParser->getSpecialTagsToErase());
+                if (specialTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
+                    return std::nullopt;
+                }
             }
             return parseContentChunk();
         }
