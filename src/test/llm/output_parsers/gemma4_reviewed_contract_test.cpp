@@ -93,6 +93,20 @@ TEST_F(Gemma4ReviewedContractTest, GuidedJsonTruncationDoesNotExposeExecutableTo
         assertNoToolDelta(parser.parseChunk("", {}, ov::genai::GenerationFinishReason::STOP));
 }
 
+TEST_F(Gemma4ReviewedContractTest, CompleteBufferedGuidedJsonEmitsWholeToolCallOnFinalFlush) {
+    Gemma4ToolParser parser(*tokenizer);
+    const std::string complete = R"(<|tool_call>call:write_file{"path":"output.txt","content":"ok"}<tool_call|>)";
+
+    EXPECT_FALSE(parser.parseChunk(complete, {}, ov::genai::GenerationFinishReason::NONE).has_value());
+    const auto delta = parser.parseChunk("", {}, ov::genai::GenerationFinishReason::STOP);
+    ASSERT_TRUE(delta.has_value());
+    const auto* tool = std::get_if<ToolCallDelta>(&*delta);
+    ASSERT_NE(tool, nullptr);
+    ASSERT_TRUE(tool->name.has_value());
+    EXPECT_EQ(*tool->name, "write_file");
+    EXPECT_EQ(tool->arguments, R"({"path":"output.txt","content":"ok"})");
+}
+
 TEST_F(Gemma4ReviewedContractTest, InvalidGuidedJsonCannotFallBackToNativeCoercion) {
     EXPECT_THROW(parseArguments({R"(<|tool_call>call:f{"s":}<tool_call|>)"}), std::runtime_error);
 }
