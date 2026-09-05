@@ -72,6 +72,11 @@ public:
         currentState = State::Content;
         toolCall = {};
         toolCallIndex = -1;
+        argumentSyntax = ArgumentSyntax::Undetermined;
+        jsonScanPosition = 0;
+        jsonContainers.clear();
+        jsonInString = false;
+        jsonEscaped = false;
     }
 
     std::optional<Delta> parseChunk(const std::string& chunk, const std::vector<int64_t>& tokens, ov::genai::GenerationFinishReason finishReason) override;
@@ -81,6 +86,16 @@ public:
     static std::string parseObjectParameter(const std::string& argumentStr);
 
 private:
+    enum class ArgumentSyntax { Undetermined, GuidedJson, Native };
+    ArgumentSyntax argumentSyntax{ArgumentSyntax::Undetermined};
+    size_t jsonScanPosition{0};
+    std::vector<char> jsonContainers;
+    bool jsonInString{false};
+    bool jsonEscaped{false};
+
+    // Scan only newly received JSON bytes; native syntax retains its own scanner.
+    size_t findGuidedJsonEnd();
+
     void writeArgumentToWriter(const std::string& arg, rapidjson::Writer<rapidjson::StringBuffer>& writer);
 
     // Masks '"', '\'', '{', '}', '[', ']' found inside <|"|>...<|"|> pairs (same length,

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "UDC9Szju5",
+      "type": "function",
+      "function": {
+        "name": "read_file",
+        "arguments": "{\"path\":\"C:\\\\llm\\\\README.md\"}"
+      }
+    }
+  ],
+  "finish_reason": "tool_calls",
+  "http_status": 200,
+  "error": "",
+  "extra": {
+    "turn1_tools": [
+      "list_files"
+    ],
+    "turn2_content": ""
+  }
+}

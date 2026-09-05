@@ -1,0 +1,7 @@
+﻿working_directory=C:\git\model_server-gemma4-reviewed
+powershell -ExecutionPolicy Bypass -File C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\backports\ovms-2026.4-gemma4-tools\build-windows.ps1 `
+  -ModelServerPath C:\git\model_server-gemma4-reviewed `
+  -SkipApply `
+  -SkipParserTests `
+  -VisualStudioPath C:\BuildTools `
+  -DeployTo C:\llm\ovms-gemma4-pr4-fb1d104f

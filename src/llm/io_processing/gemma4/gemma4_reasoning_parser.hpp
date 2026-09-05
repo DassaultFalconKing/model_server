@@ -45,6 +45,7 @@ public:
             cfg.tokenIdStartTags = {"<|channel>"};
             cfg.endTag = "<channel|>";
             cfg.needsSpecialTokens = true;
+            cfg.toolStartTerminatesReasoning = true;
             return cfg;
         }()) {
         resolveSpecialTokenIds();

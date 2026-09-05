@@ -1,0 +1,1126 @@
+{
+  "NONE": "PASS",
+  "AUTO": "PASS",
+  "REQUIRED": "PASS",
+  "NAMED": "PASS",
+  "NESTED_OBJECTS": "PASS",
+  "ARRAYS": "PASS",
+  "QUOTING": "PASS",
+  "PARALLEL_CALLS": "PASS",
+  "STREAMING": "PASS",
+  "TOOL_ROUNDTRIP": "PASS",
+  "LATER_TURN_AGENT": "PASS",
+  "MULTILINE_BOUNDED": "PASS",
+  "FAILCLOSED": "PASS",
+  "GPU_LONG_GENERATION_STABILITY": "FAIL",
+  "cases": [
+    {
+      "timestamp": "2026-09-05T21:37:22.418893+00:00",
+      "case": "A_none",
+      "group": "NONE",
+      "http_status": 200,
+      "wall_latency_s": 0.7899,
+      "ttft_s": null,
+      "total_generation_s": 0.7899,
+      "finish_reason": "stop",
+      "response_bytes": 423,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 25,
+      "completion_tokens": 2,
+      "tokens_per_sec": 2.532,
+      "usage": {
+        "prompt_tokens": 25,
+        "completion_tokens": 2,
+        "total_tokens": 27
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 2+2. Answer with the number only."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "calculate",
+              "description": "Evaluate an arithmetic expression",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "expression": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expression"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "none",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      },
+      "hard_generation": {
+        "available": true,
+        "token_count": 2,
+        "decoded": "4<turn|>\"; ids: [236812, 106]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=UNKNOWN] called with 1 tokens, text=\"4\", finish_reason=0, token IDs=[236812]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=CONTENT] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:22.411][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 2 tokens generated; full decode (skip_special=false): \"4<turn|>",
+        "decoded_starts_with_tool_call": false,
+        "first_token_id": 236812,
+        "token_ids_head": [
+          236812,
+          106
+        ],
+        "raw_line": "OVMSTextStreamer: 2 tokens generated; full decode (skip_special=false): \"4<turn|>\"; ids: [236812, 106]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=UNKNOWN] called with 1 tokens, text=\"4\", finish_reason=0, token IDs=[236812]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=CONTENT] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:22.411][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 2 tokens generated; full decode (skip_special=false): \"4<turn|>\"; ids: [236812, 106]"
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:24.048912+00:00",
+      "case": "B_auto_tool_expected",
+      "group": "AUTO",
+      "http_status": 200,
+      "wall_latency_s": 1.6267,
+      "ttft_s": null,
+      "total_generation_s": 1.6267,
+      "finish_reason": "tool_calls",
+      "response_bytes": 791,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 79,
+      "completion_tokens": 15,
+      "tokens_per_sec": 9.221,
+      "usage": {
+        "prompt_tokens": 79,
+        "completion_tokens": 15,
+        "total_tokens": 94
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Use the get_weather tool to get the weather for Berlin. Do not answer from memory."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:24.528533+00:00",
+      "case": "B_auto_optional",
+      "group": "AUTO",
+      "http_status": 200,
+      "wall_latency_s": 0.4785,
+      "ttft_s": null,
+      "total_generation_s": 0.4785,
+      "finish_reason": "stop",
+      "response_bytes": 651,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 72,
+      "completion_tokens": 2,
+      "tokens_per_sec": 4.18,
+      "usage": {
+        "prompt_tokens": 72,
+        "completion_tokens": 2,
+        "total_tokens": 74
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Say only the word hello. Do not use any tool."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:25.926441+00:00",
+      "case": "C_required",
+      "group": "REQUIRED",
+      "http_status": 200,
+      "wall_latency_s": 1.3859,
+      "ttft_s": null,
+      "total_generation_s": 1.3859,
+      "finish_reason": "tool_calls",
+      "response_bytes": 882,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 85,
+      "completion_tokens": 18,
+      "tokens_per_sec": 12.988,
+      "usage": {
+        "prompt_tokens": 85,
+        "completion_tokens": 18,
+        "total_tokens": 103
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Проверь погоду в Berlin через доступный инструмент. Не обещай запустить инструмент, а вызови его."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      },
+      "hard_generation": {
+        "available": true,
+        "token_count": 18,
+        "decoded": "<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [48, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]\n[2026-09-05 23:37:25.914][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_PROCESSING_TOOL] called with 1 tokens, text=\"<tool_call|>\", finish_reason=0, token IDs=[49]\n[2026-09-05 23:37:25.915][13068][llm_calculator][trace][gemma4_tool_parser.cpp:427] Current state: ToolCallEnded. Streaming content from current position: <tool_call|>\n[2026-09-05 23:37:25.915][13068][llm_calculator][trace][gemma4_tool_parser.cpp:433] Detected end of tool call at position: 47\n[2026-09-05 23:37:25.915][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 1 tokens, text=\"<|tool_response>\", finish_reason=0, token IDs=[50]\n[2026-09-05 23:37:25.916][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:25.916][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 18 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>",
+        "decoded_starts_with_tool_call": true,
+        "first_token_id": 48,
+        "token_ids_head": [
+          48,
+          6639,
+          236787,
+          828,
+          236779,
+          19323,
+          236782,
+          107,
+          236775,
+          13319,
+          1083,
+          236775,
+          89946,
+          236775,
+          107,
+          236783,
+          49,
+          50
+        ],
+        "raw_line": "OVMSTextStreamer: 18 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [48, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]\n[2026-09-05 23:37:25.914][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_PROCESSING_TOOL] called with 1 tokens, text=\"<tool_call|>\", finish_reason=0, token IDs=[49]\n[2026-09-05 23:37:25.915][13068][llm_calculator][trace][gemma4_tool_parser.cpp:427] Current state: ToolCallEnded. Streaming content from current position: <tool_call|>\n[2026-09-05 23:37:25.915][13068][llm_calculator][trace][gemma4_tool_parser.cpp:433] Detected end of tool call at position: 47\n[2026-09-05 23:37:25.915][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 1 tokens, text=\"<|tool_response>\", finish_reason=0, token IDs=[50]\n[2026-09-05 23:37:25.916][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:25.916][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 18 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [48, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]"
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:27.330006+00:00",
+      "case": "D_named",
+      "group": "NAMED",
+      "http_status": 200,
+      "wall_latency_s": 1.393,
+      "ttft_s": null,
+      "total_generation_s": 1.393,
+      "finish_reason": "tool_calls",
+      "response_bytes": 837,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 90,
+      "completion_tokens": 23,
+      "tokens_per_sec": 16.511,
+      "usage": {
+        "prompt_tokens": 90,
+        "completion_tokens": 23,
+        "total_tokens": 113
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Calculate 9*9 and answer directly. Do not call weather unless the API forces you. If a weather tool is forced, use city Berlin."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "calculate",
+              "description": "Evaluate an arithmetic expression",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "expression": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expression"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": {
+          "type": "function",
+          "function": {
+            "name": "get_weather"
+          }
+        },
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      },
+      "hard_generation": {
+        "available": true,
+        "token_count": 23,
+        "decoded": "<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [236820, 236909, 13205, 236779, 6639, 236813, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]\n[2026-09-05 23:37:27.318][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_PROCESSING_TOOL] called with 1 tokens, text=\"<tool_call|>\", finish_reason=0, token IDs=[49]\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:427] Current state: ToolCallEnded. Streaming content from current position: <tool_call|>\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:433] Detected end of tool call at position: 47\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 1 tokens, text=\"<|tool_response>\", finish_reason=0, token IDs=[50]\n[2026-09-05 23:37:27.320][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:27.321][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 23 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>",
+        "decoded_starts_with_tool_call": true,
+        "first_token_id": 236820,
+        "token_ids_head": [
+          236820,
+          236909,
+          13205,
+          236779,
+          6639,
+          236813,
+          6639,
+          236787,
+          828,
+          236779,
+          19323,
+          236782,
+          107,
+          236775,
+          13319,
+          1083,
+          236775,
+          89946,
+          236775,
+          107,
+          236783,
+          49,
+          50
+        ],
+        "raw_line": "OVMSTextStreamer: 23 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [236820, 236909, 13205, 236779, 6639, 236813, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]\n[2026-09-05 23:37:27.318][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_PROCESSING_TOOL] called with 1 tokens, text=\"<tool_call|>\", finish_reason=0, token IDs=[49]\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:427] Current state: ToolCallEnded. Streaming content from current position: <tool_call|>\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:433] Detected end of tool call at position: 47\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 1 tokens, text=\"<|tool_response>\", finish_reason=0, token IDs=[50]\n[2026-09-05 23:37:27.320][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:27.321][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 23 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [236820, 236909, 13205, 236779, 6639, 236813, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]"
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:31.481688+00:00",
+      "case": "E_nested_object",
+      "group": "NESTED_OBJECTS",
+      "http_status": 200,
+      "wall_latency_s": 4.1479,
+      "ttft_s": null,
+      "total_generation_s": 4.1479,
+      "finish_reason": "tool_calls",
+      "response_bytes": 1230,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 168,
+      "completion_tokens": 79,
+      "tokens_per_sec": 19.046,
+      "usage": {
+        "prompt_tokens": 168,
+        "completion_tokens": 79,
+        "total_tokens": 247
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Create event Review on 2026-09-06 at hour 14 with attendees Ada and Linus. Use the tool."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "create_event",
+              "description": "Create a calendar event",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "event": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "when": {
+                        "type": "object",
+                        "properties": {
+                          "date": {
+                            "type": "string"
+                          },
+                          "hour": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "date",
+                          "hour"
+                        ]
+                      },
+                      "attendees": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "when",
+                      "attendees"
+                    ]
+                  }
+                },
+                "required": [
+                  "event"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:34.800000+00:00",
+      "case": "F_arrays",
+      "group": "ARRAYS",
+      "http_status": 200,
+      "wall_latency_s": 3.3149,
+      "ttft_s": null,
+      "total_generation_s": 3.3149,
+      "finish_reason": "tool_calls",
+      "response_bytes": 1032,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 119,
+      "completion_tokens": 65,
+      "tokens_per_sec": 19.609,
+      "usage": {
+        "prompt_tokens": 119,
+        "completion_tokens": 65,
+        "total_tokens": 184
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call process_paths with paths exactly [C:\\sample\\alpha.txt, C:\\sample\\beta.json] and tags [runtime, windows]."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "process_paths",
+              "description": "Process path and tag arrays",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "paths": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "paths",
+                  "tags"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:37.742730+00:00",
+      "case": "G_quoting",
+      "group": "QUOTING",
+      "http_status": 200,
+      "wall_latency_s": 2.9398,
+      "ttft_s": null,
+      "total_generation_s": 2.9398,
+      "finish_reason": "tool_calls",
+      "response_bytes": 985,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 112,
+      "completion_tokens": 59,
+      "tokens_per_sec": 20.069,
+      "usage": {
+        "prompt_tokens": 112,
+        "completion_tokens": 59,
+        "total_tokens": 171
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call run_command with this exact command and do not change quoting: python -c \"print({'a':[1,2,3], 'path':'C:\\\\temp\\\\file.txt', 'note':'a,b {c}'})\" | findstr a"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "run_command",
+              "description": "Run a shell command",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "command": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "command"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:37:39.473334+00:00",
+      "case": "H_parallel_calls",
+      "group": "PARALLEL_CALLS",
+      "http_status": 200,
+      "wall_latency_s": 1.7283,
+      "ttft_s": null,
+      "total_generation_s": 1.7283,
+      "finish_reason": "tool_calls",
+      "response_bytes": 897,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 76,
+      "completion_tokens": 29,
+      "tokens_per_sec": 16.78,
+      "usage": {
+        "prompt_tokens": 76,
+        "completion_tokens": 29,
+        "total_tokens": 105
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call get_weather separately for Berlin and Paris now. Two independent tool calls."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      },
+      "n_calls": 2
+    },
+    {
+      "timestamp": "2026-09-05T21:37:40.350000+00:00",
+      "case": "I_streaming",
+      "group": "STREAMING",
+      "http_status": 200,
+      "wall_latency_s": 0.8723,
+      "ttft_s": 0.6278892999980599,
+      "total_generation_s": 0.8723,
+      "finish_reason": "tool_calls",
+      "response_bytes": 1230,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "tokens_per_sec": null,
+      "usage": {},
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Get the weather for Berlin using the tool."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false
+      },
+      "delta_names": [
+        "get_weather"
+      ]
+    },
+    {
+      "timestamp": "2026-09-05T21:37:42.933103+00:00",
+      "case": "J_tool_roundtrip",
+      "group": "TOOL_ROUNDTRIP",
+      "http_status": 200,
+      "wall_latency_s": 1.4149,
+      "ttft_s": null,
+      "total_generation_s": 1.4149,
+      "finish_reason": "stop",
+      "response_bytes": 887,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 105,
+      "completion_tokens": 13,
+      "tokens_per_sec": 9.188,
+      "usage": {
+        "prompt_tokens": 105,
+        "completion_tokens": 13,
+        "total_tokens": 118
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Get the weather for Berlin."
+          },
+          {
+            "content": "",
+            "role": "assistant",
+            "tool_calls": [
+              {
+                "id": "9fE1Gvpzs",
+                "type": "function",
+                "function": {
+                  "name": "get_weather",
+                  "arguments": "{\"city\":\"Berlin\"}"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "9fE1Gvpzs",
+            "content": "{\"city\":\"Berlin\",\"temperature_c\":21}"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0,
+        "max_tokens": 256,
+        "stream": false
+      },
+      "turn1_finish": "tool_calls",
+      "turn2_content": "The weather in Berlin is currently 21°C."
+    },
+    {
+      "timestamp": "2026-09-05T21:37:46.196666+00:00",
+      "case": "K_later_turn_agent",
+      "group": "LATER_TURN_AGENT",
+      "http_status": 200,
+      "wall_latency_s": 1.8729,
+      "ttft_s": null,
+      "total_generation_s": 1.8729,
+      "finish_reason": "tool_calls",
+      "response_bytes": 1497,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 246,
+      "completion_tokens": 26,
+      "tokens_per_sec": 13.882,
+      "usage": {
+        "prompt_tokens": 246,
+        "completion_tokens": 26,
+        "total_tokens": 272
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "List files in C:\\llm. Use the list_files tool. Do not answer from memory."
+          },
+          {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "dsREINZXn",
+                "type": "function",
+                "function": {
+                  "name": "list_files",
+                  "arguments": "{\"path\":\"C:\\\\llm\"}"
+                }
+              }
+            ]
+          },
+          {
+            "role": "tool",
+            "tool_call_id": "dsREINZXn",
+            "content": "{\"path\": \"C:\\\\llm\", \"files\": [\"README.md\", \"ovms.exe\", \"a.json\"]}"
+          },
+          {
+            "role": "assistant",
+            "content": "C:\\llm contains README.md, ovms.exe, and a.json."
+          },
+          {
+            "role": "user",
+            "content": "Теперь прочитай README.md через инструмент. Не обещай, сразу вызови read_file."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "list_files",
+              "description": "List files in a directory.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Directory path"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          },
+          {
+            "type": "function",
+            "function": {
+              "name": "read_file",
+              "description": "Read a text file.",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "File path"
+                  }
+                },
+                "required": [
+                  "path"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 256,
+        "stream": false
+      },
+      "turn1_tools": [
+        "list_files"
+      ],
+      "turn2_content": ""
+    },
+    {
+      "timestamp": "2026-09-05T21:38:15.047095+00:00",
+      "case": "L_multiline_bounded",
+      "group": "MULTILINE_BOUNDED",
+      "http_status": 200,
+      "wall_latency_s": 28.8473,
+      "ttft_s": null,
+      "total_generation_s": 28.8473,
+      "finish_reason": "tool_calls",
+      "response_bytes": 3450,
+      "status": "PASS",
+      "issues": [],
+      "error": "",
+      "prompt_tokens": 642,
+      "completion_tokens": 582,
+      "tokens_per_sec": 20.175,
+      "usage": {
+        "prompt_tokens": 642,
+        "completion_tokens": 582,
+        "total_tokens": 1224
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Write the following code verbatim to output.txt using write_file:\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "write_file",
+              "description": "Write text to a file",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path",
+                  "content"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 2048,
+        "stream": false
+      },
+      "body_bytes": 1200,
+      "generated_content_len": 1169
+    },
+    {
+      "timestamp": "2026-09-05T21:38:15.074623+00:00",
+      "case": "failclosed_required_plus_response_format",
+      "group": "FAILCLOSED",
+      "http_status": 400,
+      "wall_latency_s": 0.0239,
+      "ttft_s": null,
+      "total_generation_s": 0.0239,
+      "finish_reason": null,
+      "response_bytes": 239,
+      "status": "PASS",
+      "issues": [],
+      "error": "HTTPError 400",
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "tokens_per_sec": null,
+      "usage": {},
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call get_weather for Berlin now."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false,
+        "response_format": {
+          "type": "json_object"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-09-05T21:38:15.098239+00:00",
+      "case": "failclosed_auto_plus_response_format",
+      "group": "FAILCLOSED_AUTO",
+      "http_status": 400,
+      "wall_latency_s": 0.0202,
+      "ttft_s": null,
+      "total_generation_s": 0.0202,
+      "finish_reason": null,
+      "response_bytes": 239,
+      "status": "PASS",
+      "issues": [],
+      "error": "HTTPError 400",
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "tokens_per_sec": null,
+      "usage": {},
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Call get_weather for Berlin now."
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "description": "Get weather for a city",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "city"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "auto",
+        "temperature": 0,
+        "max_tokens": 512,
+        "stream": false,
+        "response_format": {
+          "type": "json_object"
+        }
+      },
+      "note": "auto remains optional; API error or normal completion both acceptable"
+    },
+    {
+      "timestamp": "2026-09-05T21:40:04.873667+00:00",
+      "case": "GPU_LONG_GENERATION_STABILITY",
+      "group": "GPU_LONG_GENERATION_STABILITY",
+      "http_status": 200,
+      "wall_latency_s": 109.4263,
+      "ttft_s": null,
+      "total_generation_s": 109.4263,
+      "finish_reason": "length",
+      "response_bytes": 5747,
+      "status": "FAIL",
+      "issues": [
+        "ARGUMENTS_INVALID_JSON",
+        "FINISH_length"
+      ],
+      "error": "",
+      "prompt_tokens": 2214,
+      "completion_tokens": 2048,
+      "tokens_per_sec": 18.716,
+      "usage": {
+        "prompt_tokens": 2214,
+        "completion_tokens": 2048,
+        "total_tokens": 4262
+      },
+      "request": {
+        "model": "gemma4-26-heretic",
+        "messages": [
+          {
+            "role": "user",
+            "content": "Write the following code verbatim to output.txt using write_file:\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3], text: \\\"a,b:{c}\\\"}; }\nfunction demo(x) { return {items: [1, 2, 3],"
+          }
+        ],
+        "tools": [
+          {
+            "type": "function",
+            "function": {
+              "name": "write_file",
+              "description": "Write text to a file",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "path",
+                  "content"
+                ]
+              }
+            }
+          }
+        ],
+        "tool_choice": "required",
+        "temperature": 0,
+        "max_tokens": 2048,
+        "stream": false
+      },
+      "body_bytes": 4600,
+      "models_after_status": 200,
+      "trivial_after_status": 200,
+      "trivial_after_error": "",
+      "trivial_after_body": "{\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"pong\",\"role\":\"assistant\",\"tool_calls\":[]}}],\"created\":1788644404,\"model\":\"gemma4-26-heretic\",\"object\":\"chat.completion\",\"usage\":{\"prompt_tokens\":20,\"completion_tokens\":2,\"total_tokens\":22},\"__verbose\":{\"prompt\":\"<bos><|turn>user\\nReply with the single word pong.<turn|>\\n<|turn>model\\n<|channel>thought\\n<channel|>\",\"content\":\"pong\"}}"
+    }
+  ],
+  "GEMMA4_TOOL_STACK": "PASS",
+  "HARD_GENERATION": "PASS"
+}

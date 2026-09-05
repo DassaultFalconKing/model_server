@@ -1,0 +1,6 @@
+﻿RemoteFX Root GPU Management
+GPU Local Adapter Memory
+GPU Engine
+GPU Adapter Memory
+GPU Process Memory
+GPU Non Local Adapter Memory

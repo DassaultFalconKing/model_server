@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "4",
+  "tool_calls": [],
+  "finish_reason": "stop",
+  "http_status": 200,
+  "error": "",
+  "extra": {
+    "hard_generation": {
+      "available": true,
+      "token_count": 2,
+      "decoded": "4<turn|>\"; ids: [236812, 106]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=UNKNOWN] called with 1 tokens, text=\"4\", finish_reason=0, token IDs=[236812]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=CONTENT] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:22.411][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 2 tokens generated; full decode (skip_special=false): \"4<turn|>",
+      "decoded_starts_with_tool_call": false,
+      "first_token_id": 236812,
+      "token_ids_head": [
+        236812,
+        106
+      ],
+      "raw_line": "OVMSTextStreamer: 2 tokens generated; full decode (skip_special=false): \"4<turn|>\"; ids: [236812, 106]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=UNKNOWN] called with 1 tokens, text=\"4\", finish_reason=0, token IDs=[236812]\n[2026-09-05 23:37:22.410][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=CONTENT] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:22.411][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 2 tokens generated; full decode (skip_special=false): \"4<turn|>\"; ids: [236812, 106]"
+    }
+  }
+}

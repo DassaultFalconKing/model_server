@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "wVP1D9nbe",
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Berlin\"}"
+      }
+    }
+  ],
+  "finish_reason": "tool_calls",
+  "http_status": 200,
+  "error": "",
+  "extra": {}
+}

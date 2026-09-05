@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "LmDw70ubs",
+      "type": "function",
+      "function": {
+        "name": "process_paths",
+        "arguments": "{\"paths\":[\"C:\\\\sample\\\\alpha.txt\",\"C:\\\\sample\\\\beta.json\"],\"tags\":[\"runtime\",\"windows\"]}"
+      }
+    }
+  ],
+  "finish_reason": "tool_calls",
+  "http_status": 200,
+  "error": "",
+  "extra": {}
+}

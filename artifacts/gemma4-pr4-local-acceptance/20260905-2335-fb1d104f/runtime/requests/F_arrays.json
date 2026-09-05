@@ -1,0 +1,43 @@
+{
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call process_paths with paths exactly [C:\\sample\\alpha.txt, C:\\sample\\beta.json] and tags [runtime, windows]."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "process_paths",
+        "description": "Process path and tag arrays",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "paths",
+            "tags"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "required",
+  "temperature": 0,
+  "max_tokens": 512,
+  "stream": false
+}

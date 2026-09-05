@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "qGABtyvDJ",
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Berlin\"}"
+      }
+    }
+  ],
+  "finish_reason": "tool_calls",
+  "http_status": 200,
+  "error": "",
+  "extra": {
+    "hard_generation": {
+      "available": true,
+      "token_count": 23,
+      "decoded": "<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [236820, 236909, 13205, 236779, 6639, 236813, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]\n[2026-09-05 23:37:27.318][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_PROCESSING_TOOL] called with 1 tokens, text=\"<tool_call|>\", finish_reason=0, token IDs=[49]\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:427] Current state: ToolCallEnded. Streaming content from current position: <tool_call|>\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:433] Detected end of tool call at position: 47\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 1 tokens, text=\"<|tool_response>\", finish_reason=0, token IDs=[50]\n[2026-09-05 23:37:27.320][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:27.321][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 23 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>",
+      "decoded_starts_with_tool_call": true,
+      "first_token_id": 236820,
+      "token_ids_head": [
+        236820,
+        236909,
+        13205,
+        236779,
+        6639,
+        236813,
+        6639,
+        236787,
+        828,
+        236779,
+        19323,
+        236782,
+        107,
+        236775,
+        13319,
+        1083,
+        236775,
+        89946,
+        236775,
+        107,
+        236783,
+        49,
+        50
+      ],
+      "raw_line": "OVMSTextStreamer: 23 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [236820, 236909, 13205, 236779, 6639, 236813, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]\n[2026-09-05 23:37:27.318][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_PROCESSING_TOOL] called with 1 tokens, text=\"<tool_call|>\", finish_reason=0, token IDs=[49]\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:427] Current state: ToolCallEnded. Streaming content from current position: <tool_call|>\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][gemma4_tool_parser.cpp:433] Detected end of tool call at position: 47\n[2026-09-05 23:37:27.319][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 1 tokens, text=\"<|tool_response>\", finish_reason=0, token IDs=[50]\n[2026-09-05 23:37:27.320][13068][llm_calculator][trace][output_parser.cpp:415] OutputParser::parseChunk[PROCESSING_PHASE=TOOL_CALLS_WAITING_FOR_TOOL] called with 0 tokens, text=\"\", finish_reason=1, token IDs=[]\n[2026-09-05 23:37:27.321][13068][llm_calculator][trace][ovms_text_streamer.cpp:206] OVMSTextStreamer: 23 tokens generated; full decode (skip_special=false): \"<|tool_call>call:get_weather{\n\"city\":\"Berlin\"\n}<tool_call|><|tool_response>\"; ids: [236820, 236909, 13205, 236779, 6639, 236813, 6639, 236787, 828, 236779, 19323, 236782, 107, 236775, 13319, 1083, 236775, 89946, 236775, 107, 236783, 49, 50]"
+    }
+  }
+}

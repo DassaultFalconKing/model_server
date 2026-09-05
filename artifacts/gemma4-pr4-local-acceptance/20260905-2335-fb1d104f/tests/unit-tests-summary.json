@@ -1,0 +1,54 @@
+{
+  "working_directory": "C:\\git\\model_server-gemma4-reviewed",
+  "commands": [
+    {
+      "name": "gemma4_generation_contract_bazel",
+      "command": "C:\\opt\\bazel.exe --output_user_root=C:\\opt test --config=win_mp_on_py_on --action_env OpenVINO_DIR=C:\\opt/openvino/runtime/cmake --test_output=all --test_timeout=600 //src/test/llm/generation_config:gemma4_generation_contract_test",
+      "exit_code": 1,
+      "duration_s": 209.6,
+      "status": "FAIL",
+      "log": "tests/gemma4_generation_contract_bazel.log",
+      "classification": "BUILD visibility: //src:test_platform_utils is not visible from //src/test/llm/generation_config:gemma4_generation_contract_test"
+    },
+    {
+      "name": "gemma4_output_parser",
+      "command": "bazel-bin\\src\\ovms_test.exe --gtest_filter=Gemma4OutputParserTest.*",
+      "exit_code": 0,
+      "duration_s": 9.915,
+      "status": "PASS",
+      "detail": "39/39 PASSED",
+      "log": "tests/gemma4_output_parser.log.gz"
+    },
+    {
+      "name": "gemma4_reviewed_contract",
+      "command": "bazel-bin\\src\\ovms_test.exe --gtest_filter=Gemma4ReviewedContractTest.*",
+      "exit_code": 0,
+      "duration_s": 10.439,
+      "status": "PASS",
+      "detail": "6/6 PASSED including guided JSON quoting/nested/truncation and reasoning->tool transition",
+      "log": "tests/gemma4_reviewed_contract.log.gz"
+    },
+    {
+      "name": "http_openai_handler_adjacent",
+      "command": "bazel-bin\\src\\ovms_test.exe --gtest_filter=HttpOpenAIHandlerParsingTest.*Tool*:HttpOpenAIHandlerChatAndResponsesParsingTest.*Tool*:HttpOpenAIHandlerCommonParsingValidationTest.ReasoningParserSpecialTokenNeedIgnoresUserPreference",
+      "exit_code": 0,
+      "duration_s": 22.861,
+      "status": "PASS",
+      "detail": "34/34 HttpOpenAIHandlerParsingTest PASSED. ChatAndResponses *Tool* names did not match this filter on this binary.",
+      "log": "tests/http_openai_handler_adjacent.log.gz"
+    },
+    {
+      "name": "gemma4_generation_contract_ovms_test",
+      "command": "bazel-bin\\src\\ovms_test.exe --gtest_filter=Gemma4GenerationContractTest.*",
+      "exit_code": 0,
+      "duration_s": 0,
+      "status": "SKIP",
+      "detail": "0 tests from 0 test suites. Dedicated cc_test is not linked into ovms_test.exe.",
+      "log": "tests/gemma4_generation_contract_ovms_test.log"
+    }
+  ],
+  "unit_tests_gate": "FAIL",
+  "parser_regressions_gate": "PASS",
+  "skipped": ["gemma4_generation_contract_ovms_test"],
+  "failed": ["gemma4_generation_contract_bazel"]
+}

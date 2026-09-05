@@ -69,6 +69,11 @@ struct OutputParsingConfig {
     bool needsSpecialTokens = false;
     // See comment block above.
     bool defaultDecodingWithSpecialTokens = false;
+
+    // A reasoning parser may opt into ending its phase at a tool start marker
+    // even without its own end tag. Other reasoning formats keep tool examples
+    // as reasoning text until the explicit reasoning end boundary.
+    bool toolStartTerminatesReasoning = false;
 };
 
 }  // namespace ovms

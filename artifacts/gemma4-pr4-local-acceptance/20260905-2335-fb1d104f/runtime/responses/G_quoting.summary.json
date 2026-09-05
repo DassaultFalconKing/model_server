@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "issues": [],
+  "content": "",
+  "tool_calls": [
+    {
+      "id": "pW6sGfFj1",
+      "type": "function",
+      "function": {
+        "name": "run_command",
+        "arguments": "{\"command\":\"python -c \\\"print({'a':[1,2,3], 'path':'C:\\\\\\\\temp\\\\\\\\file.txt', 'note':'a,b {c}'})\\\" | findstr a\"}"
+      }
+    }
+  ],
+  "finish_reason": "tool_calls",
+  "http_status": 200,
+  "error": "",
+  "extra": {}
+}

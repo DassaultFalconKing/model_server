@@ -27,80 +27,15 @@
 #include "llama3/generation_config_builder.hpp"
 #include "hermes3/generation_config_builder.hpp"
 #include "devstral/generation_config_builder.hpp"
+#include "gemma4/generation_config_builder.hpp"
 #include "../apis/openai_request.hpp"
 #include "../../logging.hpp"
 
 namespace ovms {
 
-// RC1-local Gemma4 builder. It intentionally lives in this already-built header so
-// the 2026.4 RC1 port does not add a translation unit or mutate BUILD while we are
-// proving the runtime contract on the exact 530dc63f lineage.
-class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
-    static bool isHardToolChoice(const std::string& toolChoice) {
-        return toolChoice == "required" ||
-            (!toolChoice.empty() && toolChoice != "auto" && toolChoice != "none");
-    }
-
-    static std::vector<ov::genai::StructuredOutputConfig::Tag> buildToolTags(const OpenAIRequest& request) {
-        std::vector<ov::genai::StructuredOutputConfig::Tag> tags;
-        tags.reserve(request.toolNameSchemaMap.size());
-        for (const auto& [toolName, toolSchemaWrapper] : request.toolNameSchemaMap) {
-            ov::genai::StructuredOutputConfig::Tag tag;
-            tag.begin = "<|tool_call>call:" + toolName;
-            tag.content = ov::genai::StructuredOutputConfig::JSONSchema(toolSchemaWrapper.stringRepr);
-            tag.end = "<tool_call|>";
-            tags.push_back(std::move(tag));
-        }
-        return tags;
-    }
-
-public:
-    Gemma4GenerationConfigBuilder() = delete;
-    explicit Gemma4GenerationConfigBuilder(const ov::genai::GenerationConfig& baseConfig, bool enableToolGuidedGeneration, DecodingMethod decodingMethod) :
-        BaseGenerationConfigBuilder(baseConfig, enableToolGuidedGeneration, decodingMethod) {}
-
-    void parseConfigFromRequest(const OpenAIRequest& request) override {
-        BaseGenerationConfigBuilder::parseConfigFromRequest(request);
-
-        if (request.toolNameSchemaMap.empty() || request.toolChoice == "none") {
-            return;
-        }
-
-        const bool hardToolChoice = isHardToolChoice(request.toolChoice);
-        if (!hardToolChoice && !enableToolGuidedGeneration) {
-            return;
-        }
-
-        auto toolTags = buildToolTags(request);
-        if (toolTags.empty()) {
-            return;
-        }
-
-        if (hardToolChoice) {
-            // A TriggeredTags grammar still permits prose before Gemma decides to emit
-            // <|tool_call>. Hard choice must constrain from token zero instead.
-            auto requiredTags = std::make_shared<ov::genai::StructuredOutputConfig::TagsWithSeparator>();
-            requiredTags->tags = std::move(toolTags);
-            requiredTags->separator = "";
-            requiredTags->at_least_one = true;
-            requiredTags->stop_after_first = false;
-            ov::genai::StructuredOutputConfig::StructuralTag structuralTag = requiredTags;
-            setStructuralTagsConfig(structuralTag);
-            return;
-        }
-
-        auto triggeredTags = std::make_shared<ov::genai::StructuredOutputConfig::TriggeredTags>();
-        triggeredTags->triggers.push_back("<|tool_call>");
-        triggeredTags->tags = std::move(toolTags);
-        triggeredTags->at_least_one = false;
-        triggeredTags->stop_after_first = false;
-        ov::genai::StructuredOutputConfig::StructuralTag structuralTag = triggeredTags;
-        setStructuralTagsConfig(structuralTag);
-    }
-};
-
 class GenerationConfigBuilder {
     std::unique_ptr<BaseGenerationConfigBuilder> builder_impl;
+    bool hardToolChoice{false};
 
 public:
     GenerationConfigBuilder() = delete;
@@ -144,7 +79,12 @@ public:
     }
 
     void parseConfigFromRequest(const OpenAIRequest& request) {
+        hardToolChoice = !request.toolChoice.empty() && request.toolChoice != "auto" && request.toolChoice != "none";
         builder_impl->parseConfigFromRequest(request);
+    }
+
+    bool hasHardToolChoice() const {
+        return hardToolChoice;
     }
 
     void addStopString(const std::string& decodedStopString) {
