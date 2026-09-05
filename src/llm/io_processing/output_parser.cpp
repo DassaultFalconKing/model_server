@@ -459,11 +459,9 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
             return parseReasoningChunk(tokens, finishReason, UNKNOWN);
         }
 
-        // Robust transition: a structural tool-call opener is itself sufficient evidence
-        // that reasoning has ended. This is deliberately generic rather than Gemma-specific:
-        // a parser-owned tool start tag must never be emitted as reasoning text merely because
-        // the model omitted its reasoning close tag.
-        if (applyToolParser) {
+        // Only reasoning formats that declare this boundary may omit their end
+        // tag before a tool call. In other formats a tool marker can be an example.
+        if (applyToolParser && reasoningParser->getParsingConfig().toolStartTerminatesReasoning) {
             TagLookupStatus toolStartStatus = streamOutputCache.lookupTags(toolParser->getParsingConfig().startTags);
             if (toolStartStatus == TagLookupStatus::FOUND_COMPLETE) {
                 const std::string original = streamOutputCache.getBuffer();
