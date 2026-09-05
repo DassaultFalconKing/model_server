@@ -148,6 +148,22 @@ TEST_F(Gemma4OutputParserTest, ParseToolCallOutputWithSingleToolCall) {
     }
 }
 
+TEST_F(Gemma4OutputParserTest, ParseToolCallOutputWithGuidedJsonArguments) {
+    const std::string input = R"JSON(<|tool_call>call:example_tool{"arg1":"value1","arg2":42,"nested":{"enabled":true},"paths":["C:\\llm\\ovms.exe","C:\\llm\\README.md"]}<tool_call|>)JSON";
+
+    auto generatedTensor = gemma4Tokenizer->encode(input).input_ids;
+    std::vector<int64_t> generatedTokens(generatedTensor.data<int64_t>(), generatedTensor.data<int64_t>() + generatedTensor.get_size());
+    ParsedOutput parsedOutput = outputParserWithRegularToolParsing->parse(generatedTokens, true);
+
+    EXPECT_EQ(parsedOutput.content, "");
+    EXPECT_EQ(parsedOutput.reasoning, "");
+    ASSERT_EQ(parsedOutput.toolCalls.size(), 1);
+    EXPECT_EQ(parsedOutput.toolCalls[0].name, "example_tool");
+    EXPECT_EQ(
+        parsedOutput.toolCalls[0].arguments,
+        R"JSON({"arg1":"value1","arg2":42,"nested":{"enabled":true},"paths":["C:\\llm\\ovms.exe","C:\\llm\\README.md"]})JSON");
+    EXPECT_FALSE(parsedOutput.toolCalls[0].id.empty());
+}
 TEST_F(Gemma4OutputParserTest, ParseToolCallOutputWithSingleToolCallAndReasoning) {
     std::string inputWithProperClosure = "<|channel>thought\nSome reasoning content<channel|><|tool_call>call:example_tool{arg1:<|\"|>value1<|\"|>,arg2:42}<tool_call|>";
 
@@ -449,7 +465,7 @@ TEST_F(Gemma4OutputParserTest, ParseToolCallArgumentValueContainingComma) {
         "<|\"|>,path:<|\"|>/home/user/demos/hello_world_python/hello.py<|\"|>}<tool_call|>";
     auto generatedTensor = gemma4Tokenizer->encode(input).input_ids;
     std::vector<int64_t> generatedTokens(generatedTensor.data<int64_t>(), generatedTensor.data<int64_t>() + generatedTensor.get_size());
-    ParsedOutput parsedOutput = ovms::test::parseWithStreamer(*gemma4Tokenizer, *outputParserWithRegularToolParsing, generatedTokens, true, true);
+    ParsedOutput parsedOutput = outputParserWithRegularToolParsing->parse(generatedTokens, true);
     EXPECT_EQ(parsedOutput.content, "");
     ASSERT_EQ(parsedOutput.toolCalls.size(), 1);
     EXPECT_EQ(parsedOutput.toolCalls[0].name, "editor");
@@ -465,7 +481,7 @@ TEST_F(Gemma4OutputParserTest, ParseToolCallArgumentValueContainingBracesAndBrac
         "path:<|\"|>file.txt<|\"|>}<tool_call|>";
     auto generatedTensor = gemma4Tokenizer->encode(input).input_ids;
     std::vector<int64_t> generatedTokens(generatedTensor.data<int64_t>(), generatedTensor.data<int64_t>() + generatedTensor.get_size());
-    ParsedOutput parsedOutput = ovms::test::parseWithStreamer(*gemma4Tokenizer, *outputParserWithRegularToolParsing, generatedTokens, true, true);
+    ParsedOutput parsedOutput = outputParserWithRegularToolParsing->parse(generatedTokens, true);
     EXPECT_EQ(parsedOutput.content, "");
     ASSERT_EQ(parsedOutput.toolCalls.size(), 1);
     EXPECT_EQ(parsedOutput.toolCalls[0].name, "editor");

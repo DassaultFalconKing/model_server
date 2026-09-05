@@ -42,6 +42,57 @@ const int64_t Gemma4ToolParser::eotTokenId = 49;  // <tool_call|>
 const int64_t Gemma4ToolParser::reasoningTokenId = 100;     // <|channel>
 const int64_t Gemma4ToolParser::reasoningEndTokenId = 101;  // <channel|>
 
+namespace {
+size_t longestTrailingTagPrefix(const std::string& text, const std::string& tag) {
+    if (text.empty() || tag.size() < 2)
+        return 0;
+
+    const size_t maxPrefixLength = std::min(text.size(), tag.size() - 1);
+    for (size_t length = maxPrefixLength; length > 0; --length) {
+        if (text.compare(text.size() - length, length, tag, 0, length) == 0)
+            return length;
+    }
+    return 0;
+}
+
+size_t findMatchingPairEnd(const std::string& masked, size_t openPos, char openCh, char closeCh) {
+    int depth = 0;
+    for (size_t i = openPos; i < masked.size(); ++i) {
+        if (masked[i] == openCh) {
+            depth++;
+        } else if (masked[i] == closeCh) {
+            depth--;
+            if (depth == 0) {
+                return i;
+            }
+        }
+    }
+    return std::string::npos;
+}
+
+bool tryParseGuidedJsonArguments(const std::string& argumentsStr, std::string& outJson) {
+    const std::string guidedArguments = "{" + argumentsStr + "}";
+    rapidjson::Document guidedArgsDoc;
+    guidedArgsDoc.Parse(guidedArguments.c_str());
+    if (guidedArgsDoc.HasParseError() || !guidedArgsDoc.IsObject()) {
+        return false;
+    }
+    rapidjson::StringBuffer guidedArgsBuffer;
+    rapidjson::Writer<rapidjson::StringBuffer> guidedArgsWriter(guidedArgsBuffer);
+    guidedArgsDoc.Accept(guidedArgsWriter);
+    outJson = guidedArgsBuffer.GetString();
+    return true;
+}
+}  // namespace
+
+size_t Gemma4ToolParser::structuralTagHoldbackLength(const std::string& text) {
+    size_t holdback = 0;
+    for (const std::string& tag : {TOOL_CALL_START_TAG, TURN_END_TAG, TOOL_RESPONSE_START_TAG}) {
+        holdback = std::max(holdback, longestTrailingTagPrefix(text, tag));
+    }
+    return holdback;
+}
+
 std::string Gemma4ToolParser::parseArrayParameter(const std::string& argumentStr) {
     size_t pos = 1;
     std::string parsedArguments = "[";
@@ -58,11 +109,7 @@ std::string Gemma4ToolParser::parseArrayParameter(const std::string& argumentStr
         }
 
         std::string originalStr = argumentStr.substr(stringStartPos, stringEndPos - stringStartPos);
-        size_t quotePos = 0;
-        while ((quotePos = originalStr.find('\"', quotePos)) != std::string::npos) {
-            originalStr.insert(quotePos, "\\");
-            quotePos += 2;
-        }
+        escapeSpecialCharacters(originalStr);
         parsedArguments += "\"" + originalStr + "\",";
 
         pos = stringEndPos + TOOL_ARGS_STRING_INDICATOR.size() + 1;
@@ -76,39 +123,59 @@ std::string Gemma4ToolParser::parseArrayParameter(const std::string& argumentStr
 std::string Gemma4ToolParser::parseObjectParameter(const std::string& argumentStr) {
     size_t pos = 1;
     std::vector<std::pair<std::string, std::string>> keyValuePairs;
+    const std::string masked = maskStringValues(argumentStr);
 
-    while (pos != std::string::npos) {
+    while (pos < argumentStr.size() && argumentStr[pos] != '}') {
         std::string key, value;
-        bool isStringValue = false;
         size_t keyEndPos = argumentStr.find(':', pos);
         if (keyEndPos == std::string::npos) {
             break;
         }
         key = argumentStr.substr(pos, keyEndPos - pos);
         size_t valueStartPos = keyEndPos + 1;
-        size_t valueEndPos = std::string::npos;
-        if (argumentStr.substr(valueStartPos, TOOL_ARGS_STRING_INDICATOR.size()) == TOOL_ARGS_STRING_INDICATOR) {
-            valueStartPos = valueStartPos + TOOL_ARGS_STRING_INDICATOR.size();
-            valueEndPos = argumentStr.find(TOOL_ARGS_STRING_INDICATOR, valueStartPos);
-            isStringValue = true;
+        if (valueStartPos >= argumentStr.size()) {
+            break;
+        }
+        if (argumentStr.compare(valueStartPos, TOOL_ARGS_STRING_INDICATOR.size(), TOOL_ARGS_STRING_INDICATOR) == 0) {
+            valueStartPos += TOOL_ARGS_STRING_INDICATOR.size();
+            size_t valueEndPos = argumentStr.find(TOOL_ARGS_STRING_INDICATOR, valueStartPos);
+            if (valueEndPos == std::string::npos) {
+                break;
+            }
+            std::string raw = argumentStr.substr(valueStartPos, valueEndPos - valueStartPos);
+            escapeSpecialCharacters(raw);
+            value = "\"" + raw + "\"";
+            pos = valueEndPos + TOOL_ARGS_STRING_INDICATOR.size();
+        } else if (argumentStr[valueStartPos] == '{') {
+            size_t closePos = findMatchingPairEnd(masked, valueStartPos, '{', '}');
+            if (closePos == std::string::npos) {
+                break;
+            }
+            value = parseObjectParameter(argumentStr.substr(valueStartPos, closePos - valueStartPos + 1));
+            pos = closePos + 1;
+        } else if (argumentStr[valueStartPos] == '[') {
+            size_t closePos = findMatchingPairEnd(masked, valueStartPos, '[', ']');
+            if (closePos == std::string::npos) {
+                break;
+            }
+            value = parseArrayParameter(argumentStr.substr(valueStartPos, closePos - valueStartPos + 1));
+            pos = closePos + 1;
         } else {
-            valueEndPos = argumentStr.find(',', valueStartPos);
-        }
-
-        if (valueEndPos == std::string::npos) {
-            valueEndPos = argumentStr.size() - 1;
-        }
-        value = argumentStr.substr(valueStartPos, valueEndPos - valueStartPos);
-        if (isStringValue) {
-            value = "\"" + value + "\"";
+            size_t commaPos = argumentStr.find(',', valueStartPos);
+            size_t bracePos = argumentStr.find('}', valueStartPos);
+            size_t valueEndPos = commaPos;
+            if (valueEndPos == std::string::npos || (bracePos != std::string::npos && bracePos < valueEndPos)) {
+                valueEndPos = bracePos;
+            }
+            if (valueEndPos == std::string::npos) {
+                break;
+            }
+            value = argumentStr.substr(valueStartPos, valueEndPos - valueStartPos);
+            pos = valueEndPos;
         }
         keyValuePairs.emplace_back(key, value);
-        if (valueEndPos == argumentStr.size() - 1) {
-            break;
-        } else if (isStringValue) {
-            pos = valueEndPos + TOOL_ARGS_STRING_INDICATOR.size() + 1;
-        } else {
-            pos = valueEndPos + 1;
+        if (pos < argumentStr.size() && argumentStr[pos] == ',') {
+            pos += 1;
         }
     }
 
@@ -321,6 +388,13 @@ bool Gemma4ToolParser::parseToolCallParametersState() {
     }
     std::string argumentsStr = this->streamingContent.substr(this->streamingPosition, pos - this->streamingPosition);
     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed arguments string: {}", argumentsStr);
+
+    if (tryParseGuidedJsonArguments(argumentsStr, this->toolCall.arguments)) {
+        this->currentState = State::ToolCallEnded;
+        this->streamingPosition = pos + TOOL_ARGS_END_INDICATOR.length();
+        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed Gemma4 guided JSON arguments directly: {}", this->toolCall.arguments);
+        return true;
+    }
     std::vector<std::pair<std::string, std::string>> arguments = parseArguments(argumentsStr);
 
     rapidjson::Document argsDoc(rapidjson::kObjectType);
@@ -354,9 +428,8 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
         this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
         this->currentState = State::AfterToolCall;
     } else {
-        this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
-        this->currentState = State::AfterToolCall;
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}, returning to content state", toolCallEndTagPos);
+        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Waiting for more data in ToolCallEnded state; no complete next tool call prefix or end tag found from position: {}", this->streamingPosition);
+        return false;
     }
     return true;
 }
@@ -420,6 +493,11 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
                 content = this->streamingContent.substr(this->streamingPosition, contentEnd - this->streamingPosition);
             } else {
                 content = this->streamingContent.substr(this->streamingPosition);
+                if (finishReason == ov::genai::GenerationFinishReason::NONE) {
+                    const size_t holdbackLength = structuralTagHoldbackLength(content);
+                    if (holdbackLength > 0)
+                        content.resize(content.size() - holdbackLength);
+                }
             }
             this->streamingPosition += content.size();
 
@@ -478,9 +556,14 @@ bool Gemma4ToolParser::parseSingleToolCall(const std::string& toolStr, ToolCall&
         int argsStrLen = toolStr.length() - argsPos - TOOL_ARGS_START_INDICATOR.length() - TOOL_ARGS_END_INDICATOR.length();
         std::string argsStr = toolStr.substr(argsPos + TOOL_ARGS_START_INDICATOR.length(), argsStrLen);
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed args string: {}", argsStr);
+        toolCall.name = toolName;
+        toolCall.id = generateRandomId();
+        if (tryParseGuidedJsonArguments(argsStr, toolCall.arguments)) {
+            SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Parsed Gemma4 guided JSON arguments directly: {}", toolCall.arguments);
+            return true;
+        }
         std::vector<std::pair<std::string, std::string>> arguments = parseArguments(argsStr);
 
-        toolCall.name = toolName;
         rapidjson::Document argsDoc(rapidjson::kObjectType);
         rapidjson::StringBuffer sb;
         rapidjson::Writer<rapidjson::StringBuffer> argsWriter(sb);
@@ -491,7 +574,6 @@ bool Gemma4ToolParser::parseSingleToolCall(const std::string& toolStr, ToolCall&
         }
         argsWriter.EndObject();
         toolCall.arguments = sb.GetString();
-        toolCall.id = generateRandomId();
         return true;
     }
     return false;

@@ -55,28 +55,37 @@ void Gemma4ReasoningParser::parse(ParsedOutput& parsedOutput, const std::vector<
         parsedOutput.content = contentWithoutReasoning;
     }
 }
-std::optional<rapidjson::Document> Gemma4ReasoningParser::parseChunk(const std::string& chunk, const std::vector<int64_t>& /*tokens*/, ov::genai::GenerationFinishReason finishReason) {
+std::optional<rapidjson::Document> Gemma4ReasoningParser::parseChunk(const std::string& chunk, const std::vector<int64_t>& /*tokens*/, ov::genai::GenerationFinishReason /*finishReason*/) {
     if (chunk.empty()) {
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Received empty chunk for Gemma4ReasoningParser");
         return std::nullopt;
     }
 
-    if (chunk.find(getParsingStartTags()[0]) != std::string::npos || chunk.find(getParsingEndTag()) != std::string::npos) {
-        return std::nullopt;
-    } else {
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-        writer.StartObject();
-        writer.String("delta");
-        writer.StartObject();
-        writer.String("reasoning_content");
-        writer.String(chunk.c_str());
-        writer.EndObject();
-        writer.EndObject();
-        rapidjson::Document doc;
-        doc.Parse(buffer.GetString());
-        return doc;
+    std::string reasoningText = chunk;
+    const std::string& startTag = getParsingStartTags()[0];
+    const size_t startPos = reasoningText.find(startTag);
+    if (startPos != std::string::npos) {
+        reasoningText.erase(startPos, startTag.size());
     }
-    return std::nullopt;
+    const size_t endPos = reasoningText.find(getParsingEndTag());
+    if (endPos != std::string::npos) {
+        reasoningText.erase(endPos, getParsingEndTag().size());
+    }
+    if (reasoningText.empty()) {
+        return std::nullopt;
+    }
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    writer.StartObject();
+    writer.String("delta");
+    writer.StartObject();
+    writer.String("reasoning_content");
+    writer.String(reasoningText.c_str());
+    writer.EndObject();
+    writer.EndObject();
+    rapidjson::Document doc;
+    doc.Parse(buffer.GetString());
+    return doc;
 }
 }  // namespace ovms

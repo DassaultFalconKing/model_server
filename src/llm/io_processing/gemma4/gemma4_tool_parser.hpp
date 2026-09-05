@@ -63,6 +63,10 @@ public:
         return tagsToErase;
     }
 
+    bool holdsIncompleteSpecialTagsInContent() const override {
+        return true;
+    }
+
     const std::vector<std::string>& getSpecialParsingStartTags() const override {
         static const std::vector<std::string> beginningOnlyTags = {};
         return beginningOnlyTags;
@@ -90,6 +94,10 @@ private:
     // masked through the current buffer end too; a later call re-masks from scratch once
     // its closing delimiter has arrived.
     static std::string maskStringValues(const std::string& text);
+
+    // Returns the longest suffix of text that is a proper prefix of a structural
+    // marker. That suffix must be retained until the next transport chunk arrives.
+    static size_t structuralTagHoldbackLength(const std::string& text);
 
     std::pair<std::string, std::string> parseSingleArgument(const std::string& argumentStr);
     std::vector<std::pair<std::string, std::string>> parseArguments(const std::string& argumentsStr);
