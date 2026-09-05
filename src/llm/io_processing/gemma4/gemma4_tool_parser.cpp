@@ -42,6 +42,31 @@ const int64_t Gemma4ToolParser::eotTokenId = 49;  // <tool_call|>
 const int64_t Gemma4ToolParser::reasoningTokenId = 100;     // <|channel>
 const int64_t Gemma4ToolParser::reasoningEndTokenId = 101;  // <channel|>
 
+namespace {
+size_t longestTrailingTagPrefix(const std::string& text, const std::string& tag) {
+    if (text.empty() || tag.size() < 2)
+        return 0;
+
+    const size_t maxPrefixLength = std::min(text.size(), tag.size() - 1);
+    for (size_t length = maxPrefixLength; length > 0; --length) {
+        if (text.compare(text.size() - length, length, tag, 0, length) == 0)
+            return length;
+    }
+    return 0;
+}
+
+size_t structuralTagHoldbackLength(const std::string& text) {
+    size_t holdback = 0;
+    for (const std::string& tag : {
+             Gemma4ToolParser::TOOL_CALL_START_TAG,
+             Gemma4ToolParser::TURN_END_TAG,
+             Gemma4ToolParser::TOOL_RESPONSE_START_TAG}) {
+        holdback = std::max(holdback, longestTrailingTagPrefix(text, tag));
+    }
+    return holdback;
+}
+}  // namespace
+
 std::string Gemma4ToolParser::parseArrayParameter(const std::string& argumentStr) {
     size_t pos = 1;
     std::string parsedArguments = "[";
@@ -419,6 +444,11 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
                 content = this->streamingContent.substr(this->streamingPosition, contentEnd - this->streamingPosition);
             } else {
                 content = this->streamingContent.substr(this->streamingPosition);
+                if (finishReason == ov::genai::GenerationFinishReason::NONE) {
+                    const size_t holdbackLength = structuralTagHoldbackLength(content);
+                    if (holdbackLength > 0)
+                        content.resize(content.size() - holdbackLength);
+                }
             }
             this->streamingPosition += content.size();
 
