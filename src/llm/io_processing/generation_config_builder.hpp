@@ -35,6 +35,7 @@ namespace ovms {
 
 class GenerationConfigBuilder {
     std::unique_ptr<BaseGenerationConfigBuilder> builder_impl;
+    bool hardToolChoice{false};
 
 public:
     GenerationConfigBuilder() = delete;
@@ -78,7 +79,12 @@ public:
     }
 
     void parseConfigFromRequest(const OpenAIRequest& request) {
+        hardToolChoice = !request.toolChoice.empty() && request.toolChoice != "auto" && request.toolChoice != "none";
         builder_impl->parseConfigFromRequest(request);
+    }
+
+    bool hasHardToolChoice() const {
+        return hardToolChoice;
     }
 
     void addStopString(const std::string& decodedStopString) {

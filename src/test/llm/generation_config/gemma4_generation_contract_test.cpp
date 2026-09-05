@@ -51,6 +51,22 @@ TEST(Gemma4GenerationContractTest, AbsentToolsAndNonePreserveResponseFormat) {
     }
 }
 
+TEST(Gemma4GenerationContractTest, TracksHardToolChoiceForValidationFallbackPolicy) {
+    for (const std::string choice : {"", "none", "auto"}) {
+        OpenAIRequest request;
+        request.toolChoice = choice;
+        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(request);
+        EXPECT_FALSE(builder.hasHardToolChoice()) << choice;
+    }
+    for (const std::string choice : {"required", "second"}) {
+        auto request = requestWithTools(choice);
+        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(request);
+        EXPECT_TRUE(builder.hasHardToolChoice()) << choice;
+    }
+}
+
 TEST(Gemma4GenerationContractTest, AutoIsOptionalAndHardChoicesAreImmediateAndRepeatable) {
     for (bool guided : {false, true}) {
         for (const std::string choice : {"auto", "required", "second"}) {
