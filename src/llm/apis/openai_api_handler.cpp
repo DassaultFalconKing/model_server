@@ -329,7 +329,11 @@ ov::genai::ChatHistory& OpenAIApiHandler::getChatHistory() {
 }
 
 absl::StatusOr<InputRequest> OpenAIApiHandler::extractInputRequest(GenerationConfigBuilder& configBuilder) {
-    configBuilder.parseConfigFromRequest(request);
+    try {
+        configBuilder.parseConfigFromRequest(request);
+    } catch (const std::invalid_argument& e) {
+        return absl::InvalidArgumentError(e.what());
+    }
     try {
         configBuilder.adjustConfigForDecodingMethod();
     } catch (const std::invalid_argument& e) {
@@ -338,6 +342,9 @@ absl::StatusOr<InputRequest> OpenAIApiHandler::extractInputRequest(GenerationCon
     try {
         configBuilder.validateStructuredOutputConfig(tokenizer);
     } catch (const std::exception& e) {
+        if (configBuilder.hasHardToolChoice()) {
+            return absl::InvalidArgumentError(absl::StrCat("Structured output validation failed for hard tool_choice: ", e.what()));
+        }
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Tool guided generation will not be applied due to JSON schema validation failure: {}", e.what());
         configBuilder.unsetStructuredOutputConfig();
     }
@@ -724,7 +731,7 @@ absl::Status OpenAIApiHandler::parseCommonPart(std::optional<uint32_t> maxTokens
     }
 
     // best_of: int; optional - defaults to 1
-    // Extension, unsupported by OpenAI API, however supported by vLLM, supported in CB lib by mapping to group_size param
+    // Extension, unsupported by OpenAI API however supported by vLLM, supported in CB lib by mapping to group_size param
     // Not supported for RESPONSES streaming - output_index is hardcoded to 0
     it = doc.FindMember("best_of");
     if (it != doc.MemberEnd() && !it->value.IsNull()) {
