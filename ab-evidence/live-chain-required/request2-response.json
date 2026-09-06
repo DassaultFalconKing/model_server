@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "0VVd0LQvC",
+            "type": "function",
+            "function": {
+              "name": "publish_review_evidence",
+              "arguments": "{\"repository\":\"::C:\\\\git\\\\g4-final-review\",\"commit_sha\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"verdict\":\"PARTIAL\",\"artifacts\":[{\"kind\":\"diff\",\"path\":\"ab-evidence/live_chain_harness.py\",\"authority\":\"local_exact_head\"},{\"kind\":\"diff\",\"path\":\"src/llm/io_processing/chat_template/analyzer.cpp\",\"authority\":\"local_exact_head\"}],\"gates\":[{\"name\":\"git_status_check\",\"status\":\"FAIL\",\"evidence\":\"Repository is dirty. Changed files: ab-evidence/live_chain_harness.py, src/llm/io_processing/chat_template/analyzer.cpp\"},{\"name\":\"sha_verification\",\"status\":\"PASS\",\"evidence\":\"Requested SHA 908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703 matches head SHA.\"}]}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788690827,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 5007,
+    "completion_tokens": 326,
+    "total_tokens": 5333
+  }
+}
