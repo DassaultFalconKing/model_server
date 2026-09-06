@@ -123,17 +123,18 @@ public:
         if (request.toolChoice == "required") {
             // Google Gemma4 may open/close its thought channel before choosing a
             // tool after a tool response. Do not force arguments into that phase.
-            // Reasoning is optional; the following tool grammar remains mandatory.
+            // xgrammar rejects empty ConstString, so optional thought is a Union of
+            // tools-only versus thought-then-tools rather than Concat("", thought).
             using Structured = ov::genai::StructuredOutputConfig;
             auto thought = std::make_shared<Structured::Tag>();
             thought->begin = "<|channel>thought\n";
             thought->content = Structured::AnyText();
             thought->end = "<channel|>";
-            auto optionalThought = std::make_shared<Structured::Union>();
-            optionalThought->elements = {Structured::ConstString(""), thought};
-            auto sequence = std::make_shared<Structured::Concat>();
-            sequence->elements = {optionalThought, requiredTags};
-            structuralTag = sequence;
+            auto thoughtThenTools = std::make_shared<Structured::Concat>();
+            thoughtThenTools->elements = {thought, requiredTags};
+            auto alternatives = std::make_shared<Structured::Union>();
+            alternatives->elements = {requiredTags, thoughtThenTools};
+            structuralTag = alternatives;
         }
         setStructuralTagsConfig(structuralTag);
     }

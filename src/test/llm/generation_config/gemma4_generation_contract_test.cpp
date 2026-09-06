@@ -31,6 +31,14 @@ const T& grammar(const ov::genai::GenerationConfig& config) {
         config.structured_output_config.value().structural_tags_config.value());
     if (const auto* sequence = std::get_if<std::shared_ptr<Structured::Concat>>(&root))
         return *std::get<std::shared_ptr<T>>((*sequence)->elements.back());
+    if (const auto* alternatives = std::get_if<std::shared_ptr<Structured::Union>>(&root)) {
+        for (const auto& element : (*alternatives)->elements) {
+            if (const auto* tags = std::get_if<std::shared_ptr<T>>(&element))
+                return **tags;
+            if (const auto* sequence = std::get_if<std::shared_ptr<Structured::Concat>>(&element))
+                return *std::get<std::shared_ptr<T>>((*sequence)->elements.back());
+        }
+    }
     return *std::get<std::shared_ptr<T>>(root);
 }
 }  // namespace
@@ -72,18 +80,20 @@ TEST(Gemma4GenerationContractTest, RequiredAllowsReasoningBeforeMandatoryToolSel
     builder.parseConfigFromRequest(request);
     const auto& root = std::get<Structured::StructuralTag>(
         builder.getConfig().structured_output_config->structural_tags_config.value());
-    ASSERT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Concat>>(root));
-    const auto& sequence = *std::get<std::shared_ptr<Structured::Concat>>(root);
-    ASSERT_EQ(sequence.elements.size(), 2u);
-    const auto& alternatives = *std::get<std::shared_ptr<Structured::Union>>(sequence.elements[0]);
+    ASSERT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Union>>(root));
+    const auto& alternatives = *std::get<std::shared_ptr<Structured::Union>>(root);
     ASSERT_EQ(alternatives.elements.size(), 2u);
-    EXPECT_EQ(std::get<Structured::ConstString>(alternatives.elements[0]).value, "");
-    const auto& thought = *std::get<std::shared_ptr<Structured::Tag>>(alternatives.elements[1]);
+    const auto& toolsOnly = *std::get<std::shared_ptr<Structured::TagsWithSeparator>>(alternatives.elements[0]);
+    EXPECT_TRUE(toolsOnly.at_least_one);
+    EXPECT_EQ(toolsOnly.tags.size(), 2u);
+    const auto& thoughtThenTools = *std::get<std::shared_ptr<Structured::Concat>>(alternatives.elements[1]);
+    ASSERT_EQ(thoughtThenTools.elements.size(), 2u);
+    const auto& thought = *std::get<std::shared_ptr<Structured::Tag>>(thoughtThenTools.elements[0]);
     EXPECT_EQ(thought.begin, "<|channel>thought\n");
     EXPECT_EQ(thought.end, "<channel|>");
-    const auto& tools = *std::get<std::shared_ptr<Structured::TagsWithSeparator>>(sequence.elements[1]);
-    EXPECT_TRUE(tools.at_least_one);
-    EXPECT_EQ(tools.tags.size(), 2u);
+    const auto& toolsAfterThought = *std::get<std::shared_ptr<Structured::TagsWithSeparator>>(thoughtThenTools.elements[1]);
+    EXPECT_TRUE(toolsAfterThought.at_least_one);
+    EXPECT_EQ(toolsAfterThought.tags.size(), 2u);
 
     ov::genai::Tokenizer tokenizer(getGenericFullPathForSrcTest(
         "/ovms/src/test/llm_testing/OpenVINO/gemma-4-E4B-it-int4-ov"));
