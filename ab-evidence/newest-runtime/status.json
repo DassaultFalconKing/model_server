@@ -1,0 +1,54 @@
+{
+  "build_identity": {
+    "ovms_source": "8f84ec0aca067f6b06a6eaf33db799037130c57f",
+    "ovms_stamp": "OpenVINO Model Server REPLACE_PROJECT_VERSION",
+    "ovms_sha256_pre_fix": "d6550bda6ac36044ef011d974a506f32757c5f4d8a4bf742222b956e163aad69",
+    "ovms_sha256_post_fix": "71d2b983565c24aeacb80726ab92ef81f78296a8df628a74aa20a2b818394e96",
+    "openvino": "2026.4.0-22930-61afcb26271-releases/2026/4",
+    "openvino_dir_explicit": "C:/opt/openvino/runtime/cmake",
+    "genai": "2026.4.0.0-3401-5f7f1278107",
+    "google_model": "google/gemma-4-26B-A4B-it",
+    "google_revision": "4d7ae4984b7db7de8f8457170b3f1a419ee76d52",
+    "google_template_sha256": "ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4",
+    "overlay": "C:\\llm\\models\\runtime\\gemma4-26-heretic-google-current",
+    "wondernutts_template_used": false,
+    "chat_template_mode": "JINJA",
+    "jinja_get_fix": "analyzer.cpp: parseToolResponseJsonContent=false when template has part.get('type')",
+    "local_compile_workarounds": [
+      "src/llm/servable.cpp C4239 rapidjson AddMember lvalue",
+      "src/test/llm/output_parsers/gemma4_v2_contract_test.cpp EXPECT_THAT -> string::find"
+    ]
+  },
+  "verify": "PASS windows_build_fast -Mode Verify (pre-fix); Dev rebuild post-fix exit 0",
+  "fast_tests": "PASS generation_contract + parser_contract (pre-fix, not re-run after analyzer change)",
+  "live": {
+    "named_seed42": {
+      "verdict": "PASS",
+      "request1": "inspect_repository_state exact SHA",
+      "request2": "publish_review_evidence exact SHA, HTTP 200, 220 completion tokens",
+      "out_dir": "ab-evidence/newest-runtime/live-named-seed42"
+    },
+    "named_omit_seed": {
+      "verdict": "PASS",
+      "note": "request2 needed max_tokens 4096 (1024 hit finish_reason=length with empty tool_calls)",
+      "out_dir": "ab-evidence/newest-runtime/live-named-omit-seed"
+    },
+    "auto_seed42": {
+      "verdict": "PASS",
+      "out_dir": "ab-evidence/newest-runtime/live-auto-seed42"
+    },
+    "required_seed42": {
+      "verdict": "FAIL",
+      "request1": "PASS",
+      "request2": "HTTP 200 but finish_reason=length, tool_calls=[], 4096 completion tokens, empty content",
+      "out_dir": "ab-evidence/newest-runtime/live-required-seed42"
+    },
+    "named_resume_after_restart": {
+      "verdict": "FAIL",
+      "request1_checkpoint": "PASS",
+      "request2_after_restart": "HTTP 200 finish_reason=length tool_calls=[] at 1024 and 4096",
+      "session_store": "empty; OVMS_SESSION_STORE_DIR set but no journals",
+      "out_dir": "ab-evidence/newest-runtime/live-named-resume"
+    }
+  }
+}

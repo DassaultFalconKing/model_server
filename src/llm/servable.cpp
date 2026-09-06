@@ -423,8 +423,10 @@ absl::StatusOr<SessionTurnContext> SessionStateStore::beginTurn(
     auto& allocator = effectiveDocument.GetAllocator();
     if (effectiveDocument.HasMember("seed"))
         effectiveDocument["seed"].SetUint(manifest.seed);
-    else
-        effectiveDocument.AddMember(rapidjson::Value("seed", allocator), manifest.seed, allocator);
+    else {
+        rapidjson::Value seedName("seed", allocator);
+        effectiveDocument.AddMember(seedName, manifest.seed, allocator);
+    }
 
     if (effectiveDocument.HasMember("model") && effectiveDocument["model"].IsString())
         manifest.model.assign(effectiveDocument["model"].GetString(), effectiveDocument["model"].GetStringLength());

@@ -213,13 +213,13 @@ def second_tool_choice(mode):
     return mode
 
 
-def build_request2(request1, assistant_message, tool_call, tool_result, tools, mode):
+def build_request2(request1, assistant_message, tool_call, tool_result, tools, mode, max_tokens=1024):
     call_id = tool_call.get("id")
     if not isinstance(call_id, str) or not call_id:
         raise AssertionError("first tool call has no id")
     request = {
         "model": request1["model"],
-        "max_tokens": 1024,
+        "max_tokens": max_tokens,
         "stream": False,
         "tool_choice": second_tool_choice(mode),
         "tools": tools,
@@ -259,6 +259,8 @@ def main():
                         help="Explicit stable uint32 seed for every turn (default: 42).")
     parser.add_argument("--omit-seed", action="store_true",
                         help="Omit seed from every request so OVMS session persistence generates/injects it.")
+    parser.add_argument("--max-tokens", type=int, default=1024,
+                        help="max_tokens for request2 (request1 stays 768).")
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-p", type=float, default=None)
     parser.add_argument("--top-k", type=int, default=None)
@@ -363,6 +365,7 @@ def main():
         tool_result,
         chain_tools,
         session_config["second_tool_choice"],
+        max_tokens=args.max_tokens,
     )
     dump_json(out_dir / "request2-input.json", request2)
     status2, response2, raw2, elapsed2 = post_json(endpoint, request2, args.timeout, headers=headers)

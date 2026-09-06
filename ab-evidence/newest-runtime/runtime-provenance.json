@@ -1,0 +1,381 @@
+﻿{
+    "schema_version":  1,
+    "captured_at_utc":  "2026-09-06T14:07:01.9727156Z",
+    "host":  {
+                 "computer_name":  "MSI",
+                 "os":  "Microsoft Windows NT 10.0.26200.0",
+                 "process_architecture":  "X64"
+             },
+    "ovms":  {
+                 "path":  "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\ovms.exe",
+                 "sha256":  "d6550bda6ac36044ef011d974a506f32757c5f4d8a4bf742222b956e163aad69",
+                 "file_version":  null,
+                 "product_version":  null,
+                 "version_output":  "OpenVINO Model Server 2026.4.0.8f84ec0a\r\nOpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4\r\nOpenVINO GenAI backend 2026.4.0.0-3401-5f7f1278107\r\nBazel build flags: --config=win_mp_on_py_on"
+             },
+    "source":  {
+                   "repo_path":  "C:\\git\\model_server-gemma4-google-template-session-state",
+                   "git_branch":  "fix/gemma4-google-template-session-state",
+                   "git_head":  "8f84ec0aca067f6b06a6eaf33db799037130c57f"
+               },
+    "runtime":  {
+                    "openvino_dir":  "C:\\opt\\openvino\\runtime",
+                    "search_roots":  [
+                                         "C:\\opt\\openvino\\runtime",
+                                         "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src"
+                                     ],
+                    "dlls":  [
+                                 {
+                                     "path":  "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\openvino_genai.dll",
+                                     "size":  7425808,
+                                     "sha256":  "5a2904f2564e4ce002db5ef5fe003a782e6f296f6377cd66df1b2db41d4c5e8d",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-3401-5f7f1278107"
+                                 },
+                                 {
+                                     "path":  "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\openvino_tokenizers.dll",
+                                     "size":  3483912,
+                                     "sha256":  "e96e02744f4cd9567e54065430aa609e97c48951299a21f30abc00fba6078d3c",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-736-a04accf6282"
+                                 },
+                                 {
+                                     "path":  "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\test\\llm\\gemma4_fast\\openvino_genai.dll",
+                                     "size":  7425808,
+                                     "sha256":  "5a2904f2564e4ce002db5ef5fe003a782e6f296f6377cd66df1b2db41d4c5e8d",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-3401-5f7f1278107"
+                                 },
+                                 {
+                                     "path":  "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\test\\llm\\gemma4_fast\\openvino_tokenizers.dll",
+                                     "size":  3483912,
+                                     "sha256":  "e96e02744f4cd9567e54065430aa609e97c48951299a21f30abc00fba6078d3c",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-736-a04accf6282"
+                                 },
+                                 {
+                                     "path":  "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\test\\llm\\generation_config\\openvino_genai.dll",
+                                     "size":  7425808,
+                                     "sha256":  "5a2904f2564e4ce002db5ef5fe003a782e6f296f6377cd66df1b2db41d4c5e8d",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-3401-5f7f1278107"
+                                 },
+                                 {
+                                     "path":  "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\test\\llm\\generation_config\\openvino_tokenizers.dll",
+                                     "size":  3483912,
+                                     "sha256":  "e96e02744f4cd9567e54065430aa609e97c48951299a21f30abc00fba6078d3c",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-736-a04accf6282"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_auto_batch_plugind.dll",
+                                     "size":  851208,
+                                     "sha256":  "746f081a0e6efdee39f2db8fa7c33906d4cafe883893f614d35e017ec65f07b4",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_auto_plugind.dll",
+                                     "size":  3265296,
+                                     "sha256":  "d4be3b249b14e2ed49f430f835894d901df314f068fd731b6696a1fa5871599a",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_cd.dll",
+                                     "size":  1079560,
+                                     "sha256":  "3f0c7d88d788e118c0a39ba48b5a6485b908555acb2279ef3e2049b2968938b3",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_genai_cd.dll",
+                                     "size":  759560,
+                                     "sha256":  "c034e079f0a9e9f760a074c4e92453c534d1e5cd6bea3f8ecc76ce4166dde1c7",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-3401-5f7f1278107"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_genaid.dll",
+                                     "size":  27537680,
+                                     "sha256":  "6a66e7469b03ca1231dbb6fb018fa123de6e4ce90e956d0b5b9c5bf107826afd",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-3401-5f7f1278107"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_gguf_frontendd.dll",
+                                     "size":  4820240,
+                                     "sha256":  "e8eabdee25194f6036b98672a816677e5235231ae587e114b43fa121072044f7",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_hetero_plugind.dll",
+                                     "size":  3267856,
+                                     "sha256":  "e8995ca5b0c83665247601c53b7c314113f5f098cea39a980747c93259396a33",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_intel_cpu_plugind.dll",
+                                     "size":  175469832,
+                                     "sha256":  "47779bbaa82a64d1c4963101f21c1192610241a518c29dce3a01c59bc76e6c6c",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_intel_gpu_plugind.dll",
+                                     "size":  117586192,
+                                     "sha256":  "700be067a62d46e47ce41079f0c8c3d632a77dd099ae80df9798937217768349",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_intel_npu_compiler.dll",
+                                     "size":  98174224,
+                                     "sha256":  "d51f5cea6cf039b19e9fab8112011e74200316cf938e9d1a234fd30d990df406",
+                                     "file_version":  "2026.4.0.1",
+                                     "product_version":  "2026.4.0-1-d8047fb380b-4d683512f7b"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_intel_npu_compiler_loader.dll",
+                                     "size":  529680,
+                                     "sha256":  "970f9fee31abb38c3655ad7dd2546d7a50171ab728c9df9a31257fce9d47bce3",
+                                     "file_version":  "2026.4.0.1",
+                                     "product_version":  "2026.4.0-1-d8047fb380b-4d683512f7b"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_intel_npu_plugind.dll",
+                                     "size":  27177232,
+                                     "sha256":  "346d854d276f12ce8377992272cfd96bfe25970e3ccf49c6035d555b09fcba49",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_intel_npu_vm_runtime.dll",
+                                     "size":  485640,
+                                     "sha256":  "f5c8070af7689caa9f9152b945310575c52abc49eb28a5d4fd2ac52039650b06",
+                                     "file_version":  "2026.4.0.1",
+                                     "product_version":  "2026.4.0-1-d8047fb380b-4d683512f7b"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_ir_frontendd.dll",
+                                     "size":  2828560,
+                                     "sha256":  "bb6202b07e8c1d5c155e8fa854aa41f1b0d7ac359466dd748a28401403d60f84",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_onnx_frontendd.dll",
+                                     "size":  26134288,
+                                     "sha256":  "0dc8c5aa313442b3e74b3467ea85c1526569ba412f472fbabdf179b7c12811b3",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_paddle_frontendd.dll",
+                                     "size":  9789712,
+                                     "sha256":  "45a0dd24354f01eb8b796e8bfa5ecc20814198b26695920dfe790b3883a69540",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_pytorch_frontendd.dll",
+                                     "size":  9337096,
+                                     "sha256":  "8c59512d61e4126bb4dda469df345a0ef94b5bed4ee9ecce1c6e4720c21226e4",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_tensorflow_frontendd.dll",
+                                     "size":  21368080,
+                                     "sha256":  "aa6006169aed12aeddc5f1b7de24a70fcf146576ff2eed2034f7e10a4033ce56",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_tensorflow_lite_frontendd.dll",
+                                     "size":  5254920,
+                                     "sha256":  "11f3f5471144baa9cdcc9fb8988b897cad0a33a73e149748cae2cb87f30c7261",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvino_tokenizersd.dll",
+                                     "size":  14073616,
+                                     "sha256":  "9e9735026f89ed2c2e6da657e4ad786b90abe1b95ca089a070586418c9cfdc71",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-736-a04accf6282"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Debug\\openvinod.dll",
+                                     "size":  53305104,
+                                     "sha256":  "a0c5641ecb6eed6bca333f142342f6d1acddc4088b938cb14f6b37da3cf9f6f3",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino.dll",
+                                     "size":  16465168,
+                                     "sha256":  "829c4642e287522f8a8e748a726d4ad3117a701e22ab46adc82771f98e5d2f7e",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_auto_batch_plugin.dll",
+                                     "size":  208144,
+                                     "sha256":  "d21dc67bee39d3af3fbda6720198a6b025eda297680d5d747996730bc75496dd",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_auto_plugin.dll",
+                                     "size":  720656,
+                                     "sha256":  "ed1492fe3f901d2b882ea89c8909d8ce35eb52986a3559353a44917ee3fb3e47",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_c.dll",
+                                     "size":  234248,
+                                     "sha256":  "8f89f65cb867d27d18607dad3ad5893df53561a809037a28c9c154b937976dfb",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_genai.dll",
+                                     "size":  7425808,
+                                     "sha256":  "5a2904f2564e4ce002db5ef5fe003a782e6f296f6377cd66df1b2db41d4c5e8d",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-3401-5f7f1278107"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_genai_c.dll",
+                                     "size":  178448,
+                                     "sha256":  "0304bf893da72bbe4f31e41137a015e927ebc7fdfbb828236b6fa920310c8480",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-3401-5f7f1278107"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_gguf_frontend.dll",
+                                     "size":  1322248,
+                                     "sha256":  "c984068e1e521fc2cd3ee6211c67c0ea7a798b76ece9febbff0510c1280b38cf",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_hetero_plugin.dll",
+                                     "size":  531728,
+                                     "sha256":  "c21be45cea174c79163394e4cfe3a782ebef7a7a64b4ee43dfcf3828d558de16",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_intel_cpu_plugin.dll",
+                                     "size":  46222600,
+                                     "sha256":  "ce9c65b551e36139b62e28f2c8c7b9fc2a5c02c82e1dfd01e578dac30695e78b",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_intel_gpu_plugin.dll",
+                                     "size":  34629896,
+                                     "sha256":  "b90b57aecb9d8bbb7b0a1e945e45a088e94ea7baf61eaf5dd7d8fe5e06c9e55d",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_intel_npu_compiler.dll",
+                                     "size":  98174216,
+                                     "sha256":  "c663f5c7649550359a373115be1946028a423fedf67e8893c46152323a65a06b",
+                                     "file_version":  "2026.4.0.1",
+                                     "product_version":  "2026.4.0-1-d8047fb380b-4d683512f7b"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_intel_npu_compiler_loader.dll",
+                                     "size":  529672,
+                                     "sha256":  "ea3a6b018a40e1a57c3d982a5e661ba12e6c3ada09ffe77a5eb9af58930f0fe1",
+                                     "file_version":  "2026.4.0.1",
+                                     "product_version":  "2026.4.0-1-d8047fb380b-4d683512f7b"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_intel_npu_plugin.dll",
+                                     "size":  7615752,
+                                     "sha256":  "e27a466c9690e079b82d453a93a583d9008cb08e9965a6f459c56bccde965198",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_intel_npu_vm_runtime.dll",
+                                     "size":  485640,
+                                     "sha256":  "b4ed9e64bcb6855b918c315614631d6bad2f506f56c18394e38d2ce6aed61b14",
+                                     "file_version":  "2026.4.0.1",
+                                     "product_version":  "2026.4.0-1-d8047fb380b-4d683512f7b"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_ir_frontend.dll",
+                                     "size":  509192,
+                                     "sha256":  "44604b39cbafcf4d8aa27697cee639038bdfcf24f5245f0be07abcf30609d4cd",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_onnx_frontend.dll",
+                                     "size":  5414160,
+                                     "sha256":  "1554b14f226c3bcdf73362cd818c5137f6f80c1ef19e4850a8b4765b70dba0f4",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_paddle_frontend.dll",
+                                     "size":  1688848,
+                                     "sha256":  "48b407390f572e20d557a8a5ba87f0ba42d4a224b92d7063332ddbbcc29c807c",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_pytorch_frontend.dll",
+                                     "size":  2791176,
+                                     "sha256":  "947363b58a525137487d4d3cac9f2d110c0ae1ae283ab27388c9d3d057ccecec",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_tensorflow_frontend.dll",
+                                     "size":  4128016,
+                                     "sha256":  "b8c7cb549e942c3062b1e13d4aea34c87d497f10b9f4dcfacc6d8848223eeef3",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_tensorflow_lite_frontend.dll",
+                                     "size":  1263376,
+                                     "sha256":  "0ded983534495e1c366fcb989fe1d63e226b12be73158000f2433e4278c06a5a",
+                                     "file_version":  "2026.4.0.22930",
+                                     "product_version":  "2026.4.0-22930-61afcb26271-releases/2026/4"
+                                 },
+                                 {
+                                     "path":  "C:\\opt\\openvino\\runtime\\bin\\intel64\\Release\\openvino_tokenizers.dll",
+                                     "size":  3483912,
+                                     "sha256":  "e96e02744f4cd9567e54065430aa609e97c48951299a21f30abc00fba6078d3c",
+                                     "file_version":  "2026.4.0.0",
+                                     "product_version":  "2026.4.0.0-736-a04accf6282"
+                                 }
+                             ]
+                },
+    "template":  {
+                     "schema_version":  1,
+                     "prepared_at_utc":  "2026-09-06T13:46:06.6779282Z",
+                     "source_model_path":  "C:\\llm\\models\\OpenVINO\\Wondernutts\\gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov",
+                     "overlay_path":  "C:\\llm\\models\\runtime\\gemma4-26-heretic-google-current",
+                     "weights_authority":  "Wondernutts IR/weights only",
+                     "source_template_used":  false,
+                     "source_template_sha256":  "24d32be0f96bbea1b9e1afd89e19bd4a632ab567c90555c7284be65f5e7f7609",
+                     "google_model":  "google/gemma-4-26B-A4B-it",
+                     "google_revision":  "4d7ae4984b7db7de8f8457170b3f1a419ee76d52",
+                     "google_template_url":  "https://huggingface.co/google/gemma-4-26B-A4B-it/resolve/4d7ae4984b7db7de8f8457170b3f1a419ee76d52/chat_template.jinja?download=true",
+                     "google_template_sha256":  "ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4",
+                     "link_mode_requested":  "Auto",
+                     "source_and_overlay_same_volume":  true
+                 }
+}

@@ -125,13 +125,13 @@ TEST_F(Gemma4V2ContractTest, RecoversWhitespacePrefixedBareKnownCallWithoutEndMa
 TEST_F(Gemma4V2ContractTest, DoesNotPromoteBareUnknownTool) {
     auto parsed = parse("prefix\ncall:not_in_request{x:1}");
     EXPECT_TRUE(parsed.toolCalls.empty());
-    EXPECT_THAT(parsed.content, testing::HasSubstr("call:not_in_request"));
+    EXPECT_NE(parsed.content.find("call:not_in_request"), std::string::npos);
 }
 
 TEST_F(Gemma4V2ContractTest, DoesNotPromoteQuotedBareCallExample) {
     auto parsed = parse("Example: \"call:question{questions:[]}\"");
     EXPECT_TRUE(parsed.toolCalls.empty());
-    EXPECT_THAT(parsed.content, testing::HasSubstr("call:question"));
+    EXPECT_NE(parsed.content.find("call:question"), std::string::npos);
 }
 
 TEST_F(Gemma4V2ContractTest, DoesNotPromoteBareCallEmbeddedInWord) {

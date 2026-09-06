@@ -1,0 +1,52 @@
+{
+  "repository": "C:\\git\\model_server-gemma4-google-template-session-state",
+  "head_sha": "8f84ec0aca067f6b06a6eaf33db799037130c57f",
+  "requested_sha": "8f84ec0aca067f6b06a6eaf33db799037130c57f",
+  "resolved_sha": "8f84ec0aca067f6b06a6eaf33db799037130c57f",
+  "head_matches_requested": true,
+  "dirty": true,
+  "status_porcelain": [
+    " M src/llm/io_processing/chat_template/analyzer.cpp",
+    " M src/llm/io_processing/input_processors/chat_template_adapter.cpp",
+    " M src/llm/py_jinja_template_processor.cpp",
+    " M src/llm/servable.cpp",
+    " M src/test/llm/chat_template_analyzer_test.cpp",
+    " M src/test/llm/output_parsers/gemma4_v2_contract_test.cpp",
+    "?? ab-evidence/debug_jinja_str_get.py",
+    "?? ab-evidence/newest-runtime/gemma4-template-provenance.json",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/request1-input.json",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/request1-response.json",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/request1-response.raw",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/request2-input.json",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/request2-response.json",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/request2-response.raw",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/session-config.json",
+    "?? ab-evidence/newest-runtime/live-named-omit-seed/tool1-result.json",
+    "?? ab-evidence/newest-runtime/live-named-seed42/request1-input.json",
+    "?? ab-evidence/newest-runtime/live-named-seed42/request1-response.json",
+    "?? ab-evidence/newest-runtime/live-named-seed42/request1-response.raw",
+    "?? ab-evidence/newest-runtime/live-named-seed42/request2-input.json",
+    "?? ab-evidence/newest-runtime/live-named-seed42/request2-response.json",
+    "?? ab-evidence/newest-runtime/live-named-seed42/request2-response.raw",
+    "?? ab-evidence/newest-runtime/live-named-seed42/session-config.json",
+    "?? ab-evidence/newest-runtime/live-named-seed42/tool1-result.json",
+    "?? ab-evidence/newest-runtime/runtime-provenance.json",
+    "?? ab-evidence/newest-runtime/status.json",
+    "?? bazel-model_server-gemma4-google-template-session-state/"
+  ],
+  "changed_files": [
+    "src/test/llm/max_model_length_test.cpp"
+  ],
+  "generated_artifacts": [
+    "bazel-bin",
+    "bazel-out",
+    "bazel-testlogs",
+    "ab-evidence"
+  ],
+  "origin": "https://github.com/DassaultFalconKing/model_server.git",
+  "executor": {
+    "read_only": true,
+    "allow_network": false,
+    "source_mutation_observed": false
+  }
+}

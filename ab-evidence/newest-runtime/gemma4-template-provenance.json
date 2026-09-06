@@ -1,0 +1,15 @@
+﻿{
+    "schema_version":  1,
+    "prepared_at_utc":  "2026-09-06T13:46:06.6779282Z",
+    "source_model_path":  "C:\\llm\\models\\OpenVINO\\Wondernutts\\gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov",
+    "overlay_path":  "C:\\llm\\models\\runtime\\gemma4-26-heretic-google-current",
+    "weights_authority":  "Wondernutts IR/weights only",
+    "source_template_used":  false,
+    "source_template_sha256":  "24d32be0f96bbea1b9e1afd89e19bd4a632ab567c90555c7284be65f5e7f7609",
+    "google_model":  "google/gemma-4-26B-A4B-it",
+    "google_revision":  "4d7ae4984b7db7de8f8457170b3f1a419ee76d52",
+    "google_template_url":  "https://huggingface.co/google/gemma-4-26B-A4B-it/resolve/4d7ae4984b7db7de8f8457170b3f1a419ee76d52/chat_template.jinja?download=true",
+    "google_template_sha256":  "ae53464bf3be25802b3a5b37def7fd89667067d7577049b3b2d74c4d8de4c6d4",
+    "link_mode_requested":  "Auto",
+    "source_and_overlay_same_volume":  true
+}

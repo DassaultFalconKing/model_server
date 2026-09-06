@@ -15,6 +15,8 @@
 //*****************************************************************************
 #include "analyzer.hpp"
 
+#include <chrono>
+#include <fstream>
 #include <string>
 
 namespace ovms {
@@ -50,9 +52,28 @@ ChatTemplateAnalysisResult ChatTemplateAnalyzer::analyze(const std::string& temp
         result.detectedToolParser = "gemma4";
         result.detectedReasoningParser = "gemma4";  // gemma is always tied to its own parser for reasoning
         result.caps.supportsToolCalls = true;
-        // Only templates with an explicit mapping branch can safely receive a JSON object
-        // in role:tool content. Older Gemma4 templates keep their original string behavior.
-        result.caps.parseToolResponseJsonContent = contains(templateSource, "response is mapping");
+        // format_tool_response_block has "response is mapping", but that is not safe on
+        // its own. Jinja2 treats dicts as sequences, so converting role:tool content to
+        // an object makes the OpenAI forward-scan iterate dict keys and call part.get()
+        // on strings ('str object' has no attribute 'get'). Keep JSON content as a
+        // string unless the template has a mapping test without that parts scan.
+        const bool mapsResponse = contains(templateSource, "response is mapping");
+        const bool iteratesPartsWithGet = contains(templateSource, "part.get('type')");
+        result.caps.parseToolResponseJsonContent = mapsResponse && !iteratesPartsWithGet;
+        // #region agent log
+        {
+            std::ofstream dbg("C:\\git\\model_server-gemma4-clean\\debug-afec93.log", std::ios::app);
+            if (dbg) {
+                const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    std::chrono::system_clock::now().time_since_epoch())
+                                    .count();
+                dbg << "{\"sessionId\":\"afec93\",\"hypothesisId\":\"D\",\"location\":\"analyzer.cpp:analyze\",\"message\":\"gemma4 parseToolResponseJsonContent\",\"data\":{\"mapsResponse\":"
+                    << (mapsResponse ? "true" : "false") << ",\"iteratesPartsWithGet\":" << (iteratesPartsWithGet ? "true" : "false")
+                    << ",\"parseToolResponseJsonContent\":" << (result.caps.parseToolResponseJsonContent ? "true" : "false")
+                    << "},\"timestamp\":" << ms << ",\"runId\":\"post-fix\"}\n";
+            }
+        }
+        // #endregion
         return result;
     }
 
