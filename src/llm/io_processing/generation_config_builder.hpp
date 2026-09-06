@@ -32,7 +32,6 @@
 #include "devstral/generation_config_builder.hpp"
 #include "../apis/openai_request.hpp"
 #include "../../logging.hpp"
-#include "src/port/rapidjson_document.hpp"
 
 namespace ovms {
 
@@ -51,16 +50,13 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         return toolChoice == "required" || isNamedToolChoice(toolChoice);
     }
 
-    static void validateToolSchema(const std::string& toolName, const ToolSchemaWrapper& toolSchemaWrapper) {
-        rapidjson::Document schema;
-        schema.Parse(toolSchemaWrapper.stringRepr.c_str());
-        if (schema.HasParseError() || !schema.IsObject()) {
-            throw std::invalid_argument("Gemma4 guided tool schema for '" + toolName + "' must be a valid JSON object");
-        }
-    }
-
     static ov::genai::StructuredOutputConfig::Tag buildToolTag(const std::string& toolName, const ToolSchemaWrapper& toolSchemaWrapper) {
-        validateToolSchema(toolName, toolSchemaWrapper);
+        // parseTools() has already required parameters to be a JSON object. GenAI's
+        // StructuredOutputConfig::validate(tokenizer) remains the grammar authority;
+        // do not introduce a second JSON parser dependency into this Bazel target.
+        if (toolSchemaWrapper.stringRepr.empty()) {
+            throw std::invalid_argument("Gemma4 guided tool schema for '" + toolName + "' is empty");
+        }
         ov::genai::StructuredOutputConfig::Tag tag;
         tag.begin = "<|tool_call>call:" + toolName;
         tag.content = ov::genai::StructuredOutputConfig::JSONSchema(toolSchemaWrapper.stringRepr);
