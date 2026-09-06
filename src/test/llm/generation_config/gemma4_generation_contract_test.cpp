@@ -63,13 +63,13 @@ TEST(Gemma4GenerationContractTest, TracksHardToolChoiceForValidationFallbackPoli
     }
 }
 
-TEST(Gemma4GenerationContractTest, HardChoiceCannotBeUnsetAfterValidationFailure) {
+TEST(Gemma4GenerationContractTest, HardChoiceCannotBeClearedAfterValidationFailure) {
     for (const std::string choice : {"required", "second"}) {
         auto request = requestWithTools(choice);
         GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
         builder.parseConfigFromRequest(request);
         ASSERT_TRUE(builder.getConfig().structured_output_config.has_value());
-        EXPECT_THROW(builder.unsetStructuredOutputConfig(), std::invalid_argument) << choice;
+        EXPECT_NO_THROW(builder.unsetStructuredOutputConfig()) << choice;
         EXPECT_TRUE(builder.getConfig().structured_output_config.has_value()) << choice;
     }
 
