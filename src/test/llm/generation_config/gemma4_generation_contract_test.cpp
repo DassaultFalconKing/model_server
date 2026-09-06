@@ -15,6 +15,7 @@ using Structured = ov::genai::StructuredOutputConfig;
 namespace {
 const std::string emptySchema = R"({"type":"object","properties":{},"additionalProperties":false})";
 const std::string responseSchema = R"({"type":"structural_tag","format":{"type":"json_schema","json_schema":{"type":"object","properties":{"answer":{"type":"string"}}}}})";
+const std::string openCodeQuestionSchema = R"({"type":"object","properties":{"questions":{"type":"array","items":{"type":"object","properties":{"question":{"type":"string"},"header":{"type":"string"},"options":{"type":"array","items":{"type":"object","properties":{"label":{"type":"string"},"description":{"type":"string"}},"required":["label","description"]}},"multiple":{"type":"boolean"},"custom":{"type":"boolean"}},"required":["question","header","options"]}}},"required":["questions"]})";
 
 OpenAIRequest requestWithTools(const std::string& choice) {
     OpenAIRequest request;
@@ -67,20 +68,15 @@ TEST(Gemma4GenerationContractTest, TracksHardToolChoiceForValidationFallbackPoli
     }
 }
 
-TEST(Gemma4GenerationContractTest, AutoIsOptionalAndHardChoicesAreImmediateAndRepeatable) {
+TEST(Gemma4GenerationContractTest, AutoUsesNativeGemmaGenerationAndHardChoicesStayImmediateAndRepeatable) {
     for (bool guided : {false, true}) {
         for (const std::string choice : {"auto", "required", "second"}) {
             auto request = requestWithTools(choice);
             GenerationConfigBuilder builder({}, "gemma4", guided, STANDARD);
             builder.parseConfigFromRequest(request);
-            if (choice == "auto" && !guided) {
-                EXPECT_FALSE(builder.getConfig().structured_output_config);
-            } else if (choice == "auto") {
-                const auto& tags = grammar<Structured::TriggeredTags>(builder.getConfig());
-                EXPECT_FALSE(tags.at_least_one);
-                EXPECT_FALSE(tags.stop_after_first);
-                EXPECT_EQ(tags.triggers, std::vector<std::string>{"<|tool_call>"});
-                ASSERT_EQ(tags.tags.size(), 2u);
+            if (choice == "auto") {
+                EXPECT_FALSE(builder.getConfig().structured_output_config)
+                    << "Gemma4 auto tool choice must remain native/unconstrained; the parser extracts the model's native tool protocol";
             } else {
                 const auto& tags = grammar<Structured::TagsWithSeparator>(builder.getConfig());
                 EXPECT_TRUE(tags.at_least_one);
@@ -90,6 +86,25 @@ TEST(Gemma4GenerationContractTest, AutoIsOptionalAndHardChoicesAreImmediateAndRe
                 if (choice == "second")
                     EXPECT_EQ(tags.tags[0].begin, "<|tool_call>call:second");
             }
+        }
+    }
+}
+
+TEST(Gemma4GenerationContractTest, OpenCodeQuestionSchemaDoesNotConstrainAutoButRemainsEnforcedForRequired) {
+    for (const std::string choice : {"auto", "required"}) {
+        OpenAIRequest request;
+        request.toolChoice = choice;
+        request.toolNameSchemaMap.emplace("question", ToolSchemaWrapper{nullptr, openCodeQuestionSchema});
+        GenerationConfigBuilder builder({}, "gemma4", true, STANDARD);
+        builder.parseConfigFromRequest(request);
+
+        if (choice == "auto") {
+            EXPECT_FALSE(builder.getConfig().structured_output_config);
+        } else {
+            const auto& tags = grammar<Structured::TagsWithSeparator>(builder.getConfig());
+            ASSERT_EQ(tags.tags.size(), 1u);
+            EXPECT_EQ(tags.tags[0].begin, "<|tool_call>call:question");
+            EXPECT_EQ(std::get<Structured::JSONSchema>(tags.tags[0].content).value, openCodeQuestionSchema);
         }
     }
 }
