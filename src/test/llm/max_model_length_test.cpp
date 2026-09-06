@@ -18,6 +18,7 @@
 #include <rapidjson/document.h>
 
 #include <fstream>
+#include <optional>
 #include <string>
 
 #include <openvino/genai/tokenizer.hpp>
@@ -261,8 +262,8 @@ TEST_F(SessionStateStoreTest, RejectsUnsafeSessionId) {
 }
 
 TEST_F(SessionStateStoreTest, RefusesRequestPastConfiguredRequestLimit) {
-    SessionStateStore store(directoryPath, 4, 1024 * 1024, 16);
+    SessionStateStore store(directoryPath, 4, 1024 * 1024, 1024);
     auto doc = makeSessionRequest();
-    auto result = store.beginTurn("session-large", std::string(128, 'x'), doc);
+    auto result = store.beginTurn("session-large", std::string(2048, 'x'), doc);
     EXPECT_FALSE(result.ok());
 }
