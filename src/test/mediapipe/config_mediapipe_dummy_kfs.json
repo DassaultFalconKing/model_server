@@ -3,7 +3,7 @@
     "mediapipe_config_list": [
     {
         "name":"mediapipeDummyKFS",
-        "graph_path":"/ovms/src/test/mediapipe/graphkfspass.pbtxt"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphkfspass.pbtxt"
     }
     ]
 }

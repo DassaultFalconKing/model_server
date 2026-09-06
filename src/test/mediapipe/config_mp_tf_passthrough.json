@@ -3,29 +3,29 @@
         {
             "config": {
                 "name": "dummy",
-                "base_path": "/ovms/src/test/dummy",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\dummy",
                 "shape": "(-1, -1)"
             }
         },
         {
             "config": {
                 "name": "scalar",
-                "base_path": "/ovms/src/test/scalar"
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\scalar"
             }
         }
     ],
     "mediapipe_config_list": [
         {
             "name": "mpTfsPassthrough",
-            "graph_path": "/ovms/src/test/mediapipe/graphtfpassthrough.pbtxt"
+            "graph_path": "C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphtfpassthrough.pbtxt"
         },
         {
             "name": "mpTFDummy",
-            "graph_path": "/ovms/src/test/mediapipe/graphdummy_tf.pbtxt"
+            "graph_path": "C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphdummy_tf.pbtxt"
         },
         {
             "name": "mpTFScalar",
-            "graph_path": "/ovms/src/test/mediapipe/graphscalar_tf.pbtxt"
+            "graph_path": "C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphscalar_tf.pbtxt"
         }
     ]
 }

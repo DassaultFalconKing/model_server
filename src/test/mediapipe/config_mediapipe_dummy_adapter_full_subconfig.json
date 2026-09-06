@@ -3,13 +3,13 @@
     "mediapipe_config_list": [
     {
         "name":"mediaDummyADAPTFULL",
-        "graph_path":"/ovms/src/test/mediapipe/graphdummyadapterfull.pbtxt",
-        "subconfig":"/ovms/src/test/mediapipe/config_standard_dummy.json"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphdummyadapterfull.pbtxt",
+        "subconfig":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/config_standard_dummy.json"
     },
     {
         "name":"mediaDummy",
-        "graph_path":"/ovms/src/test/mediapipe/graphdummy.pbtxt",
-        "subconfig":"/ovms/src/test/mediapipe/config_standard_dummy.json"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphdummy.pbtxt",
+        "subconfig":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/config_standard_dummy.json"
     }
     ]
 }

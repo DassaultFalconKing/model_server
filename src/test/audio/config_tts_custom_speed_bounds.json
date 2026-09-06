@@ -3,8 +3,8 @@
     "mediapipe_config_list": [
     {
         "name":"text2speech",
-        "base_path":"/ovms/src/test/audio/",
-        "graph_path":"/ovms/src/test/audio/graph_tts_custom_speed_bounds.pbtxt"
+        "base_path":"C:\\git\\model_server-gemma4\\src\\test\\audio/",
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\audio/graph_tts_custom_speed_bounds.pbtxt"
     }
     ]
 }

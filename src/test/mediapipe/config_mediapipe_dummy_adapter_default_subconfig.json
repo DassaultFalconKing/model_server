@@ -3,8 +3,8 @@
     "mediapipe_config_list": [
     {
         "name":"mediaDummy",
-        "graph_path":"/ovms/src/test/mediapipe/graphdummy.pbtxt",
-        "base_path":"/ovms/src/test/mediapipe/relative_paths/only_subconfig"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphdummy.pbtxt",
+        "base_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/relative_paths/only_subconfig"
     }
     ]
 }

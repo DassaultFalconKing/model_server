@@ -2,7 +2,7 @@
     "model_config_list": [
         {"config": {
                 "name": "add",
-                "base_path": "/ovms/src/test/add_two_inputs_model",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\add_two_inputs_model",
                 "shape": {"input1":"(1, 10)"}
         }
         }
@@ -10,11 +10,11 @@
     "mediapipe_config_list": [
     {
         "name":"mediapipeAddADAPTFULL",
-        "graph_path":"/ovms/src/test/mediapipe/graphaddadapterfull.pbtxt"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphaddadapterfull.pbtxt"
     },
     {
         "name":"mediapipeAdd",
-        "graph_path":"/ovms/src/test/mediapipe/graphadd.pbtxt"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphadd.pbtxt"
     }
     ]
 }

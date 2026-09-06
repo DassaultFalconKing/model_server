@@ -3,14 +3,14 @@
         {
             "config": {
                 "name": "dummy",
-                "base_path": "/ovms/src/test/dummy",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\dummy",
                 "shape": "(1, 10)"
             }
         },
         {
             "config": {
                 "name": "add",
-                "base_path": "/ovms/src/test/add_two_inputs_model",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\add_two_inputs_model",
                 "shape": {
                     "input1": "(1, 10)"
                 }
@@ -20,19 +20,19 @@
     "mediapipe_config_list": [
         {
             "name": "mediapipeDummyADAPTFULL",
-            "graph_path": "/ovms/src/test/mediapipe/graphdummyadapterfull.pbtxt"
+            "graph_path": "C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphdummyadapterfull.pbtxt"
         },
         {
             "name": "mediapipeDummy",
-            "graph_path": "/ovms/src/test/mediapipe/graphdummy.pbtxt"
+            "graph_path": "C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphdummy.pbtxt"
         },
         {
             "name":"mediapipeAddADAPTFULL",
-            "graph_path":"/ovms/src/test/mediapipe/graphaddadapterfull.pbtxt"
+            "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphaddadapterfull.pbtxt"
         },
         {
             "name":"mediapipeAdd",
-            "graph_path":"/ovms/src/test/mediapipe/graphadd.pbtxt"
+            "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphadd.pbtxt"
         }
     ]
 }

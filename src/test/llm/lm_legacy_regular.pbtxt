@@ -29,7 +29,7 @@ node {
     }
     node_options: {
         [type.googleapis.com/mediapipe.LLMCalculatorOptions]: {
-          models_path: "/ovms/src/test/llm_testing/HuggingFaceTB/SmolLM2-360M-Instruct"
+          models_path: "C:\\git\\model_server-gemma4\\src\\test\\llm_testing/HuggingFaceTB/SmolLM2-360M-Instruct"
           cache_size: 1
           pipeline_type: LM
         }

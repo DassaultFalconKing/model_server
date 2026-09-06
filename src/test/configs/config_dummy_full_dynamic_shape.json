@@ -3,7 +3,7 @@
         {
             "config": {
                 "name": "dummy",
-                "base_path": "/ovms/src/test/dummy",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\dummy",
                 "shape": {"b":"(-1,-1)"},
                 "plugin_config": {"ENABLE_CPU_PINNING": false}
             }

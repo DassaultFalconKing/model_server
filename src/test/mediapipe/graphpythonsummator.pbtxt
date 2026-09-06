@@ -25,7 +25,7 @@ node {
     output_stream: "OUTPUT:out"
     node_options: {
         [type.googleapis.com / mediapipe.PythonExecutorCalculatorOptions]: {
-          handler_path: "/ovms/src/test/mediapipe/python/scripts/add_two_inputs.py"
+          handler_path: "C:\\git\\model_server-gemma4\\src\\test\\mediapipe/python/scripts/add_two_inputs.py"
         }
     }
 }

@@ -3,20 +3,20 @@
         {
             "config": {
                 "name": "dummy",
-                "base_path": "/ovms/src/test/dummy"
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\dummy"
             }
         },
         {
             "config": {
                 "name": "dummyDynamic",
-                "base_path": "/ovms/src/test/dummy",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\dummy",
                 "shape": {"b":"(-1,1:10)"}
             }
         },
         {
             "config": {
                 "name": "add",
-                "base_path": "/ovms/src/test/add_two_inputs_model",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\add_two_inputs_model",
                 "shape": {"input1":"(1, 3)",
                           "input2":"(1, 3)"}
             }
@@ -24,7 +24,7 @@
         {
             "config": {
                 "name": "scalar",
-                "base_path": "/ovms/src/test/scalar"
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\scalar"
             }
         }
     ],

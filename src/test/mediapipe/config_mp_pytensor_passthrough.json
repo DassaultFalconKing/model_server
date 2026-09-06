@@ -3,7 +3,7 @@
     "mediapipe_config_list": [
     {
         "name":"mpPytensorPassthrough",
-        "graph_path":"/ovms/src/test/mediapipe/graphpytensorpassthrough.pbtxt"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\mediapipe/graphpytensorpassthrough.pbtxt"
     }
     ]
 }

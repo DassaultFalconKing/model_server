@@ -29,7 +29,7 @@ node {
     }
     node_options: {
         [type.googleapis.com/mediapipe.LLMCalculatorOptions]: {
-          models_path: "/ovms/src/test/llm_testing/facebook/opt-125m"
+          models_path: "C:\\git\\model_server-gemma4\\src\\test\\llm_testing/facebook/opt-125m"
           cache_size: 1,
           tool_parser: "phi4" # fake tool parser to enable negative testing for tools
           enable_tool_guided_generation: true

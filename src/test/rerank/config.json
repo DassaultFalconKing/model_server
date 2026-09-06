@@ -3,7 +3,7 @@
     "mediapipe_config_list": [
         {
             "name": "rerank_ov",
-            "graph_path": "/ovms/src/test/rerank/graph_ov.pbtxt"
+            "graph_path": "C:\\git\\model_server-gemma4\\src\\test\\rerank/graph_ov.pbtxt"
         }
     ]
 }

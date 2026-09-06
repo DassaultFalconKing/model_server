@@ -3,7 +3,7 @@
     "mediapipe_config_list": [
     {
         "name":"lm_cb_regular_queue",
-        "graph_path":"/ovms/src/test/llm/lm_cb_regular_queue.pbtxt"
+        "graph_path":"C:\\git\\model_server-gemma4\\src\\test\\llm/lm_cb_regular_queue.pbtxt"
     }
     ]
 }

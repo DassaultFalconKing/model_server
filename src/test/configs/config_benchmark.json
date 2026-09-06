@@ -2,7 +2,7 @@
     "model_config_list": [
         {"config": {
                 "name": "dummy",
-                "base_path": "/ovms/src/test/dummy",
+                "base_path": "C:\\git\\model_server-gemma4\\src\\test\\dummy",
                 "plugin_config": {
                     "NUM_STREAMS":1,
                     "PERFORMANCE_HINT": "THROUGHPUT",
