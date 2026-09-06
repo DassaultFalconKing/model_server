@@ -239,6 +239,27 @@ TEST_F(SessionStateStoreTest, LegacyVlmLoadsSessionBeforeItsOverriddenParser) {
     }, ::testing::ExitedWithCode(0), "");
 }
 
+TEST_F(SessionStateStoreTest, V3ChatCompletionsLowercaseSessionHeaderWritesJournal) {
+    ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+    ASSERT_EXIT({
+        EnvGuard environment;
+        environment.set("OVMS_SESSION_STORE_DIR", directoryPath);
+        VisualLanguageModelLegacyServable servable;
+        auto context = servable.createExecutionContext();
+        HttpPayload payload;
+        payload.uri = "/v3/chat/completions";
+        payload.headers.emplace("x-ovms-session-id", "gemma4-live-test");
+        payload.headers.emplace("x-ovms-session-store", directoryPath);
+        payload.body = R"({"model":"gemma4","messages":[],"seed":42})";
+        payload.parsedJson = std::make_shared<rapidjson::Document>();
+        payload.parsedJson->Parse(payload.body.c_str());
+        ASSERT_TRUE(servable.loadRequest(context, payload).ok());
+        EXPECT_TRUE(std::filesystem::exists(directoryPath + "/gemma4-live-test/manifest.json"));
+        EXPECT_TRUE(std::filesystem::exists(directoryPath + "/gemma4-live-test/turns/000000000001/raw-request.json"));
+        std::exit(::testing::Test::HasFailure() ? 1 : 0);
+    }, ::testing::ExitedWithCode(0), "");
+}
+
 TEST_F(SessionStateStoreTest, FirstTurnWithoutSeedGeneratesAndPersistsNonZeroSeed) {
     SessionStateStore store(directoryPath, 4, 1024 * 1024, 64 * 1024);
     auto doc = makeSessionRequest();

@@ -377,6 +377,13 @@ std::shared_ptr<SessionStateStore> SessionStateStore::fromEnvironment() {
     const size_t cacheEntries = static_cast<size_t>(parseEnvUnsigned("OVMS_SESSION_CACHE_ENTRIES", DEFAULT_CACHE_ENTRIES, 1));
     const uint64_t maxBytes = parseEnvUnsigned("OVMS_SESSION_MAX_BYTES", DEFAULT_MAX_BYTES, 1024 * 1024);
     const size_t maxRequestBytes = static_cast<size_t>(parseEnvUnsigned("OVMS_SESSION_MAX_REQUEST_BYTES", DEFAULT_MAX_REQUEST_BYTES, 1024));
+    if (rootDirectory.empty()) {
+        SPDLOG_LOGGER_INFO(llm_calculator_logger, "session-state: store disabled; OVMS_SESSION_STORE_DIR is unset");
+    } else {
+        SPDLOG_LOGGER_INFO(llm_calculator_logger,
+            "session-state: constructing store from OVMS_SESSION_STORE_DIR={}",
+            rootDirectory);
+    }
     return std::make_shared<SessionStateStore>(rootDirectory, cacheEntries, maxBytes, maxRequestBytes);
 }
 
@@ -546,12 +553,32 @@ absl::Status GenAiServable::loadRequest(std::shared_ptr<GenAiServableExecutionCo
         return absl::OkStatus();
     auto sessionStore = processSessionStateStore();
     executionContext->sessionTurn = {};
-    if (auto sessionId = getSessionIdHeader(executionContext->payload.headers); sessionId.has_value()) {
+    auto sessionId = getSessionIdHeader(executionContext->payload.headers);
+    const char* storeDir = std::getenv("OVMS_SESSION_STORE_DIR");
+    SPDLOG_LOGGER_INFO(llm_calculator_logger,
+        "session-state: uri={} header_count={} session_id={} store_enabled={} store_path={}",
+        payload.uri,
+        payload.headers.size(),
+        sessionId.value_or("<absent>"),
+        sessionStore->enabled(),
+        storeDir ? storeDir : "<unset>");
+    if (sessionId.has_value()) {
         if (sessionStore->enabled()) {
             auto turn = sessionStore->beginTurn(sessionId.value(), executionContext->payload.body, *executionContext->payload.parsedJson);
-            if (!turn.ok())
+            if (!turn.ok()) {
+                SPDLOG_LOGGER_ERROR(llm_calculator_logger,
+                    "session-state: beginTurn failed session_id={} status={}",
+                    sessionId.value(),
+                    turn.status().ToString());
                 return turn.status();
+            }
             executionContext->sessionTurn = std::move(*turn);
+            SPDLOG_LOGGER_INFO(llm_calculator_logger,
+                "session-state: beginTurn session_id={} turn={} seed={} store_path={}",
+                executionContext->sessionTurn.sessionId,
+                executionContext->sessionTurn.turnIndex,
+                executionContext->sessionTurn.seed,
+                storeDir ? storeDir : "<unset>");
         } else {
             static std::once_flag warningOnce;
             std::call_once(warningOnce, []() {
@@ -1004,6 +1031,9 @@ void logRequestDetails(const ovms::HttpPayload& payload) {
     parsedJson->Accept(writer);
     SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Request body: {}", buffer.GetString());
     SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Request uri: {}", payload.uri);
+    for (const auto& [name, value] : payload.headers) {
+        SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Request header: {}={}", name, value);
+    }
 }
 
 }  // namespace ovms
