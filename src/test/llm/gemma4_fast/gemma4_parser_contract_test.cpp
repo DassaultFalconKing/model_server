@@ -17,8 +17,11 @@
 #include <gtest/gtest.h>
 #include <openvino/genai/tokenizer.hpp>
 
+#include <cstddef>
 #include <memory>
 #include <string>
+#include <utility>
+#include <variant>
 #include <vector>
 
 #include "../../../llm/io_processing/output_parser.hpp"
@@ -28,6 +31,13 @@
 using namespace ovms;
 
 namespace {
+template <class... Ts>
+struct Overloaded : Ts... {
+    using Ts::operator()...;
+};
+template <class... Ts>
+Overloaded(Ts...) -> Overloaded<Ts...>;
+
 #ifdef _WIN32
 const std::string tokenizerPath = getWindowsRepoRootPath() + "\\src\\test\\llm_testing\\OpenVINO\\gemma-4-E4B-it-int4-ov";
 #else
@@ -45,7 +55,7 @@ ParsedOutput parseWithStreamer(
     ParsedOutput result;
     std::vector<ToolCall> toolCalls;
     auto callback = [&](Delta delta, bool /*isLast*/) {
-        std::visit(overloaded{
+        std::visit(Overloaded{
                        [&](const ContentDelta& d) { result.content.append(d.text); },
                        [&](const ReasoningDelta& d) { result.reasoning.append(d.text); },
                        [&](const ToolCallDelta& d) {
