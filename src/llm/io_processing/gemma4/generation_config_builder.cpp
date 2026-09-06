@@ -98,36 +98,34 @@ void Gemma4GenerationConfigBuilder::parseConfigFromRequest(const OpenAIRequest& 
         return;
     }
 
-    if (!hardToolChoice && !enableToolGuidedGeneration) {
+    // Keep Gemma4 auto tool selection on the model's native protocol and let the
+    // Gemma4 output parser extract calls afterwards. Constraining auto generation
+    // after <|tool_call> is tempting, but real Gemma4 deployments have shown
+    // constrained-decoding token collapse/pad-token failures, especially with
+    // complex nested schemas used by coding agents. This also matches vLLM's
+    // default auto-tool policy: unconstrained unless a tool explicitly opts into
+    // strict schema enforcement. OVMS does not currently retain OpenAI per-tool
+    // `strict`, so applying one global auto grammar is not equivalent and is less
+    // compatible than native generation.
+    if (!hardToolChoice) {
         return;
     }
 
     auto toolTags = buildToolTags(request);
     if (toolTags.empty()) {
-        // Defensive only: all hard-empty states were rejected above and optional
-        // generation should not install an empty structural grammar.
+        // Defensive only: hard-empty states were rejected above.
         return;
     }
 
-    if (hardToolChoice) {
-        // TriggeredTags still permits prose before Gemma chooses to emit the
-        // trigger. Hard choices must constrain from generation position zero.
-        auto requiredTags = std::make_shared<ov::genai::StructuredOutputConfig::TagsWithSeparator>();
-        requiredTags->tags = std::move(toolTags);
-        requiredTags->separator = "";
-        requiredTags->at_least_one = true;
-        requiredTags->stop_after_first = false;
-        ov::genai::StructuredOutputConfig::StructuralTag structuralTag = requiredTags;
-        setStructuralTagsConfig(structuralTag);
-        return;
-    }
-
-    auto triggeredTags = std::make_shared<ov::genai::StructuredOutputConfig::TriggeredTags>();
-    triggeredTags->triggers.push_back("<|tool_call>");
-    triggeredTags->tags = std::move(toolTags);
-    triggeredTags->at_least_one = false;
-    triggeredTags->stop_after_first = false;
-    ov::genai::StructuredOutputConfig::StructuralTag structuralTag = triggeredTags;
+    // Hard choices must remain fail-closed. Required/named selection is an API
+    // contract, so constrain from generation position zero rather than allowing
+    // prose before the model decides to emit a trigger.
+    auto requiredTags = std::make_shared<ov::genai::StructuredOutputConfig::TagsWithSeparator>();
+    requiredTags->tags = std::move(toolTags);
+    requiredTags->separator = "";
+    requiredTags->at_least_one = true;
+    requiredTags->stop_after_first = false;
+    ov::genai::StructuredOutputConfig::StructuralTag structuralTag = requiredTags;
     setStructuralTagsConfig(structuralTag);
 }
 }  // namespace ovms
