@@ -1,0 +1,1689 @@
+{
+  "provenance": {
+    "git_sha": "74ea54e19825812fac6f5dbf7f9e24051a75eba6",
+    "production_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "binary_path": "C:\\git\\g4-final-review\\bazel-bin\\src\\ovms.exe",
+    "binary_sha256": "83938cf36ef70a53e024e467f31b4a8b841e66815b93292457ae1b1472bd105b",
+    "model": "gemma4-26-heretic",
+    "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+    "parser_name": "gemma4",
+    "chat_template_mode": "JINJA",
+    "model_default_temperature": 1.0,
+    "model_default_top_p": 0.95,
+    "model_default_top_k": 64,
+    "started_utc": "2026-09-06T12:41:35.609297+00:00"
+  },
+  "generated_utc": "2026-09-06T13:38:18.407721+00:00",
+  "cells": {
+    "B_ambiguous": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "B_distractor_prose": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "B_overwrite": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "B_renamed": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 2,
+        "rate": 0.6666666666666666,
+        "low": 0.2076549551264879,
+        "high": 0.9385096847238394
+      },
+      "outcomes": {
+        "F_GROUNDED_VALUE_CORRUPTED": 1,
+        "PASS": 2
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 2,
+        "rate": 0.6666666666666666,
+        "low": 0.2076549551264879,
+        "high": 0.9385096847238394
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 2,
+        "rate": 0.6666666666666666,
+        "low": 0.2076549551264879,
+        "high": 0.9385096847238394
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 2,
+        "rate": 0.6666666666666666,
+        "low": 0.2076549551264879,
+        "high": 0.9385096847238394
+      }
+    },
+    "B_same_name": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "F_GROUNDED_VALUE_CORRUPTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      }
+    },
+    "B_sec_conflict_two_tools": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "F_GROUNDED_VALUE_CORRUPTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      }
+    },
+    "B_sec_fake_sha_prose": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "B_sec_json_array": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      }
+    },
+    "B_sec_json_scalar": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      }
+    },
+    "B_sec_malformed_json": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "B_sec_prompt_injection": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "B_ungrounded_extra_fields": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "auto_A1": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 30
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      }
+    },
+    "auto_A2": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 20
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      }
+    },
+    "auto_A3": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 2,
+        "rate": 0.1,
+        "low": 0.027865893984153206,
+        "high": 0.30103820641179335
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 18,
+        "PASS": 2
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 18,
+        "rate": 0.9,
+        "low": 0.6989617935882066,
+        "high": 0.9721341060158468
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 2,
+        "rate": 0.1,
+        "low": 0.027865893984153206,
+        "high": 0.30103820641179335
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      }
+    },
+    "auto_A4": {
+      "n": 15,
+      "pass": {
+        "n": 15,
+        "k": 15,
+        "rate": 1.0,
+        "low": 0.7961107336956521,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 15
+      },
+      "tool_action_attempt_rate": {
+        "n": 15,
+        "k": 15,
+        "rate": 1.0,
+        "low": 0.7961107336956521,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 15,
+        "k": 15,
+        "rate": 1.0,
+        "low": 0.7961107336956521,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 15,
+        "k": 15,
+        "rate": 1.0,
+        "low": 0.7961107336956521,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 15,
+        "k": 15,
+        "rate": 1.0,
+        "low": 0.7961107336956521,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 15,
+        "k": 15,
+        "rate": 1.0,
+        "low": 0.7961107336956521,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 15,
+        "k": 15,
+        "rate": 1.0,
+        "low": 0.7961107336956521,
+        "high": 1.0
+      }
+    },
+    "auto_A5": {
+      "n": 15,
+      "pass": {
+        "n": 15,
+        "k": 1,
+        "rate": 0.06666666666666667,
+        "low": 0.011866588606194883,
+        "high": 0.2981707755242399
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 13,
+        "I_TRUNCATED": 1,
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 15,
+        "k": 14,
+        "rate": 0.9333333333333333,
+        "low": 0.7018292244757601,
+        "high": 0.9881334113938051
+      },
+      "structured_tool_call_rate": {
+        "n": 15,
+        "k": 14,
+        "rate": 0.9333333333333333,
+        "low": 0.7018292244757601,
+        "high": 0.9881334113938051
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 14,
+        "k": 14,
+        "rate": 1.0,
+        "low": 0.7846829880728186,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 14,
+        "k": 14,
+        "rate": 1.0,
+        "low": 0.7846829880728186,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 15,
+        "k": 13,
+        "rate": 0.8666666666666667,
+        "low": 0.6211750079348376,
+        "high": 0.9626395301086407
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 15,
+        "k": 1,
+        "rate": 0.06666666666666667,
+        "low": 0.011866588606194883,
+        "high": 0.2981707755242399
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 14,
+        "k": 14,
+        "rate": 1.0,
+        "low": 0.7846829880728186,
+        "high": 1.0
+      }
+    },
+    "named_t0_s42": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 30
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      }
+    },
+    "required_t0_s42": {
+      "n": 50,
+      "pass": {
+        "n": 50,
+        "k": 50,
+        "rate": 1.0,
+        "low": 0.9286499658256813,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 50
+      },
+      "tool_action_attempt_rate": {
+        "n": 50,
+        "k": 50,
+        "rate": 1.0,
+        "low": 0.9286499658256813,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 50,
+        "k": 50,
+        "rate": 1.0,
+        "low": 0.9286499658256813,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 50,
+        "k": 50,
+        "rate": 1.0,
+        "low": 0.9286499658256813,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 50,
+        "k": 50,
+        "rate": 1.0,
+        "low": 0.9286499658256813,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 50,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.07135003417431873
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 50,
+        "k": 50,
+        "rate": 1.0,
+        "low": 0.9286499658256813,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 50,
+        "k": 50,
+        "rate": 1.0,
+        "low": 0.9286499658256813,
+        "high": 1.0
+      }
+    },
+    "thinking_off_t09_s42": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "outcomes": {
+        "PASS": 20
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      }
+    },
+    "thinking_off_t0_s42": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 30
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      }
+    },
+    "thinking_on_t09_s42": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 1,
+        "rate": 0.05,
+        "low": 0.008881219432873136,
+        "high": 0.23613589351256675
+      },
+      "outcomes": {
+        "PASS": 1,
+        "G_UNGROUNDED_VALUE_INVENTED": 19
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 19,
+        "rate": 0.95,
+        "low": 0.7638641064874331,
+        "high": 0.9911187805671268
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 1,
+        "rate": 0.05,
+        "low": 0.008881219432873136,
+        "high": 0.23613589351256675
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 20,
+        "k": 20,
+        "rate": 1.0,
+        "low": 0.8388698745050668,
+        "high": 0.9999999999999999
+      }
+    },
+    "thinking_on_t0_s42": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 1,
+        "rate": 0.03333333333333333,
+        "low": 0.0059084379948573795,
+        "high": 0.16670751396958874
+      },
+      "outcomes": {
+        "PASS": 1,
+        "G_UNGROUNDED_VALUE_INVENTED": 29
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 29,
+        "rate": 0.9666666666666667,
+        "low": 0.8332924860304112,
+        "high": 0.9940915620051425
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 1,
+        "rate": 0.03333333333333333,
+        "low": 0.0059084379948573795,
+        "high": 0.16670751396958874
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 30,
+        "k": 30,
+        "rate": 1.0,
+        "low": 0.8864829086095221,
+        "high": 1.0
+      }
+    }
+  },
+  "campaigns": {
+    "A": {
+      "n": 180,
+      "pass": {
+        "n": 180,
+        "k": 98,
+        "rate": 0.5444444444444444,
+        "low": 0.47151816368939986,
+        "high": 0.6155132807714838
+      },
+      "outcomes": {
+        "PASS": 98,
+        "G_UNGROUNDED_VALUE_INVENTED": 81,
+        "I_TRUNCATED": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 180,
+        "k": 179,
+        "rate": 0.9944444444444445,
+        "low": 0.9692061604403328,
+        "high": 0.9990186591869987
+      },
+      "structured_tool_call_rate": {
+        "n": 180,
+        "k": 179,
+        "rate": 0.9944444444444445,
+        "low": 0.9692061604403328,
+        "high": 0.9990186591869987
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 179,
+        "k": 179,
+        "rate": 1.0,
+        "low": 0.9789894641044491,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 179,
+        "k": 179,
+        "rate": 1.0,
+        "low": 0.9789894641044491,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 180,
+        "k": 81,
+        "rate": 0.45,
+        "low": 0.3791218435422471,
+        "high": 0.5229677814392588
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 180,
+        "k": 98,
+        "rate": 0.5444444444444444,
+        "low": 0.47151816368939986,
+        "high": 0.6155132807714838
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 179,
+        "k": 179,
+        "rate": 1.0,
+        "low": 0.9789894641044491,
+        "high": 1.0
+      }
+    },
+    "thinking": {
+      "n": 100,
+      "pass": {
+        "n": 100,
+        "k": 22,
+        "rate": 0.22,
+        "low": 0.15001174503655804,
+        "high": 0.3107053471500031
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 78,
+        "PASS": 22
+      },
+      "tool_action_attempt_rate": {
+        "n": 100,
+        "k": 100,
+        "rate": 1.0,
+        "low": 0.9630051925239981,
+        "high": 0.9999999999999999
+      },
+      "structured_tool_call_rate": {
+        "n": 100,
+        "k": 100,
+        "rate": 1.0,
+        "low": 0.9630051925239981,
+        "high": 0.9999999999999999
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 100,
+        "k": 100,
+        "rate": 1.0,
+        "low": 0.9630051925239981,
+        "high": 0.9999999999999999
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 100,
+        "k": 100,
+        "rate": 1.0,
+        "low": 0.9630051925239981,
+        "high": 0.9999999999999999
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 100,
+        "k": 78,
+        "rate": 0.78,
+        "low": 0.6892946528499969,
+        "high": 0.849988254963442
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 100,
+        "k": 22,
+        "rate": 0.22,
+        "low": 0.15001174503655804,
+        "high": 0.3107053471500031
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 100,
+        "k": 100,
+        "rate": 1.0,
+        "low": 0.9630051925239981,
+        "high": 0.9999999999999999
+      }
+    },
+    "B": {
+      "n": 36,
+      "pass": {
+        "n": 36,
+        "k": 20,
+        "rate": 0.5555555555555556,
+        "low": 0.3958078731600341,
+        "high": 0.7045897012345685
+      },
+      "outcomes": {
+        "F_GROUNDED_VALUE_CORRUPTED": 7,
+        "PASS": 20,
+        "G_UNGROUNDED_VALUE_INVENTED": 9
+      },
+      "tool_action_attempt_rate": {
+        "n": 36,
+        "k": 36,
+        "rate": 1.0,
+        "low": 0.9035781695514236,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 36,
+        "k": 36,
+        "rate": 1.0,
+        "low": 0.9035781695514236,
+        "high": 1.0
+      },
+      "parser_recognition_conditional_on_attempted_call": {
+        "n": 36,
+        "k": 36,
+        "rate": 1.0,
+        "low": 0.9035781695514236,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 36,
+        "k": 23,
+        "rate": 0.6388888888888888,
+        "low": 0.4757478039083198,
+        "high": 0.7752461320781867
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 36,
+        "k": 9,
+        "rate": 0.25,
+        "low": 0.13750323839225387,
+        "high": 0.41070767683203424
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 36,
+        "k": 20,
+        "rate": 0.5555555555555556,
+        "low": 0.3958078731600341,
+        "high": 0.7045897012345685
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 36,
+        "k": 23,
+        "rate": 0.6388888888888888,
+        "low": 0.4757478039083198,
+        "high": 0.7752461320781867
+      }
+    }
+  },
+  "key_rates": {
+    "named_success": {
+      "n": 30,
+      "k": 30,
+      "rate": 1.0,
+      "low": 0.8864829086095221,
+      "high": 1.0
+    },
+    "required_success": {
+      "n": 50,
+      "k": 50,
+      "rate": 1.0,
+      "low": 0.9286499658256813,
+      "high": 1.0
+    },
+    "auto_success": {
+      "n": 100,
+      "k": 18,
+      "rate": 0.18,
+      "low": 0.11700131654251038,
+      "high": 0.26667536024213084
+    },
+    "parser_recognition_conditional_on_attempted_call": {
+      "n": 315,
+      "k": 315,
+      "rate": 1.0,
+      "low": 0.9879513840101166,
+      "high": 1.0
+    },
+    "grounded_exact_value_fidelity_conditional_on_intended_parsed_call": {
+      "n": 315,
+      "k": 302,
+      "rate": 0.9587301587301588,
+      "low": 0.9306804021970664,
+      "high": 0.9757257882122153
+    },
+    "ungrounded_hallucination_rate": {
+      "n": 316,
+      "k": 168,
+      "rate": 0.5316455696202531,
+      "low": 0.47657678873940323,
+      "high": 0.5859541640822434
+    }
+  },
+  "n_total": 316
+}
