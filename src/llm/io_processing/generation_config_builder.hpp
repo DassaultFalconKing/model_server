@@ -91,8 +91,6 @@ public:
             return;
         }
 
-        // Auto stays on Gemma4's native protocol. The output parser extracts tool
-        // calls after generation; no global JSON grammar is installed here.
         if (!hardToolChoice) {
             config.structured_output_config.reset();
             return;
@@ -145,7 +143,9 @@ public:
 
     void unsetStructuredOutputConfig() {
         if (hardToolChoice) {
-            throw std::invalid_argument("Refusing to disable structured output for required/named tool_choice");
+            SPDLOG_LOGGER_WARN(llm_calculator_logger,
+                "Refusing to clear structured output after validation failure for required/named tool_choice; keeping hard Gemma4 generation fail-closed.");
+            return;
         }
         builder_impl->unsetStructuredOutputConfig();
     }
