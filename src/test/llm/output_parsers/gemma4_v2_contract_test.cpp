@@ -95,6 +95,15 @@ TEST_F(Gemma4V2ContractTest, AcceptsColonNameVariantWhenAnchoredByToolMarker) {
     EXPECT_EQ(parsed.toolCalls[0].arguments, expectedQuestionJson);
 }
 
+TEST_F(Gemma4V2ContractTest, AcceptsDirectCallImmediatelyAfterReasoningEnd) {
+    const std::string input = "<|channel>thought\nNeed user input<channel|>call:question{" + nativeQuestionArgs + "}<tool_call|>";
+    auto parsed = parse(input);
+    EXPECT_EQ(parsed.reasoning, "Need user input");
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].name, "question");
+    EXPECT_EQ(parsed.toolCalls[0].arguments, expectedQuestionJson);
+}
+
 TEST_F(Gemma4V2ContractTest, DoesNotEmitUnknownToolAsExecutableCall) {
     auto parsed = parse(R"(<|tool_call>call:not_in_request{x:1}<tool_call|>)");
     EXPECT_TRUE(parsed.toolCalls.empty());
