@@ -253,3 +253,29 @@ TEST_F(Gemma4ParserFastContractTest, NonGemmaReasoningDoesNotTreatLiteralToolMar
     ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*delta));
     EXPECT_EQ(std::get<ReasoningDelta>(*delta).text, "literal <|tool_call> example");
 }
+
+// Root-cause campaign parser-boundary contracts. Record current behavior; do not patch.
+
+TEST_F(Gemma4ParserFastContractTest, CanonicalCallAfterOrdinaryContentIsParsed) {
+    auto parsed = parse("Here is a normal answer.\n<|tool_call>call:question{" + nativeQuestionArgs + "}<tool_call|>");
+    EXPECT_EQ(parsed.content, "Here is a normal answer.\n");
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].name, "question");
+    EXPECT_EQ(parsed.toolCalls[0].arguments, expectedQuestionJson);
+}
+
+TEST_F(Gemma4ParserFastContractTest, BareCallAtPhaseEntryIsAccepted) {
+    auto parsed = parse("call:question{" + nativeQuestionArgs + "}<tool_call|>");
+    EXPECT_TRUE(parsed.content.empty());
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].name, "question");
+    EXPECT_EQ(parsed.toolCalls[0].arguments, expectedQuestionJson);
+}
+
+TEST_F(Gemma4ParserFastContractTest, ProsePlusLateBareCallIsNotPromoted) {
+    const std::string input = "I will now invoke the tool.\ncall:question{" + nativeQuestionArgs + "}<tool_call|>";
+    auto parsed = parse(input);
+    EXPECT_TRUE(parsed.toolCalls.empty())
+        << "current Gemma4 parser must not promote a late bare call: after ordinary content";
+    EXPECT_NE(parsed.content.find("call:question"), std::string::npos);
+}

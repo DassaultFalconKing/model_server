@@ -1,0 +1,66 @@
+{
+  "catalog_name": "gemma4-grounded-facts-v1",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "inspect_build_state",
+        "description": "Return structured authoritative build/repo facts. Do not invent values.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "scope": { "type": "string" }
+          },
+          "required": ["scope"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "publish_exact_facts",
+        "description": "Publish exact values copied from the structured tool result. Copy characters exactly. Do not invent hashes, paths, or evidence.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "head_sha": { "type": "string" },
+            "commit_sha": { "type": "string" },
+            "parent_sha": { "type": "string" },
+            "merge_base_sha": { "type": "string" },
+            "digest_sha256": { "type": "string" },
+            "uuid": { "type": "string" },
+            "opaque_id": { "type": "string" },
+            "ref_name": { "type": "string" },
+            "win_path": { "type": "string" },
+            "posix_path": { "type": "string" },
+            "path_with_spaces": { "type": "string" },
+            "path_with_dots": { "type": "string" },
+            "count": { "type": "integer" },
+            "port": { "type": "integer" },
+            "pid": { "type": "integer" },
+            "exit_code": { "type": "integer" },
+            "byte_size": { "type": "integer" },
+            "port_as_string": { "type": "string" },
+            "one": { "type": "string" },
+            "one_point_zero": { "type": "string" },
+            "one_e0": { "type": "string" },
+            "status": { "type": "string", "enum": ["PASS", "FAIL", "PARTIAL", "NOT_RUN", "BLOCKED"] },
+            "verdict": { "type": "string", "enum": ["PASS", "FAIL", "PARTIAL", "NOT_RUN", "BLOCKED"] },
+            "flag_true": { "type": "boolean" },
+            "flag_false": { "type": "boolean" },
+            "ts_utc": { "type": "string" },
+            "ts_offset": { "type": "string" },
+            "date": { "type": "string" },
+            "nested2_leaf": { "type": "string" },
+            "nested4_leaf": { "type": "string" },
+            "array_leaf_0": { "type": "string" },
+            "array_leaf_1": { "type": "string" },
+            "build_id": { "type": "string" },
+            "notes": { "type": "string" }
+          },
+          "required": []
+        }
+      }
+    }
+  ]
+}

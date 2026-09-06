@@ -167,3 +167,105 @@ TEST(Gemma4GenerationContractTest, RejectsHardNamesThatItsParserCannotExecute) {
         EXPECT_THROW(builder.parseConfigFromRequest(request), std::invalid_argument) << name;
     }
 }
+
+// Root-cause campaign contracts. These characterize current production behavior
+// at 908bc8b7 and must not be "fixed" in this test session.
+
+TEST(Gemma4GenerationContractTest, NamedToolChoiceInstallsStructuralOutput) {
+    auto request = requestWithTools("second");
+    GenerationConfigBuilder builder({}, "gemma4", true, STANDARD);
+    builder.parseConfigFromRequest(request);
+    ASSERT_TRUE(builder.getConfig().structured_output_config.has_value());
+    const auto& tags = grammar<Structured::TagsWithSeparator>(builder.getConfig());
+    ASSERT_EQ(tags.tags.size(), 1u);
+    EXPECT_EQ(tags.tags[0].begin, "<|tool_call>call:second");
+    EXPECT_EQ(tags.tags[0].end, "<tool_call|>");
+    EXPECT_TRUE(tags.at_least_one);
+}
+
+TEST(Gemma4GenerationContractTest, RequiredToolChoiceInstallsStructuralOutputWithAtLeastOne) {
+    auto request = requestWithTools("required");
+    GenerationConfigBuilder builder({}, "gemma4", true, STANDARD);
+    builder.parseConfigFromRequest(request);
+    ASSERT_TRUE(builder.getConfig().structured_output_config.has_value());
+    const auto& tags = grammar<Structured::TagsWithSeparator>(builder.getConfig());
+    EXPECT_TRUE(tags.at_least_one);
+    EXPECT_FALSE(tags.stop_after_first);
+    ASSERT_EQ(tags.tags.size(), 2u);
+}
+
+TEST(Gemma4GenerationContractTest, AutoPlusEnableToolGuidedGenerationResetsStructuredOutput) {
+    // Current production contract: Gemma4 auto ignores enable_tool_guided_generation
+    // and clears structured_output_config. Do not treat this as a regression to patch.
+    for (bool guided : {false, true}) {
+        auto request = requestWithTools("auto");
+        GenerationConfigBuilder builder({}, "gemma4", guided, STANDARD);
+        builder.parseConfigFromRequest(request);
+        EXPECT_FALSE(builder.getConfig().structured_output_config.has_value())
+            << "guided=" << guided
+            << " Gemma4 auto must leave structured_output_config empty/reset";
+        EXPECT_FALSE(builder.hasHardToolChoice());
+    }
+}
+
+TEST(Gemma4GenerationContractTest, SamplingInheritsBaseTemperatureAndRandomizesOmittedSeed) {
+    ov::genai::GenerationConfig base;
+    base.temperature = 1.0f;
+    base.rng_seed = 0;
+    base.num_beams = 1;
+
+    {
+        OpenAIRequest omitted;
+        GenerationConfigBuilder builder(base, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(omitted);
+        EXPECT_FLOAT_EQ(builder.getConfig().temperature, 1.0f);
+        EXPECT_TRUE(builder.getConfig().do_sample);
+        EXPECT_NE(builder.getConfig().rng_seed, 0u);
+    }
+    {
+        OpenAIRequest greedy;
+        greedy.temperature = 0.0f;
+        GenerationConfigBuilder builder(base, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(greedy);
+        EXPECT_FLOAT_EQ(builder.getConfig().temperature, 0.0f);
+        EXPECT_FALSE(builder.getConfig().do_sample);
+        EXPECT_EQ(builder.getConfig().rng_seed, 0u);
+    }
+    {
+        OpenAIRequest fixed;
+        fixed.temperature = 0.9f;
+        fixed.seed = 42;
+        GenerationConfigBuilder builder(base, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(fixed);
+        EXPECT_FLOAT_EQ(builder.getConfig().temperature, 0.9f);
+        EXPECT_TRUE(builder.getConfig().do_sample);
+        EXPECT_EQ(builder.getConfig().rng_seed, 42u);
+    }
+}
+
+TEST(Gemma4VsHermesGuidedGenerationReference, AutoHonorsTriggeredTagsOnlyForHermesQwen) {
+    using Triggered = ov::genai::StructuredOutputConfig::TriggeredTags;
+    auto request = requestWithTools("auto");
+
+    GenerationConfigBuilder gemma({}, "gemma4", true, STANDARD);
+    gemma.parseConfigFromRequest(request);
+    EXPECT_FALSE(gemma.getConfig().structured_output_config.has_value())
+        << "Gemma4 auto + enable_tool_guided_generation currently does not install trigger-scoped tags";
+
+    GenerationConfigBuilder hermes({}, "hermes3", true, STANDARD);
+    hermes.parseConfigFromRequest(request);
+    ASSERT_TRUE(hermes.getConfig().structured_output_config.has_value());
+    const auto& triggered = grammar<Triggered>(hermes.getConfig());
+    ASSERT_FALSE(triggered.triggers.empty());
+    EXPECT_EQ(triggered.triggers.front(), "<tool_call>");
+    EXPECT_FALSE(triggered.at_least_one);
+    EXPECT_EQ(triggered.tags.size(), 2u);
+
+    GenerationConfigBuilder qwen({}, "qwen3", true, STANDARD);
+    qwen.parseConfigFromRequest(request);
+    ASSERT_TRUE(qwen.getConfig().structured_output_config.has_value());
+    const auto& qwenTriggered = grammar<Triggered>(qwen.getConfig());
+    EXPECT_FALSE(qwenTriggered.at_least_one);
+    ASSERT_FALSE(qwenTriggered.triggers.empty());
+    EXPECT_EQ(qwenTriggered.triggers.front(), "<tool_call>");
+}

@@ -1,0 +1,39 @@
+{
+  "snapshot_note": "Partial live campaign freeze. Campaign was still running in the original worktree.",
+  "n_trials": 245,
+  "last_trial_id": "thinking_off_t09_s42-005",
+  "last_outcome": "PASS",
+  "git_sha_tested": "74ea54e19825812fac6f5dbf7f9e24051a75eba6",
+  "production_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+  "binary_sha256": "83938cf36ef70a53e024e467f31b4a8b841e66815b93292457ae1b1472bd105b",
+  "model": "gemma4-26-heretic",
+  "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+  "cell_counts": {
+    "named_t0_s42": 30,
+    "required_t0_s42": 50,
+    "auto_A1": 30,
+    "auto_A2": 20,
+    "auto_A3": 20,
+    "auto_A4": 15,
+    "auto_A5": 15,
+    "thinking_off_t0_s42": 30,
+    "thinking_on_t0_s42": 30,
+    "thinking_off_t09_s42": 5
+  },
+  "outcomes": {
+    "auto_A1|G_UNGROUNDED_VALUE_INVENTED": 30,
+    "auto_A2|G_UNGROUNDED_VALUE_INVENTED": 20,
+    "auto_A3|G_UNGROUNDED_VALUE_INVENTED": 18,
+    "auto_A3|PASS": 2,
+    "auto_A4|PASS": 15,
+    "auto_A5|G_UNGROUNDED_VALUE_INVENTED": 13,
+    "auto_A5|I_TRUNCATED": 1,
+    "auto_A5|PASS": 1,
+    "named_t0_s42|PASS": 30,
+    "required_t0_s42|PASS": 50,
+    "thinking_off_t09_s42|PASS": 5,
+    "thinking_off_t0_s42|G_UNGROUNDED_VALUE_INVENTED": 30,
+    "thinking_on_t0_s42|G_UNGROUNDED_VALUE_INVENTED": 29,
+    "thinking_on_t0_s42|PASS": 1
+  }
+}
