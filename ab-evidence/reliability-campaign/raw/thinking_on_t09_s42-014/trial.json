@@ -1,0 +1,617 @@
+{
+  "trial_id": "thinking_on_t09_s42-014",
+  "campaign": "thinking",
+  "cell": "thinking_on_t09_s42",
+  "tool_choice": "auto",
+  "explicit_temperature": true,
+  "request_temperature": 0.9,
+  "effective_temperature": 0.9,
+  "explicit_seed": true,
+  "request_seed": 42,
+  "effective_rng_seed_observable": false,
+  "top_p": null,
+  "top_k": null,
+  "thinking_mode": true,
+  "git_sha": "74ea54e19825812fac6f5dbf7f9e24051a75eba6",
+  "production_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+  "binary_path": "C:\\git\\g4-final-review\\bazel-bin\\src\\ovms.exe",
+  "binary_sha256": "83938cf36ef70a53e024e467f31b4a8b841e66815b93292457ae1b1472bd105b",
+  "model": "gemma4-26-heretic",
+  "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+  "parser_name": "gemma4",
+  "chat_template_mode": "JINJA",
+  "intended_tool": "publish_review_evidence",
+  "grounded_expected": {
+    "commit_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703"
+  },
+  "grounded_leaves": [
+    "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "?? ab-evidence/live-chain-auto/request1-input.json",
+    "?? ab-evidence/live-chain-auto/request1-response.json",
+    "?? ab-evidence/live-chain-auto/request1-response.raw",
+    "?? ab-evidence/live-chain-named/request1-input.json",
+    "?? ab-evidence/live-chain-named/request1-response.json",
+    "?? ab-evidence/live-chain-named/request1-response.raw",
+    "?? ab-evidence/live-chain-named/request2-input.json",
+    "?? ab-evidence/live-chain-named/request2-response.json",
+    "?? ab-evidence/live-chain-named/request2-response.raw",
+    "?? ab-evidence/live-chain-named/summary.json",
+    "?? ab-evidence/live-chain-named/tool1-result.json",
+    "?? ab-evidence/live-chain-required/request1-input.json",
+    "?? ab-evidence/live-chain-required/request1-response.json",
+    "?? ab-evidence/live-chain-required/request1-response.raw",
+    "?? ab-evidence/live-chain-required/request2-input.json",
+    "?? ab-evidence/live-chain-required/request2-response.json",
+    "?? ab-evidence/live-chain-required/request2-response.raw",
+    "?? ab-evidence/live-chain-required/summary.json",
+    "?? ab-evidence/live-chain-required/tool1-result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/request.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/response_raw.bin",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/result.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/manifest.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/server_cmd.json",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/session.json",
+    "?? ab-evidence/stage-A/cases/01-unary-text/request.json",
+    "?? ab-evidence/stage-A/cases/01-unary-text/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/01-unary-text/result.json",
+    "?? ab-evidence/stage-A/cases/02-streaming-text/request.json",
+    "?? ab-evidence/stage-A/cases/02-streaming-text/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/02-streaming-text/result.json",
+    "?? ab-evidence/stage-A/cases/03-auto-tool/request.json",
+    "?? ab-evidence/stage-A/cases/03-auto-tool/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/03-auto-tool/result.json",
+    "?? ab-evidence/stage-A/cases/04-named-nested/request.json",
+    "?? ab-evidence/stage-A/cases/04-named-nested/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/04-named-nested/result.json",
+    "?? ab-evidence/stage-A/cases/05-required-call/request.json",
+    "?? ab-evidence/stage-A/cases/05-required-call/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/05-required-call/result.json",
+    "?? ab-evidence/stage-A/cases/06-none/request.json",
+    "?? ab-evidence/stage-A/cases/06-none/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/06-none/result.json",
+    "?? ab-evidence/stage-A/cases/07-roundtrip-part1/request.json",
+    "?? ab-evidence/stage-A/cases/07-roundtrip-part1/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/07-roundtrip-part1/result.json",
+    "?? ab-evidence/stage-A/cases/07-roundtrip-part2/request.json",
+    "?? ab-evidence/stage-A/cases/07-roundtrip-part2/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/07-roundtrip-part2/result.json",
+    "?? ab-evidence/stage-A/cases/08-streaming-nested/request.json",
+    "?? ab-evidence/stage-A/cases/08-streaming-nested/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/08-streaming-nested/result.json",
+    "?? ab-evidence/stage-A/cases/09-low-token-truncation/request.json",
+    "?? ab-evidence/stage-A/cases/09-low-token-truncation/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/09-low-token-truncation/result.json",
+    "?? ab-evidence/stage-A/cases/10-required-without-tools/request.json",
+    "?? ab-evidence/stage-A/cases/10-required-without-tools/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/10-required-without-tools/result.json",
+    "?? ab-evidence/stage-A/cases/11-named-without-tools/request.json",
+    "?? ab-evidence/stage-A/cases/11-named-without-tools/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/11-named-without-tools/result.json",
+    "?? ab-evidence/stage-A/cases/12-parameterless/request.json",
+    "?? ab-evidence/stage-A/cases/12-parameterless/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/12-parameterless/result.json",
+    "?? ab-evidence/stage-A/cases/13-literal-marker-in-string/request.json",
+    "?? ab-evidence/stage-A/cases/13-literal-marker-in-string/response_raw.bin",
+    "?? ab-evidence/stage-A/cases/13-literal-marker-in-string/result.json",
+    "?? ab-evidence/stage-A/manifest.json",
+    "?? ab-evidence/stage-A/server_cmd.json",
+    "?? ab-evidence/stage-B/cases/01-unary-text/request.json",
+    "?? ab-evidence/stage-B/cases/01-unary-text/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/01-unary-text/result.json",
+    "?? ab-evidence/stage-B/cases/02-streaming-text/request.json",
+    "?? ab-evidence/stage-B/cases/02-streaming-text/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/02-streaming-text/result.json",
+    "?? ab-evidence/stage-B/cases/03-auto-tool/request.json",
+    "?? ab-evidence/stage-B/cases/03-auto-tool/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/03-auto-tool/result.json",
+    "?? ab-evidence/stage-B/cases/04-named-nested/request.json",
+    "?? ab-evidence/stage-B/cases/04-named-nested/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/04-named-nested/result.json",
+    "?? ab-evidence/stage-B/cases/05-required-call/request.json",
+    "?? ab-evidence/stage-B/cases/05-required-call/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/05-required-call/result.json",
+    "?? ab-evidence/stage-B/cases/06-none/request.json",
+    "?? ab-evidence/stage-B/cases/06-none/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/06-none/result.json",
+    "?? ab-evidence/stage-B/cases/07-roundtrip-part1/request.json",
+    "?? ab-evidence/stage-B/cases/07-roundtrip-part1/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/07-roundtrip-part1/result.json",
+    "?? ab-evidence/stage-B/cases/07-roundtrip-part2/request.json",
+    "?? ab-evidence/stage-B/cases/07-roundtrip-part2/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/07-roundtrip-part2/result.json",
+    "?? ab-evidence/stage-B/cases/08-streaming-nested/request.json",
+    "?? ab-evidence/stage-B/cases/08-streaming-nested/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/08-streaming-nested/result.json",
+    "?? ab-evidence/stage-B/cases/09-low-token-truncation/request.json",
+    "?? ab-evidence/stage-B/cases/09-low-token-truncation/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/09-low-token-truncation/result.json",
+    "?? ab-evidence/stage-B/cases/10-required-without-tools/request.json",
+    "?? ab-evidence/stage-B/cases/10-required-without-tools/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/10-required-without-tools/result.json",
+    "?? ab-evidence/stage-B/cases/11-named-without-tools/request.json",
+    "?? ab-evidence/stage-B/cases/11-named-without-tools/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/11-named-without-tools/result.json",
+    "?? ab-evidence/stage-B/cases/12-parameterless/request.json",
+    "?? ab-evidence/stage-B/cases/12-parameterless/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/12-parameterless/result.json",
+    "?? ab-evidence/stage-B/cases/13-literal-marker-in-string/request.json",
+    "?? ab-evidence/stage-B/cases/13-literal-marker-in-string/response_raw.bin",
+    "?? ab-evidence/stage-B/cases/13-literal-marker-in-string/result.json",
+    "?? ab-evidence/stage-B/manifest.json",
+    "?? ab-evidence/stage-B/server_cmd.json",
+    "?? bazel-g4-final-review/",
+    "C:\\git\\g4-final-review",
+    "ab-evidence",
+    "ab-evidence/live_chain_harness.py",
+    "bazel-bin",
+    "bazel-out",
+    "bazel-testlogs",
+    "false",
+    "https://github.com/DassaultFalconKing/model_server.git",
+    "src/llm/io_processing/chat_template/analyzer.cpp",
+    "true"
+  ],
+  "allowed_ungrounded_keys": [],
+  "request": {
+    "model": "gemma4-26-heretic",
+    "max_tokens": 2048,
+    "stream": false,
+    "tool_choice": "auto",
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "inspect_repository_state",
+          "description": "Inspect an exact repository ref and report git status, changed scopes, generated artifacts, and provenance without modifying files.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "repository": {
+                "type": "string",
+                "description": "Absolute repository path."
+              },
+              "ref": {
+                "type": "string",
+                "description": "Exact commit SHA or ref to inspect."
+              },
+              "include": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "status",
+                    "diff",
+                    "submodules",
+                    "generated_artifacts",
+                    "remote_provenance"
+                  ]
+                }
+              },
+              "constraints": {
+                "type": "object",
+                "properties": {
+                  "read_only": {
+                    "type": "boolean"
+                  },
+                  "allow_network": {
+                    "type": "boolean"
+                  },
+                  "fail_on_dirty": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "read_only",
+                  "fail_on_dirty"
+                ]
+              }
+            },
+            "required": [
+              "repository",
+              "ref",
+              "include",
+              "constraints"
+            ]
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "publish_review_evidence",
+          "description": "Create a compact immutable review evidence record from exact SHA, logs, responses, and explicit PASS/FAIL/NOT_RUN gates.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "repository": {
+                "type": "string"
+              },
+              "commit_sha": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              },
+              "verdict": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "PARTIAL",
+                  "NOT_RUN",
+                  "BLOCKED"
+                ]
+              },
+              "artifacts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "build_log",
+                        "runtime_log",
+                        "curl_response",
+                        "binary",
+                        "diff"
+                      ]
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "sha256": {
+                      "type": "string"
+                    },
+                    "authority": {
+                      "type": "string",
+                      "enum": [
+                        "local_exact_head",
+                        "hosted_exact_head",
+                        "derived_runtime",
+                        "unverified"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "path",
+                    "authority"
+                  ]
+                }
+              },
+              "gates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "PASS",
+                        "FAIL",
+                        "NOT_RUN",
+                        "BLOCKED"
+                      ]
+                    },
+                    "evidence": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "status",
+                    "evidence"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "repository",
+              "commit_sha",
+              "verdict",
+              "artifacts",
+              "gates"
+            ]
+          }
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "Inspect repository C:\\git\\g4-final-review at exact commit 908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703 using inspect_repository_state. Use read-only local inspection with allow_network false. After the tool result is returned, publish a review evidence record using publish_review_evidence and copy the exact commit SHA from the tool result without changing any character."
+      },
+      {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "dFCnoAPpg",
+            "type": "function",
+            "function": {
+              "name": "inspect_repository_state",
+              "arguments": "{\"repository\":\"C:\\\\git\\\\g4-final-review\",\"ref\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"include\":[\"status\",\"diff\",\"submodules\",\"generated_artifacts\",\"remote_provenance\"],\"constraints\":{\"read_only\":true,\"fail_on_dirty\":true}}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "dFCnoAPpg",
+        "name": "inspect_repository_state",
+        "content": "{\"repository\":\"C:\\\\git\\\\g4-final-review\",\"head_sha\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"requested_sha\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"resolved_sha\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"head_matches_requested\":true,\"dirty\":true,\"status_porcelain\":[\"?? ab-evidence/live-chain-auto/request1-input.json\",\"?? ab-evidence/live-chain-auto/request1-response.json\",\"?? ab-evidence/live-chain-auto/request1-response.raw\",\"?? ab-evidence/live-chain-named/request1-input.json\",\"?? ab-evidence/live-chain-named/request1-response.json\",\"?? ab-evidence/live-chain-named/request1-response.raw\",\"?? ab-evidence/live-chain-named/request2-input.json\",\"?? ab-evidence/live-chain-named/request2-response.json\",\"?? ab-evidence/live-chain-named/request2-response.raw\",\"?? ab-evidence/live-chain-named/summary.json\",\"?? ab-evidence/live-chain-named/tool1-result.json\",\"?? ab-evidence/live-chain-required/request1-input.json\",\"?? ab-evidence/live-chain-required/request1-response.json\",\"?? ab-evidence/live-chain-required/request1-response.raw\",\"?? ab-evidence/live-chain-required/request2-input.json\",\"?? ab-evidence/live-chain-required/request2-response.json\",\"?? ab-evidence/live-chain-required/request2-response.raw\",\"?? ab-evidence/live-chain-required/summary.json\",\"?? ab-evidence/live-chain-required/tool1-result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/request.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/response_raw.bin\",\"?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/result.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/manifest.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/server_cmd.json\",\"?? ab-evidence/stage-A-dryrun-04f46b55/session.json\",\"?? ab-evidence/stage-A/cases/01-unary-text/request.json\",\"?? ab-evidence/stage-A/cases/01-unary-text/response_raw.bin\",\"?? ab-evidence/stage-A/cases/01-unary-text/result.json\",\"?? ab-evidence/stage-A/cases/02-streaming-text/request.json\",\"?? ab-evidence/stage-A/cases/02-streaming-text/response_raw.bin\",\"?? ab-evidence/stage-A/cases/02-streaming-text/result.json\",\"?? ab-evidence/stage-A/cases/03-auto-tool/request.json\",\"?? ab-evidence/stage-A/cases/03-auto-tool/response_raw.bin\",\"?? ab-evidence/stage-A/cases/03-auto-tool/result.json\",\"?? ab-evidence/stage-A/cases/04-named-nested/request.json\",\"?? ab-evidence/stage-A/cases/04-named-nested/response_raw.bin\",\"?? ab-evidence/stage-A/cases/04-named-nested/result.json\",\"?? ab-evidence/stage-A/cases/05-required-call/request.json\",\"?? ab-evidence/stage-A/cases/05-required-call/response_raw.bin\",\"?? ab-evidence/stage-A/cases/05-required-call/result.json\",\"?? ab-evidence/stage-A/cases/06-none/request.json\",\"?? ab-evidence/stage-A/cases/06-none/response_raw.bin\",\"?? ab-evidence/stage-A/cases/06-none/result.json\",\"?? ab-evidence/stage-A/cases/07-roundtrip-part1/request.json\",\"?? ab-evidence/stage-A/cases/07-roundtrip-part1/response_raw.bin\",\"?? ab-evidence/stage-A/cases/07-roundtrip-part1/result.json\",\"?? ab-evidence/stage-A/cases/07-roundtrip-part2/request.json\",\"?? ab-evidence/stage-A/cases/07-roundtrip-part2/response_raw.bin\",\"?? ab-evidence/stage-A/cases/07-roundtrip-part2/result.json\",\"?? ab-evidence/stage-A/cases/08-streaming-nested/request.json\",\"?? ab-evidence/stage-A/cases/08-streaming-nested/response_raw.bin\",\"?? ab-evidence/stage-A/cases/08-streaming-nested/result.json\",\"?? ab-evidence/stage-A/cases/09-low-token-truncation/request.json\",\"?? ab-evidence/stage-A/cases/09-low-token-truncation/response_raw.bin\",\"?? ab-evidence/stage-A/cases/09-low-token-truncation/result.json\",\"?? ab-evidence/stage-A/cases/10-required-without-tools/request.json\",\"?? ab-evidence/stage-A/cases/10-required-without-tools/response_raw.bin\",\"?? ab-evidence/stage-A/cases/10-required-without-tools/result.json\",\"?? ab-evidence/stage-A/cases/11-named-without-tools/request.json\",\"?? ab-evidence/stage-A/cases/11-named-without-tools/response_raw.bin\",\"?? ab-evidence/stage-A/cases/11-named-without-tools/result.json\",\"?? ab-evidence/stage-A/cases/12-parameterless/request.json\",\"?? ab-evidence/stage-A/cases/12-parameterless/response_raw.bin\",\"?? ab-evidence/stage-A/cases/12-parameterless/result.json\",\"?? ab-evidence/stage-A/cases/13-literal-marker-in-string/request.json\",\"?? ab-evidence/stage-A/cases/13-literal-marker-in-string/response_raw.bin\",\"?? ab-evidence/stage-A/cases/13-literal-marker-in-string/result.json\",\"?? ab-evidence/stage-A/manifest.json\",\"?? ab-evidence/stage-A/server_cmd.json\",\"?? ab-evidence/stage-B/cases/01-unary-text/request.json\",\"?? ab-evidence/stage-B/cases/01-unary-text/response_raw.bin\",\"?? ab-evidence/stage-B/cases/01-unary-text/result.json\",\"?? ab-evidence/stage-B/cases/02-streaming-text/request.json\",\"?? ab-evidence/stage-B/cases/02-streaming-text/response_raw.bin\",\"?? ab-evidence/stage-B/cases/02-streaming-text/result.json\",\"?? ab-evidence/stage-B/cases/03-auto-tool/request.json\",\"?? ab-evidence/stage-B/cases/03-auto-tool/response_raw.bin\",\"?? ab-evidence/stage-B/cases/03-auto-tool/result.json\",\"?? ab-evidence/stage-B/cases/04-named-nested/request.json\",\"?? ab-evidence/stage-B/cases/04-named-nested/response_raw.bin\",\"?? ab-evidence/stage-B/cases/04-named-nested/result.json\",\"?? ab-evidence/stage-B/cases/05-required-call/request.json\",\"?? ab-evidence/stage-B/cases/05-required-call/response_raw.bin\",\"?? ab-evidence/stage-B/cases/05-required-call/result.json\",\"?? ab-evidence/stage-B/cases/06-none/request.json\",\"?? ab-evidence/stage-B/cases/06-none/response_raw.bin\",\"?? ab-evidence/stage-B/cases/06-none/result.json\",\"?? ab-evidence/stage-B/cases/07-roundtrip-part1/request.json\",\"?? ab-evidence/stage-B/cases/07-roundtrip-part1/response_raw.bin\",\"?? ab-evidence/stage-B/cases/07-roundtrip-part1/result.json\",\"?? ab-evidence/stage-B/cases/07-roundtrip-part2/request.json\",\"?? ab-evidence/stage-B/cases/07-roundtrip-part2/response_raw.bin\",\"?? ab-evidence/stage-B/cases/07-roundtrip-part2/result.json\",\"?? ab-evidence/stage-B/cases/08-streaming-nested/request.json\",\"?? ab-evidence/stage-B/cases/08-streaming-nested/response_raw.bin\",\"?? ab-evidence/stage-B/cases/08-streaming-nested/result.json\",\"?? ab-evidence/stage-B/cases/09-low-token-truncation/request.json\",\"?? ab-evidence/stage-B/cases/09-low-token-truncation/response_raw.bin\",\"?? ab-evidence/stage-B/cases/09-low-token-truncation/result.json\",\"?? ab-evidence/stage-B/cases/10-required-without-tools/request.json\",\"?? ab-evidence/stage-B/cases/10-required-without-tools/response_raw.bin\",\"?? ab-evidence/stage-B/cases/10-required-without-tools/result.json\",\"?? ab-evidence/stage-B/cases/11-named-without-tools/request.json\",\"?? ab-evidence/stage-B/cases/11-named-without-tools/response_raw.bin\",\"?? ab-evidence/stage-B/cases/11-named-without-tools/result.json\",\"?? ab-evidence/stage-B/cases/12-parameterless/request.json\",\"?? ab-evidence/stage-B/cases/12-parameterless/response_raw.bin\",\"?? ab-evidence/stage-B/cases/12-parameterless/result.json\",\"?? ab-evidence/stage-B/cases/13-literal-marker-in-string/request.json\",\"?? ab-evidence/stage-B/cases/13-literal-marker-in-string/response_raw.bin\",\"?? ab-evidence/stage-B/cases/13-literal-marker-in-string/result.json\",\"?? ab-evidence/stage-B/manifest.json\",\"?? ab-evidence/stage-B/server_cmd.json\",\"?? bazel-g4-final-review/\"],\"changed_files\":[\"ab-evidence/live_chain_harness.py\",\"src/llm/io_processing/chat_template/analyzer.cpp\"],\"generated_artifacts\":[\"bazel-bin\",\"bazel-out\",\"bazel-testlogs\",\"ab-evidence\"],\"origin\":\"https://github.com/DassaultFalconKing/model_server.git\",\"executor\":{\"read_only\":true,\"allow_network\":false,\"source_mutation_observed\":false}}"
+      }
+    ],
+    "skip_special_tokens": false,
+    "explicit_temperature": true,
+    "explicit_seed": true,
+    "temperature": 0.9,
+    "seed": 42,
+    "chat_template_kwargs": {
+      "enable_thinking": true
+    }
+  },
+  "tool_result": {
+    "repository": "C:\\git\\g4-final-review",
+    "head_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "requested_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "resolved_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "head_matches_requested": true,
+    "dirty": true,
+    "status_porcelain": [
+      "?? ab-evidence/live-chain-auto/request1-input.json",
+      "?? ab-evidence/live-chain-auto/request1-response.json",
+      "?? ab-evidence/live-chain-auto/request1-response.raw",
+      "?? ab-evidence/live-chain-named/request1-input.json",
+      "?? ab-evidence/live-chain-named/request1-response.json",
+      "?? ab-evidence/live-chain-named/request1-response.raw",
+      "?? ab-evidence/live-chain-named/request2-input.json",
+      "?? ab-evidence/live-chain-named/request2-response.json",
+      "?? ab-evidence/live-chain-named/request2-response.raw",
+      "?? ab-evidence/live-chain-named/summary.json",
+      "?? ab-evidence/live-chain-named/tool1-result.json",
+      "?? ab-evidence/live-chain-required/request1-input.json",
+      "?? ab-evidence/live-chain-required/request1-response.json",
+      "?? ab-evidence/live-chain-required/request1-response.raw",
+      "?? ab-evidence/live-chain-required/request2-input.json",
+      "?? ab-evidence/live-chain-required/request2-response.json",
+      "?? ab-evidence/live-chain-required/request2-response.raw",
+      "?? ab-evidence/live-chain-required/summary.json",
+      "?? ab-evidence/live-chain-required/tool1-result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/01-unary-text/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/02-streaming-text/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/03-auto-tool/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/04-named-nested/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/05-required-call/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/06-none/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/07-roundtrip-part1/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/08-streaming-nested/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/09-low-token-truncation/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/10-required-without-tools/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/11-named-without-tools/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/12-parameterless/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/request.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/response_raw.bin",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/cases/13-literal-marker-in-string/result.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/manifest.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/server_cmd.json",
+      "?? ab-evidence/stage-A-dryrun-04f46b55/session.json",
+      "?? ab-evidence/stage-A/cases/01-unary-text/request.json",
+      "?? ab-evidence/stage-A/cases/01-unary-text/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/01-unary-text/result.json",
+      "?? ab-evidence/stage-A/cases/02-streaming-text/request.json",
+      "?? ab-evidence/stage-A/cases/02-streaming-text/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/02-streaming-text/result.json",
+      "?? ab-evidence/stage-A/cases/03-auto-tool/request.json",
+      "?? ab-evidence/stage-A/cases/03-auto-tool/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/03-auto-tool/result.json",
+      "?? ab-evidence/stage-A/cases/04-named-nested/request.json",
+      "?? ab-evidence/stage-A/cases/04-named-nested/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/04-named-nested/result.json",
+      "?? ab-evidence/stage-A/cases/05-required-call/request.json",
+      "?? ab-evidence/stage-A/cases/05-required-call/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/05-required-call/result.json",
+      "?? ab-evidence/stage-A/cases/06-none/request.json",
+      "?? ab-evidence/stage-A/cases/06-none/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/06-none/result.json",
+      "?? ab-evidence/stage-A/cases/07-roundtrip-part1/request.json",
+      "?? ab-evidence/stage-A/cases/07-roundtrip-part1/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/07-roundtrip-part1/result.json",
+      "?? ab-evidence/stage-A/cases/07-roundtrip-part2/request.json",
+      "?? ab-evidence/stage-A/cases/07-roundtrip-part2/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/07-roundtrip-part2/result.json",
+      "?? ab-evidence/stage-A/cases/08-streaming-nested/request.json",
+      "?? ab-evidence/stage-A/cases/08-streaming-nested/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/08-streaming-nested/result.json",
+      "?? ab-evidence/stage-A/cases/09-low-token-truncation/request.json",
+      "?? ab-evidence/stage-A/cases/09-low-token-truncation/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/09-low-token-truncation/result.json",
+      "?? ab-evidence/stage-A/cases/10-required-without-tools/request.json",
+      "?? ab-evidence/stage-A/cases/10-required-without-tools/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/10-required-without-tools/result.json",
+      "?? ab-evidence/stage-A/cases/11-named-without-tools/request.json",
+      "?? ab-evidence/stage-A/cases/11-named-without-tools/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/11-named-without-tools/result.json",
+      "?? ab-evidence/stage-A/cases/12-parameterless/request.json",
+      "?? ab-evidence/stage-A/cases/12-parameterless/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/12-parameterless/result.json",
+      "?? ab-evidence/stage-A/cases/13-literal-marker-in-string/request.json",
+      "?? ab-evidence/stage-A/cases/13-literal-marker-in-string/response_raw.bin",
+      "?? ab-evidence/stage-A/cases/13-literal-marker-in-string/result.json",
+      "?? ab-evidence/stage-A/manifest.json",
+      "?? ab-evidence/stage-A/server_cmd.json",
+      "?? ab-evidence/stage-B/cases/01-unary-text/request.json",
+      "?? ab-evidence/stage-B/cases/01-unary-text/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/01-unary-text/result.json",
+      "?? ab-evidence/stage-B/cases/02-streaming-text/request.json",
+      "?? ab-evidence/stage-B/cases/02-streaming-text/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/02-streaming-text/result.json",
+      "?? ab-evidence/stage-B/cases/03-auto-tool/request.json",
+      "?? ab-evidence/stage-B/cases/03-auto-tool/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/03-auto-tool/result.json",
+      "?? ab-evidence/stage-B/cases/04-named-nested/request.json",
+      "?? ab-evidence/stage-B/cases/04-named-nested/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/04-named-nested/result.json",
+      "?? ab-evidence/stage-B/cases/05-required-call/request.json",
+      "?? ab-evidence/stage-B/cases/05-required-call/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/05-required-call/result.json",
+      "?? ab-evidence/stage-B/cases/06-none/request.json",
+      "?? ab-evidence/stage-B/cases/06-none/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/06-none/result.json",
+      "?? ab-evidence/stage-B/cases/07-roundtrip-part1/request.json",
+      "?? ab-evidence/stage-B/cases/07-roundtrip-part1/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/07-roundtrip-part1/result.json",
+      "?? ab-evidence/stage-B/cases/07-roundtrip-part2/request.json",
+      "?? ab-evidence/stage-B/cases/07-roundtrip-part2/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/07-roundtrip-part2/result.json",
+      "?? ab-evidence/stage-B/cases/08-streaming-nested/request.json",
+      "?? ab-evidence/stage-B/cases/08-streaming-nested/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/08-streaming-nested/result.json",
+      "?? ab-evidence/stage-B/cases/09-low-token-truncation/request.json",
+      "?? ab-evidence/stage-B/cases/09-low-token-truncation/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/09-low-token-truncation/result.json",
+      "?? ab-evidence/stage-B/cases/10-required-without-tools/request.json",
+      "?? ab-evidence/stage-B/cases/10-required-without-tools/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/10-required-without-tools/result.json",
+      "?? ab-evidence/stage-B/cases/11-named-without-tools/request.json",
+      "?? ab-evidence/stage-B/cases/11-named-without-tools/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/11-named-without-tools/result.json",
+      "?? ab-evidence/stage-B/cases/12-parameterless/request.json",
+      "?? ab-evidence/stage-B/cases/12-parameterless/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/12-parameterless/result.json",
+      "?? ab-evidence/stage-B/cases/13-literal-marker-in-string/request.json",
+      "?? ab-evidence/stage-B/cases/13-literal-marker-in-string/response_raw.bin",
+      "?? ab-evidence/stage-B/cases/13-literal-marker-in-string/result.json",
+      "?? ab-evidence/stage-B/manifest.json",
+      "?? ab-evidence/stage-B/server_cmd.json",
+      "?? bazel-g4-final-review/"
+    ],
+    "changed_files": [
+      "ab-evidence/live_chain_harness.py",
+      "src/llm/io_processing/chat_template/analyzer.cpp"
+    ],
+    "generated_artifacts": [
+      "bazel-bin",
+      "bazel-out",
+      "bazel-testlogs",
+      "ab-evidence"
+    ],
+    "origin": "https://github.com/DassaultFalconKing/model_server.git",
+    "executor": {
+      "read_only": true,
+      "allow_network": false,
+      "source_mutation_observed": false
+    }
+  },
+  "http_status": 200,
+  "raw_response_text": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"\",\"role\":\"assistant\",\"tool_calls\":[{\"id\":\"TPjrQe2Vl\",\"type\":\"function\",\"function\":{\"name\":\"publish_review_evidence\",\"arguments\":\"{\\\"artifacts\\\":[{\\\"authority\\\":\\\"local_exact_head\\\",\\\"kind\\\":\\\"binary\\\",\\\"path\\\":\\\"ab-evidence/live_chain_harness.py\\\",\\\"sha256\\\":\\\"\\\"},{\\\"authority\\\":\\\"local_exact_head\\\",\\\"kind\\\":\\\"binary\\\",\\\"path\\\":\\\"src/llm/io_processing/chat_template/analyzer.cpp\\\",\\\"sha256\\\":\\\"\\\"}],\\\"commit_sha\\\":\\\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\\\",\\\"gates\\\":[{\\\"evidence\\\":\\\"Repository is dirty.\\\",\\\"name\\\":\\\"Git Cleanliness\\\",\\\"status\\\":\\\"FAIL\\\"}],\\\"repository\\\":\\\"C:\\\\\\\\git\\\\\\\\g4-final-review\\\",\\\"verdict\\\":\\\"FAIL\\\"}\"}}]}}],\"created\":1788701747,\"model\":\"gemma4-26-heretic\",\"object\":\"chat.completion\",\"usage\":{\"prompt_tokens\":5162,\"completion_tokens\":189,\"total_tokens\":5351}}",
+  "raw_generated_output": "",
+  "elapsed_s": 7.516,
+  "finish_reason": "tool_calls",
+  "prompt_tokens": 5162,
+  "completion_tokens": 189,
+  "structured_tool_calls": [
+    {
+      "id": "TPjrQe2Vl",
+      "type": "function",
+      "function": {
+        "name": "publish_review_evidence",
+        "arguments": "{\"artifacts\":[{\"authority\":\"local_exact_head\",\"kind\":\"binary\",\"path\":\"ab-evidence/live_chain_harness.py\",\"sha256\":\"\"},{\"authority\":\"local_exact_head\",\"kind\":\"binary\",\"path\":\"src/llm/io_processing/chat_template/analyzer.cpp\",\"sha256\":\"\"}],\"commit_sha\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"gates\":[{\"evidence\":\"Repository is dirty.\",\"name\":\"Git Cleanliness\",\"status\":\"FAIL\"}],\"repository\":\"C:\\\\git\\\\g4-final-review\",\"verdict\":\"FAIL\"}"
+      }
+    }
+  ],
+  "parsed_tool_name": "publish_review_evidence",
+  "parsed_arguments": {
+    "artifacts": [
+      {
+        "authority": "local_exact_head",
+        "kind": "binary",
+        "path": "ab-evidence/live_chain_harness.py",
+        "sha256": ""
+      },
+      {
+        "authority": "local_exact_head",
+        "kind": "binary",
+        "path": "src/llm/io_processing/chat_template/analyzer.cpp",
+        "sha256": ""
+      }
+    ],
+    "commit_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "gates": [
+      {
+        "evidence": "Repository is dirty.",
+        "name": "Git Cleanliness",
+        "status": "FAIL"
+      }
+    ],
+    "repository": "C:\\git\\g4-final-review",
+    "verdict": "FAIL"
+  },
+  "protocol_attempt": null,
+  "primary_outcome": "G_UNGROUNDED_VALUE_INVENTED",
+  "outcome_reason": "invented=sha256=,sha256=",
+  "intended_parsed": true,
+  "grounded_exact": true
+}
