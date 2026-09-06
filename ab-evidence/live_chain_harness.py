@@ -7,7 +7,9 @@ Validates and records the exact two-request conversation for:
   3. tool result -> publish_review_evidence,
   4. byte-exact propagation of the commit SHA.
 
-The second step can run as a named control, required tool selection, or auto.
+One X-OVMS-Session-ID is reused for every turn. Sampling parameters are fixed for
+one chain and recorded in session-config.json. The harness can stop after tool1,
+allow OVMS to restart, then resume request2 with the same persisted session ID.
 Python standard library only. The executor performs read-only Git/filesystem
 operations; HTTP is limited to the configured OVMS endpoint.
 """
@@ -20,16 +22,22 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import uuid
 
 CHAT_PATH = "/v3/chat/completions"
 DEFAULT_TIMEOUT_S = 180
 SHA40_LEN = 40
 SECOND_TOOL_CHOICES = ("named", "required", "auto")
+SESSION_HEADER = "X-OVMS-Session-ID"
 
 
 def dump_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def load_json(path):
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def run_git(repo_root, *args, check=True):
@@ -50,12 +58,15 @@ def run_git(repo_root, *args, check=True):
     return proc
 
 
-def post_json(url, body, timeout):
+def post_json(url, body, timeout, headers=None):
     payload = json.dumps(body, separators=(",", ":")).encode("utf-8")
+    request_headers = {"Content-Type": "application/json"}
+    if headers:
+        request_headers.update(headers)
     request = urllib.request.Request(
         url,
         data=payload,
-        headers={"Content-Type": "application/json"},
+        headers=request_headers,
         method="POST",
     )
     started = time.monotonic()
@@ -165,23 +176,35 @@ def require_sha(value, label):
         raise ValueError("%s must be a lowercase 40-character git SHA" % label)
 
 
-def build_request1(model, tools, repo_root, commit_sha):
+def apply_sampling(request, temperature, seed, top_p, top_k):
+    request["temperature"] = temperature
+    if seed is not None:
+        if seed < 0 or seed > 0xFFFFFFFF:
+            raise ValueError("--seed must fit uint32")
+        request["seed"] = seed
+    if top_p is not None:
+        request["top_p"] = top_p
+    if top_k is not None:
+        request["top_k"] = top_k
+    return request
+
+
+def build_request1(model, tools, repo_root, commit_sha, temperature, seed, top_p, top_k):
     user_content = (
         "Inspect repository %s at exact commit %s using inspect_repository_state. "
         "Use read-only local inspection with allow_network false. After the tool result is returned, "
         "publish a review evidence record using publish_review_evidence and copy the exact commit SHA "
         "from the tool result without changing any character."
     ) % (repo_root, commit_sha)
-    return {
+    request = {
         "model": model,
-        "temperature": 0,
-        "seed": 42,
         "max_tokens": 768,
         "stream": False,
         "tool_choice": {"type": "function", "function": {"name": "inspect_repository_state"}},
         "tools": tools,
         "messages": [{"role": "user", "content": user_content}],
     }
+    return apply_sampling(request, temperature, seed, top_p, top_k)
 
 
 def second_tool_choice(mode):
@@ -194,10 +217,8 @@ def build_request2(request1, assistant_message, tool_call, tool_result, tools, m
     call_id = tool_call.get("id")
     if not isinstance(call_id, str) or not call_id:
         raise AssertionError("first tool call has no id")
-    return {
+    request = {
         "model": request1["model"],
-        "temperature": 0,
-        "seed": 42,
         "max_tokens": 1024,
         "stream": False,
         "tool_choice": second_tool_choice(mode),
@@ -213,6 +234,14 @@ def build_request2(request1, assistant_message, tool_call, tool_result, tools, m
             },
         ],
     }
+    for key in ("temperature", "seed", "top_p", "top_k"):
+        if key in request1:
+            request[key] = request1[key]
+    return request
+
+
+def new_session_id():
+    return "gemma4-" + uuid.uuid4().hex
 
 
 def main():
@@ -225,6 +254,18 @@ def main():
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--second-tool-choice", choices=SECOND_TOOL_CHOICES, default="named")
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_S)
+    parser.add_argument("--session-id", default="")
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Explicit stable uint32 seed for every turn (default: 42).")
+    parser.add_argument("--omit-seed", action="store_true",
+                        help="Omit seed from every request so OVMS session persistence generates/injects it.")
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--top-p", type=float, default=None)
+    parser.add_argument("--top-k", type=int, default=None)
+    parser.add_argument("--stop-after-tool-result", action="store_true",
+                        help="Persist request1/tool result then stop; restart OVMS and rerun with --resume.")
+    parser.add_argument("--resume", action="store_true",
+                        help="Resume request2 from an existing out-dir/session-config after an OVMS restart.")
     args = parser.parse_args()
 
     require_sha(args.commit_sha, "--commit-sha")
@@ -239,30 +280,81 @@ def main():
     chain_tools = [inspect_tool, publish_tool]
     endpoint = args.base_url.rstrip("/") + CHAT_PATH
 
-    request1 = build_request1(args.model, chain_tools, repo_root, args.commit_sha)
-    dump_json(out_dir / "request1-input.json", request1)
-    status1, response1, raw1, elapsed1 = post_json(endpoint, request1, args.timeout)
-    (out_dir / "request1-response.raw").write_text(raw1, encoding="utf-8")
-    if response1 is not None:
-        dump_json(out_dir / "request1-response.json", response1)
-    if status1 != 200:
-        raise AssertionError("request1 HTTP status %s" % status1)
+    session_config_path = out_dir / "session-config.json"
+    if args.resume:
+        if not session_config_path.exists():
+            raise ValueError("--resume requires existing session-config.json in --out-dir")
+        session_config = load_json(session_config_path)
+        session_id = session_config["session_id"]
+        if args.session_id and args.session_id != session_id:
+            raise ValueError("--session-id conflicts with persisted resume session")
+    else:
+        session_id = args.session_id or new_session_id()
+        requested_seed = None if args.omit_seed else args.seed
+        session_config = {
+            "schema_version": 1,
+            "session_id": session_id,
+            "header": SESSION_HEADER,
+            "seed_mode": "server_persisted" if args.omit_seed else "explicit",
+            "requested_seed": requested_seed,
+            "temperature": args.temperature,
+            "top_p": args.top_p,
+            "top_k": args.top_k,
+            "second_tool_choice": args.second_tool_choice,
+            "model": args.model,
+            "commit_sha": args.commit_sha,
+        }
+        dump_json(session_config_path, session_config)
 
-    assistant1, call1, name1, args1 = first_tool_call(response1)
-    if name1 != "inspect_repository_state":
-        raise AssertionError("request1 called %r instead of inspect_repository_state" % name1)
-    if args1.get("ref") != args.commit_sha:
-        raise AssertionError("request1 ref mismatch: %r" % args1.get("ref"))
+    headers = {SESSION_HEADER: session_id}
 
-    tool_result = inspect_repository_state(repo_root, args.commit_sha)
-    if tool_result["resolved_sha"] != args.commit_sha:
-        raise AssertionError("requested SHA resolved to a different commit")
-    if tool_result["head_sha"] != args.commit_sha:
-        raise AssertionError(
-            "worktree HEAD %s does not match acceptance SHA %s"
-            % (tool_result["head_sha"], args.commit_sha)
+    if args.resume:
+        request1 = load_json(out_dir / "request1-input.json")
+        response1 = load_json(out_dir / "request1-response.json")
+        tool_result = load_json(out_dir / "tool1-result.json")
+        assistant1, call1, name1, args1 = first_tool_call(response1)
+        status1 = 200
+        elapsed1 = None
+    else:
+        requested_seed = None if args.omit_seed else args.seed
+        request1 = build_request1(
+            args.model, chain_tools, repo_root, args.commit_sha,
+            args.temperature, requested_seed, args.top_p, args.top_k,
         )
-    dump_json(out_dir / "tool1-result.json", tool_result)
+        dump_json(out_dir / "request1-input.json", request1)
+        status1, response1, raw1, elapsed1 = post_json(endpoint, request1, args.timeout, headers=headers)
+        (out_dir / "request1-response.raw").write_text(raw1, encoding="utf-8")
+        if response1 is not None:
+            dump_json(out_dir / "request1-response.json", response1)
+        if status1 != 200:
+            raise AssertionError("request1 HTTP status %s" % status1)
+
+        assistant1, call1, name1, args1 = first_tool_call(response1)
+        if name1 != "inspect_repository_state":
+            raise AssertionError("request1 called %r instead of inspect_repository_state" % name1)
+        if args1.get("ref") != args.commit_sha:
+            raise AssertionError("request1 ref mismatch: %r" % args1.get("ref"))
+
+        tool_result = inspect_repository_state(repo_root, args.commit_sha)
+        if tool_result["resolved_sha"] != args.commit_sha:
+            raise AssertionError("requested SHA resolved to a different commit")
+        if tool_result["head_sha"] != args.commit_sha:
+            raise AssertionError(
+                "worktree HEAD %s does not match acceptance SHA %s"
+                % (tool_result["head_sha"], args.commit_sha)
+            )
+        dump_json(out_dir / "tool1-result.json", tool_result)
+
+        if args.stop_after_tool_result:
+            checkpoint = {
+                "verdict": "CHECKPOINT",
+                "next_action": "restart OVMS, then rerun this command with --resume and the same --out-dir",
+                "session_id": session_id,
+                "commit_sha": args.commit_sha,
+            }
+            dump_json(out_dir / "checkpoint.json", checkpoint)
+            print(json.dumps(checkpoint, indent=2))
+            return 0
 
     request2 = build_request2(
         request1,
@@ -270,10 +362,10 @@ def main():
         call1,
         tool_result,
         chain_tools,
-        args.second_tool_choice,
+        session_config["second_tool_choice"],
     )
     dump_json(out_dir / "request2-input.json", request2)
-    status2, response2, raw2, elapsed2 = post_json(endpoint, request2, args.timeout)
+    status2, response2, raw2, elapsed2 = post_json(endpoint, request2, args.timeout, headers=headers)
     (out_dir / "request2-response.raw").write_text(raw2, encoding="utf-8")
     if response2 is not None:
         dump_json(out_dir / "request2-response.json", response2)
@@ -296,10 +388,20 @@ def main():
         "endpoint": endpoint,
         "model": args.model,
         "commit_sha": args.commit_sha,
-        "second_tool_choice": args.second_tool_choice,
+        "session_id": session_id,
+        "session_header": SESSION_HEADER,
+        "seed_mode": session_config["seed_mode"],
+        "requested_seed": session_config["requested_seed"],
+        "sampling": {
+            "temperature": session_config["temperature"],
+            "top_p": session_config["top_p"],
+            "top_k": session_config["top_k"],
+        },
+        "resumed_after_restart_checkpoint": bool(args.resume),
+        "second_tool_choice": session_config["second_tool_choice"],
         "request1": {
             "http": status1,
-            "elapsed_s": round(elapsed1, 3),
+            "elapsed_s": None if elapsed1 is None else round(elapsed1, 3),
             "tool": name1,
             "requested_ref_exact": args1.get("ref") == args.commit_sha,
         },
@@ -317,6 +419,7 @@ def main():
             "exact_sha_pass": exact_sha_pass,
         },
         "evidence_files": [
+            "session-config.json",
             "request1-input.json",
             "request1-response.json",
             "request1-response.raw",
