@@ -20,9 +20,275 @@
 #include "rapidjson/error/en.h"
 #include <algorithm>
 #include <cctype>
+#include <cstdlib>
+#include <string_view>
 #include <utility>
 
 namespace ovms {
+namespace {
+
+constexpr std::string_view GEMMA4_STRING_DELIM = "<|\"|>";
+
+std::string quoteJsonString(const std::string& value) {
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    writer.String(value.c_str(), static_cast<rapidjson::SizeType>(value.size()));
+    return buffer.GetString();
+}
+
+std::string trimCopy(std::string value) {
+    trim(value);
+    return value;
+}
+
+bool isJsonNumber(const std::string& value) {
+    if (value.empty()) {
+        return false;
+    }
+    char* end = nullptr;
+    std::strtod(value.c_str(), &end);
+    return end != value.c_str() && end == value.c_str() + value.size();
+}
+
+// Gemma4 does not serialize function arguments as JSON. Strings use <|"|>
+// delimiters, object keys are normally bare, and values may recurse into
+// arrays/objects. Convert that dialect to JSON with one structural parser
+// instead of ad-hoc comma searches that lose nested values.
+class Gemma4ValueReader {
+public:
+    explicit Gemma4ValueReader(const std::string& input) : input(input) {}
+
+    std::string parse() {
+        skipWhitespace();
+        return parseValue();
+    }
+
+private:
+    bool startsWith(std::string_view token) const {
+        return pos + token.size() <= input.size() &&
+            std::string_view(input).substr(pos, token.size()) == token;
+    }
+
+    void skipWhitespace() {
+        while (pos < input.size() && std::isspace(static_cast<unsigned char>(input[pos]))) {
+            pos++;
+        }
+    }
+
+    std::string parseSpecialStringRaw() {
+        pos += GEMMA4_STRING_DELIM.size();
+        const size_t end = input.find(GEMMA4_STRING_DELIM, pos);
+        if (end == std::string::npos) {
+            std::string value = input.substr(pos);
+            pos = input.size();
+            return value;
+        }
+        std::string value = input.substr(pos, end - pos);
+        pos = end + GEMMA4_STRING_DELIM.size();
+        return value;
+    }
+
+    std::string parseQuotedStringRaw() {
+        const char quote = input[pos++];
+        std::string value;
+        while (pos < input.size()) {
+            const char current = input[pos++];
+            if (current == quote) {
+                break;
+            }
+            if (current == '\\' && pos < input.size()) {
+                const char escaped = input[pos++];
+                switch (escaped) {
+                case 'n':
+                    value.push_back('\n');
+                    break;
+                case 'r':
+                    value.push_back('\r');
+                    break;
+                case 't':
+                    value.push_back('\t');
+                    break;
+                default:
+                    value.push_back(escaped);
+                    break;
+                }
+                continue;
+            }
+            value.push_back(current);
+        }
+        return value;
+    }
+
+    std::string parseKeyRaw() {
+        skipWhitespace();
+        if (startsWith(GEMMA4_STRING_DELIM)) {
+            return parseSpecialStringRaw();
+        }
+        if (pos < input.size() && (input[pos] == '"' || input[pos] == '\'')) {
+            return parseQuotedStringRaw();
+        }
+
+        const size_t start = pos;
+        while (pos < input.size() && input[pos] != ':' && input[pos] != '=' && input[pos] != ',' && input[pos] != '}') {
+            pos++;
+        }
+        return trimCopy(input.substr(start, pos - start));
+    }
+
+    std::string parseBareValue() {
+        const size_t start = pos;
+        while (pos < input.size() && input[pos] != ',' && input[pos] != '}' && input[pos] != ']') {
+            pos++;
+        }
+        std::string value = trimCopy(input.substr(start, pos - start));
+        std::string lower = value;
+        std::transform(lower.begin(), lower.end(), lower.begin(), [](unsigned char c) {
+            return static_cast<char>(std::tolower(c));
+        });
+
+        if (lower == "true" || lower == "false" || lower == "null") {
+            return lower;
+        }
+        if (isJsonNumber(value)) {
+            return value;
+        }
+        return quoteJsonString(value);
+    }
+
+    std::string parseObject() {
+        pos++;  // {
+        std::string output = "{";
+        bool first = true;
+
+        while (pos < input.size()) {
+            skipWhitespace();
+            if (pos < input.size() && input[pos] == '}') {
+                pos++;
+                break;
+            }
+            if (pos < input.size() && input[pos] == ',') {
+                pos++;
+                skipWhitespace();
+            }
+            if (pos >= input.size() || input[pos] == '}') {
+                if (pos < input.size()) {
+                    pos++;
+                }
+                break;
+            }
+
+            const size_t keyStart = pos;
+            const std::string key = parseKeyRaw();
+            skipWhitespace();
+            if (pos >= input.size() || (input[pos] != ':' && input[pos] != '=')) {
+                // Malformed tail. Do not invent a key/value pair and, critically,
+                // do not loop forever on the same byte.
+                if (pos == keyStart) {
+                    pos++;
+                }
+                break;
+            }
+            pos++;  // : or =
+            skipWhitespace();
+
+            const std::string value = parseValue();
+            if (!first) {
+                output.push_back(',');
+            }
+            output += quoteJsonString(key);
+            output.push_back(':');
+            output += value;
+            first = false;
+
+            skipWhitespace();
+            if (pos < input.size() && input[pos] == ',') {
+                pos++;
+                continue;
+            }
+            if (pos < input.size() && input[pos] == '}') {
+                pos++;
+                break;
+            }
+        }
+
+        output.push_back('}');
+        return output;
+    }
+
+    std::string parseArray() {
+        pos++;  // [
+        std::string output = "[";
+        bool first = true;
+
+        while (pos < input.size()) {
+            skipWhitespace();
+            if (pos < input.size() && input[pos] == ']') {
+                pos++;
+                break;
+            }
+            if (pos < input.size() && input[pos] == ',') {
+                pos++;
+                skipWhitespace();
+            }
+            if (pos >= input.size() || input[pos] == ']') {
+                if (pos < input.size()) {
+                    pos++;
+                }
+                break;
+            }
+
+            const size_t valueStart = pos;
+            const std::string value = parseValue();
+            if (pos == valueStart) {
+                pos++;
+                continue;
+            }
+            if (!first) {
+                output.push_back(',');
+            }
+            output += value;
+            first = false;
+
+            skipWhitespace();
+            if (pos < input.size() && input[pos] == ',') {
+                pos++;
+                continue;
+            }
+            if (pos < input.size() && input[pos] == ']') {
+                pos++;
+                break;
+            }
+        }
+
+        output.push_back(']');
+        return output;
+    }
+
+    std::string parseValue() {
+        skipWhitespace();
+        if (pos >= input.size()) {
+            return "\"\"";
+        }
+        if (startsWith(GEMMA4_STRING_DELIM)) {
+            return quoteJsonString(parseSpecialStringRaw());
+        }
+        if (input[pos] == '{') {
+            return parseObject();
+        }
+        if (input[pos] == '[') {
+            return parseArray();
+        }
+        if (input[pos] == '"' || input[pos] == '\'') {
+            return quoteJsonString(parseQuotedStringRaw());
+        }
+        return parseBareValue();
+    }
+
+    const std::string& input;
+    size_t pos{0};
+};
+
+}  // namespace
 
 const std::string Gemma4ToolParser::TOOL_CALL_START_TAG = "<|tool_call>";
 const std::string Gemma4ToolParser::TOOL_CALL_END_TAG = "<tool_call|>";
@@ -43,85 +309,11 @@ const int64_t Gemma4ToolParser::reasoningTokenId = 100;     // <|channel>
 const int64_t Gemma4ToolParser::reasoningEndTokenId = 101;  // <channel|>
 
 std::string Gemma4ToolParser::parseArrayParameter(const std::string& argumentStr) {
-    size_t pos = 1;
-    std::string parsedArguments = "[";
-
-    while (pos != std::string::npos) {
-        size_t stringStartPos = argumentStr.find(TOOL_ARGS_STRING_INDICATOR, pos);
-        if (stringStartPos == std::string::npos) {
-            break;
-        }
-        stringStartPos += TOOL_ARGS_STRING_INDICATOR.size();
-        size_t stringEndPos = argumentStr.find(TOOL_ARGS_STRING_INDICATOR, stringStartPos);
-        if (stringEndPos == std::string::npos) {
-            break;
-        }
-
-        std::string originalStr = argumentStr.substr(stringStartPos, stringEndPos - stringStartPos);
-        size_t quotePos = 0;
-        while ((quotePos = originalStr.find('\"', quotePos)) != std::string::npos) {
-            originalStr.insert(quotePos, "\\");
-            quotePos += 2;
-        }
-        parsedArguments += "\"" + originalStr + "\",";
-
-        pos = stringEndPos + TOOL_ARGS_STRING_INDICATOR.size() + 1;
-    }
-
-    parsedArguments.back() = ']';
-
-    return parsedArguments;
+    return Gemma4ValueReader(argumentStr).parse();
 }
 
 std::string Gemma4ToolParser::parseObjectParameter(const std::string& argumentStr) {
-    size_t pos = 1;
-    std::vector<std::pair<std::string, std::string>> keyValuePairs;
-
-    while (pos != std::string::npos) {
-        std::string key, value;
-        bool isStringValue = false;
-        size_t keyEndPos = argumentStr.find(':', pos);
-        if (keyEndPos == std::string::npos) {
-            break;
-        }
-        key = argumentStr.substr(pos, keyEndPos - pos);
-        size_t valueStartPos = keyEndPos + 1;
-        size_t valueEndPos = std::string::npos;
-        if (argumentStr.substr(valueStartPos, TOOL_ARGS_STRING_INDICATOR.size()) == TOOL_ARGS_STRING_INDICATOR) {
-            valueStartPos = valueStartPos + TOOL_ARGS_STRING_INDICATOR.size();
-            valueEndPos = argumentStr.find(TOOL_ARGS_STRING_INDICATOR, valueStartPos);
-            isStringValue = true;
-        } else {
-            valueEndPos = argumentStr.find(',', valueStartPos);
-        }
-
-        if (valueEndPos == std::string::npos) {
-            valueEndPos = argumentStr.size() - 1;
-        }
-        value = argumentStr.substr(valueStartPos, valueEndPos - valueStartPos);
-        if (isStringValue) {
-            value = "\"" + value + "\"";
-        }
-        keyValuePairs.emplace_back(key, value);
-        if (valueEndPos == argumentStr.size() - 1) {
-            break;
-        } else if (isStringValue) {
-            pos = valueEndPos + TOOL_ARGS_STRING_INDICATOR.size() + 1;
-        } else {
-            pos = valueEndPos + 1;
-        }
-    }
-
-    if (keyValuePairs.empty()) {
-        return argumentStr;
-    }
-
-    std::string parsedObject = "{";
-    for (const auto& [key, value] : keyValuePairs) {
-        parsedObject += "\"" + key + "\":" + value + ",";
-    }
-    parsedObject.back() = '}';
-    return parsedObject;
+    return Gemma4ValueReader(argumentStr).parse();
 }
 
 std::string Gemma4ToolParser::normalizeArgStr(const std::string& arg) {
@@ -138,22 +330,10 @@ std::string Gemma4ToolParser::normalizeArgStr(const std::string& arg) {
         return lower;
     }
 
-    const char first = normalized.front();
-    const char last = normalized.back();
-    if (first == '{' && last == '}') {
-        normalized = parseObjectParameter(normalized);
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Argument contains is an object, changed it to correct JSON format. Modified string: {}", normalized);
-    }
-
-    if (first == '[' && last == ']' && normalized.find(TOOL_ARGS_STRING_INDICATOR) != std::string::npos) {
-        normalized = parseArrayParameter(normalized);
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Argument is an array, normalized quotes for JSON parsing. Modified string: {}", normalized);
-    }
-
-    if (normalized.substr(0, TOOL_ARGS_STRING_INDICATOR.size()) == TOOL_ARGS_STRING_INDICATOR &&
-        normalized.substr(normalized.size() - TOOL_ARGS_STRING_INDICATOR.size(), TOOL_ARGS_STRING_INDICATOR.size()) == TOOL_ARGS_STRING_INDICATOR) {
-        normalized = "\"" + normalized.substr(TOOL_ARGS_STRING_INDICATOR.size(), normalized.size() - 2 * TOOL_ARGS_STRING_INDICATOR.size()) + "\"";
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Argument is enclosed in string indicators, removed them for JSON parsing. Modified string: {}", normalized);
+    if ((!normalized.empty() && (normalized.front() == '{' || normalized.front() == '[')) ||
+        normalized.rfind(TOOL_ARGS_STRING_INDICATOR, 0) == 0) {
+        normalized = Gemma4ValueReader(normalized).parse();
+        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Converted Gemma4 structured argument to JSON: {}", normalized);
     }
 
     rapidjson::Document tempDoc;
@@ -343,22 +523,32 @@ bool Gemma4ToolParser::parseToolCallParametersState() {
 
 bool Gemma4ToolParser::parseInToolCallEndedState() {
     size_t nextToolCallPos = this->streamingContent.find(TOOL_CALL_NAME_PREFIX, this->streamingPosition);
-    size_t toolCallEndTagPos = this->streamingContent.find(TOOL_CALL_END_TAG, this->streamingPosition);
+    const size_t canonicalEndPos = this->streamingContent.find(TOOL_CALL_END_TAG, this->streamingPosition);
+    const size_t turnEndPos = this->streamingContent.find(TURN_END_TAG, this->streamingPosition);
+    size_t toolCallEndTagPos = canonicalEndPos;
+    size_t toolCallEndTagLength = TOOL_CALL_END_TAG.length();
+    if (turnEndPos != std::string::npos && (toolCallEndTagPos == std::string::npos || turnEndPos < toolCallEndTagPos)) {
+        toolCallEndTagPos = turnEndPos;
+        toolCallEndTagLength = TURN_END_TAG.length();
+    }
+
     SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Current state: ToolCallEnded. Streaming content from current position: {}", this->streamingContent.substr(this->streamingPosition));
-    if (nextToolCallPos != std::string::npos && nextToolCallPos < toolCallEndTagPos) {
+    if (nextToolCallPos != std::string::npos && (toolCallEndTagPos == std::string::npos || nextToolCallPos < toolCallEndTagPos)) {
         this->streamingPosition = nextToolCallPos;
         this->currentState = State::ToolCallStarted;
         SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected next tool call at position: {}", nextToolCallPos);
-    } else if (toolCallEndTagPos != std::string::npos) {
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}", toolCallEndTagPos);
-        this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
-        this->currentState = State::AfterToolCall;
-    } else {
-        this->streamingPosition = toolCallEndTagPos + TOOL_CALL_END_TAG.length();
-        this->currentState = State::AfterToolCall;
-        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}, returning to content state", toolCallEndTagPos);
+        return true;
     }
-    return true;
+    if (toolCallEndTagPos != std::string::npos) {
+        SPDLOG_LOGGER_TRACE(llm_calculator_logger, "Detected end of tool call at position: {}", toolCallEndTagPos);
+        this->streamingPosition = toolCallEndTagPos + toolCallEndTagLength;
+        this->currentState = State::AfterToolCall;
+        return true;
+    }
+    // The call arguments may already be complete while the end marker is still in flight.
+    // Keep the parser in ToolCallEnded and wait instead of doing arithmetic on npos and
+    // prematurely treating subsequent bytes as ordinary content.
+    return false;
 }
 
 bool Gemma4ToolParser::parseNewContent() {
@@ -404,16 +594,41 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
         this->streamingContent += chunk;
     }
 
-    if (parseNewContent()) {
-        if (this->currentState == State::ToolCallParameters) {
-            return BaseOutputParser::wrapFirstDelta(this->toolCall.name, toolCallIndex);
+    // If we enter a new parseChunk() already in ToolCallParameters, the function-name delta
+    // was necessarily emitted by the previous call. If we reach ToolCallParameters for the
+    // first time inside this invocation and finishReason is already terminal, no later SSE
+    // callback is guaranteed, so the final delta must carry both name and arguments.
+    const bool nameAlreadyEmittedAtEntry = this->currentState == State::ToolCallParameters;
+    auto wrapNameAndArgs = [this]() {
+        auto delta = BaseOutputParser::wrapFirstDelta(this->toolCall.name, this->toolCallIndex);
+        auto& function = delta["delta"]["tool_calls"][0]["function"];
+        rapidjson::Value argsValue(this->toolCall.arguments.c_str(), delta.GetAllocator());
+        function.AddMember("arguments", argsValue, delta.GetAllocator());
+        return delta;
+    };
+
+    // A backend chunk is not guaranteed to align with Gemma4 parser states. In particular,
+    // `<|tool_call>call:name{...}<tool_call|>` can arrive as one decoded chunk. Drain
+    // non-emitting state transitions until we can emit one meaningful OpenAI delta or until
+    // no state/position progress is possible. We still emit at most one delta per call.
+    while (true) {
+        const State previousState = this->currentState;
+        const size_t previousPosition = this->streamingPosition;
+        const bool parsed = parseNewContent();
+
+        if (this->currentState == State::ToolCallParameters && previousState != State::ToolCallParameters) {
+            if (finishReason == ov::genai::GenerationFinishReason::NONE) {
+                return BaseOutputParser::wrapFirstDelta(this->toolCall.name, toolCallIndex);
+            }
+            // Terminal chunk: keep draining so we can return an identifiable complete call
+            // rather than consuming the finish signal with a name-only delta.
         }
-        if (this->currentState == State::ToolCallEnded) {
-            auto delta = wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+        if (this->currentState == State::ToolCallEnded && previousState != State::ToolCallEnded) {
+            auto delta = nameAlreadyEmittedAtEntry ? wrapDeltaArgs(this->toolCall.arguments, toolCallIndex) : wrapNameAndArgs();
             this->toolCall = ToolCall{};
             return delta;
         }
-        if (this->currentState == State::Content) {
+        if (parsed && this->currentState == State::Content) {
             size_t contentEnd = this->streamingContent.find(TOOL_CALL_START_TAG, this->streamingPosition);
             std::string content;
             if (contentEnd != std::string::npos) {
@@ -437,11 +652,54 @@ std::optional<rapidjson::Document> Gemma4ToolParser::parseChunk(const std::strin
         if (this->currentState == State::AfterToolCall) {
             this->currentState = State::Content;
         }
+
+        const bool advanced = this->currentState != previousState || this->streamingPosition != previousPosition;
+        if (!advanced) {
+            break;
+        }
     }
 
     if (finishReason != ov::genai::GenerationFinishReason::NONE) {
+        // Recover a call only when the function name and argument-start brace were already
+        // generated and only structural closure is missing. Insert synthetic closure before
+        // any already-generated turn/tool marker so marker bytes never become argument data.
+        if (this->currentState == State::ToolCallParameters && this->toolCall.arguments.empty() && !this->toolCall.name.empty()) {
+            size_t closurePos = this->streamingContent.size();
+            for (const std::string& marker : {TOOL_CALL_END_TAG, TURN_END_TAG, TOOL_RESPONSE_START_TAG}) {
+                const size_t markerPos = this->streamingContent.find(marker, this->streamingPosition);
+                if (markerPos != std::string::npos) {
+                    closurePos = std::min(closurePos, markerPos);
+                }
+            }
+
+            size_t delimiterCount = 0;
+            size_t delimiterPos = this->streamingPosition;
+            while ((delimiterPos = this->streamingContent.find(TOOL_ARGS_STRING_INDICATOR, delimiterPos)) != std::string::npos && delimiterPos < closurePos) {
+                delimiterCount++;
+                delimiterPos += TOOL_ARGS_STRING_INDICATOR.size();
+            }
+            if (delimiterCount % 2 != 0) {
+                this->streamingContent.insert(closurePos, TOOL_ARGS_STRING_INDICATOR);
+                closurePos += TOOL_ARGS_STRING_INDICATOR.size();
+            }
+
+            const std::string maskedStreamingContent = maskStringValues(this->streamingContent);
+            const size_t closingBracePos = findInStringRespectingSpecialChars(maskedStreamingContent, TOOL_ARGS_END_INDICATOR, this->streamingPosition);
+            if (closingBracePos == std::string::npos || closingBracePos >= closurePos) {
+                this->streamingContent.insert(closurePos, TOOL_ARGS_END_INDICATOR);
+            }
+
+            if (parseToolCallParametersState() && this->currentState == State::ToolCallEnded && !this->toolCall.arguments.empty()) {
+                auto delta = nameAlreadyEmittedAtEntry ? wrapDeltaArgs(this->toolCall.arguments, toolCallIndex) : wrapNameAndArgs();
+                this->toolCall = ToolCall{};
+                return delta;
+            }
+        }
+
         if ((this->currentState == State::ToolCallParameters || this->currentState == State::ToolCallEnded) && !this->toolCall.arguments.empty()) {
-            return wrapDeltaArgs(this->toolCall.arguments, toolCallIndex);
+            auto delta = nameAlreadyEmittedAtEntry ? wrapDeltaArgs(this->toolCall.arguments, toolCallIndex) : wrapNameAndArgs();
+            this->toolCall = ToolCall{};
+            return delta;
         }
 
         if (this->currentState == State::Content && this->streamingPosition < this->streamingContent.size()) {
@@ -502,6 +760,10 @@ void Gemma4ToolParser::parse(ParsedOutput& parsedOutput, const std::vector<int64
     std::vector<std::pair<size_t, size_t>> toolCallPositions;
     size_t pos = 0;
 
+    const auto vocab = tokenizer.get_vocab();
+    const auto turnEndTokenIt = vocab.find(TURN_END_TAG);
+    const std::optional<int64_t> turnEndTokenId = turnEndTokenIt == vocab.end() ? std::nullopt : std::optional<int64_t>(turnEndTokenIt->second);
+
     while (pos != std::string::npos) {
         size_t start = std::string::npos;
         size_t end = std::string::npos;
@@ -512,9 +774,17 @@ void Gemma4ToolParser::parse(ParsedOutput& parsedOutput, const std::vector<int64
         } else {
             break;
         }
-        auto itArgs = std::find(generatedTokens.begin() + start, generatedTokens.end(), eotTokenId);
-        if (itArgs != generatedTokens.end()) {
-            end = std::distance(generatedTokens.begin(), itArgs);
+
+        auto canonicalEndIt = std::find(generatedTokens.begin() + start, generatedTokens.end(), eotTokenId);
+        auto selectedEndIt = canonicalEndIt;
+        if (turnEndTokenId.has_value()) {
+            auto turnEndIt = std::find(generatedTokens.begin() + start, generatedTokens.end(), turnEndTokenId.value());
+            if (turnEndIt != generatedTokens.end() && (selectedEndIt == generatedTokens.end() || turnEndIt < selectedEndIt)) {
+                selectedEndIt = turnEndIt;
+            }
+        }
+        if (selectedEndIt != generatedTokens.end()) {
+            end = std::distance(generatedTokens.begin(), selectedEndIt);
         } else {
             break;
         }
