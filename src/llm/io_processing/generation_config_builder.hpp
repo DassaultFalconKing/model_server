@@ -35,12 +35,6 @@
 
 namespace ovms {
 
-// Gemma4's native tool syntax is not JSON. In auto mode the model must be free
-// to decide whether to emit <|tool_call>call:name{...}<tool_call|>; constraining
-// the stream after the tool marker has caused reserved/pad-token collapse in
-// real Gemma4 agent workloads. Hard OpenAI choices are different: required and
-// named tool_choice are API contracts and remain fail-closed using GenAI
-// structural tags from generation position zero.
 class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
     static bool isNamedToolChoice(const std::string& toolChoice) {
         return !toolChoice.empty() && toolChoice != "auto" && toolChoice != "none" && toolChoice != "required";
@@ -51,9 +45,6 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
     }
 
     static ov::genai::StructuredOutputConfig::Tag buildToolTag(const std::string& toolName, const ToolSchemaWrapper& toolSchemaWrapper) {
-        // parseTools() has already required parameters to be a JSON object. GenAI's
-        // StructuredOutputConfig::validate(tokenizer) remains the grammar authority;
-        // do not introduce a second JSON parser dependency into this Bazel target.
         if (toolSchemaWrapper.stringRepr.empty()) {
             throw std::invalid_argument("Gemma4 guided tool schema for '" + toolName + "' is empty");
         }
@@ -93,22 +84,15 @@ public:
         if (hardToolChoice && request.toolNameSchemaMap.empty()) {
             throw std::invalid_argument("Gemma4 hard tool_choice requires at least one available tool schema");
         }
-
-        // GenAI exposes one structural_tags_config. A response_format grammar and
-        // active Gemma4 tool protocol cannot both own it, even in auto mode where
-        // tool arguments themselves remain native/unconstrained.
         if (request.responseFormat.has_value() && request.toolChoice != "none" && !request.toolNameSchemaMap.empty()) {
             throw std::invalid_argument("Gemma4 response_format cannot be combined with active tool generation constraints");
         }
-
         if (request.toolNameSchemaMap.empty() || request.toolChoice == "none") {
             return;
         }
 
-        // Auto is intentionally native. This is independent of the legacy
-        // enable_tool_guided_generation switch: globally constraining auto is not
-        // equivalent to per-tool OpenAI strict=true and has proven less robust on
-        // complex agent schemas such as OpenCode's question tool.
+        // Auto stays on Gemma4's native protocol. The output parser extracts tool
+        // calls after generation; no global JSON grammar is installed here.
         if (!hardToolChoice) {
             config.structured_output_config.reset();
             return;
@@ -118,7 +102,6 @@ public:
         if (toolTags.empty()) {
             throw std::invalid_argument("Gemma4 hard tool_choice did not produce an enforceable tool tag");
         }
-
         auto requiredTags = std::make_shared<ov::genai::StructuredOutputConfig::TagsWithSeparator>();
         requiredTags->tags = std::move(toolTags);
         requiredTags->separator = "";
@@ -135,12 +118,10 @@ class GenerationConfigBuilder {
 
 public:
     GenerationConfigBuilder() = delete;
-    // Using tool parser name to select appropriate builder implementation to avoid introducing additional parameters. Might be insufficient in the future.
     explicit GenerationConfigBuilder(const ov::genai::GenerationConfig& baseConfig, std::string toolParserName, bool enableToolGuidedGeneration, DecodingMethod decodingMethod) {
         if (toolParserName == "llama3") {
             builder_impl = std::make_unique<Llama3GenerationConfigBuilder>(baseConfig, enableToolGuidedGeneration, decodingMethod);
         } else if (toolParserName == "qwen3") {
-            // Qwen3 and Hermes3 share the same mechanism for generating tool calls, so we can use Hermes3GenerationConfigBuilder
             builder_impl = std::make_unique<Hermes3GenerationConfigBuilder>(baseConfig, enableToolGuidedGeneration, decodingMethod);
         } else if (toolParserName == "hermes3") {
             builder_impl = std::make_unique<Hermes3GenerationConfigBuilder>(baseConfig, enableToolGuidedGeneration, decodingMethod);
@@ -158,19 +139,14 @@ public:
         }
     }
 
-    ov::genai::GenerationConfig& getConfig() {
-        return builder_impl->getConfig();
-    }
-
-    void adjustConfigForDecodingMethod() {
-        builder_impl->adjustConfigForDecodingMethod();
-    }
-
-    void validateStructuredOutputConfig(ov::genai::Tokenizer& tokenizer) {
-        builder_impl->validateStructuredOutputConfig(tokenizer);
-    }
+    ov::genai::GenerationConfig& getConfig() { return builder_impl->getConfig(); }
+    void adjustConfigForDecodingMethod() { builder_impl->adjustConfigForDecodingMethod(); }
+    void validateStructuredOutputConfig(ov::genai::Tokenizer& tokenizer) { builder_impl->validateStructuredOutputConfig(tokenizer); }
 
     void unsetStructuredOutputConfig() {
+        if (hardToolChoice) {
+            throw std::invalid_argument("Refusing to disable structured output for required/named tool_choice");
+        }
         builder_impl->unsetStructuredOutputConfig();
     }
 
@@ -179,12 +155,7 @@ public:
         builder_impl->parseConfigFromRequest(request);
     }
 
-    bool hasHardToolChoice() const {
-        return hardToolChoice;
-    }
-
-    void addStopString(const std::string& decodedStopString) {
-        builder_impl->addStopString(decodedStopString);
-    }
+    bool hasHardToolChoice() const { return hardToolChoice; }
+    void addStopString(const std::string& decodedStopString) { builder_impl->addStopString(decodedStopString); }
 };
 }  // namespace ovms
