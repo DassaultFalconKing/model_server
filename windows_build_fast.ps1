@@ -8,7 +8,7 @@ param(
     [int]$Jobs = 0,
 
     [string]$OutputUserRoot = "C:\opt",
-    [string]$DiskCache = "C:\opt\bazel-disk-cache\win_mp_on_py_on",
+    [string]$DiskCache = "",
     [string]$RepositoryCache = "C:\opt\bazel-repository-cache",
     [string]$ProfileDirectory = "C:\opt\bazel-profiles",
     [string]$OpenVinoDir = "",
@@ -161,6 +161,9 @@ function Invoke-Package {
 $script:Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $script:BazelConfig = if ($WithPython) { "win_mp_on_py_on" } else { "win_mp_on_py_off" }
 
+if (-not $DiskCache) {
+    $DiskCache = "C:\opt\bazel-disk-cache\$script:BazelConfig"
+}
 if (-not $OpenVinoDir) {
     $OpenVinoDir = Join-Path $OutputUserRoot "openvino\runtime\cmake"
 }
