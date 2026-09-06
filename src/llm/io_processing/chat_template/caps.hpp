@@ -25,15 +25,20 @@ struct ChatTemplateCaps {
     // Some templates require tool_call arguments to be a dict/object rather than a stringified JSON.
     bool requiresObjectArguments = false;
 
+    // Gemma4-style templates render tool result mappings natively. Parse JSON object strings
+    // from role:tool content so opaque fields (commit SHAs, ids, hashes) remain structured.
+    bool parseToolResponseJsonContent = false;
+
     std::string missnamedReasoningField = "";
 
     bool needsWorkarounds() const {
-        return requiresObjectArguments || !missnamedReasoningField.empty();
+        return requiresObjectArguments || parseToolResponseJsonContent || !missnamedReasoningField.empty();
     }
 
     std::string toString() const {
         return std::string("supportsToolCalls=") + (supportsToolCalls ? "true" : "false") +
                ", requiresObjectArguments=" + (requiresObjectArguments ? "true" : "false") +
+               ", parseToolResponseJsonContent=" + (parseToolResponseJsonContent ? "true" : "false") +
                ", missnamedReasoningField=" + missnamedReasoningField;
     }
 };
