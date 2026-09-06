@@ -541,6 +541,26 @@ absl::Status GenAiServable::loadRequest(std::shared_ptr<GenAiServableExecutionCo
         return endpointStatus;
     }
     executionContext->payload = payload;
+    // All legacy parsers override parseRequest; session setup must precede dispatch.
+    if (executionContext->endpoint == Endpoint::TOKENIZE)
+        return absl::OkStatus();
+    auto sessionStore = processSessionStateStore();
+    executionContext->sessionTurn = {};
+    if (auto sessionId = getSessionIdHeader(executionContext->payload.headers); sessionId.has_value()) {
+        if (sessionStore->enabled()) {
+            auto turn = sessionStore->beginTurn(sessionId.value(), executionContext->payload.body, *executionContext->payload.parsedJson);
+            if (!turn.ok())
+                return turn.status();
+            executionContext->sessionTurn = std::move(*turn);
+        } else {
+            static std::once_flag warningOnce;
+            std::call_once(warningOnce, []() {
+                SPDLOG_LOGGER_WARN(llm_calculator_logger,
+                    "X-OVMS-Session-ID received but OVMS_SESSION_STORE_DIR is not configured; session persistence is disabled");
+            });
+        }
+    }
+
     return absl::OkStatus();
 }
 
@@ -574,23 +594,6 @@ absl::Status GenAiServable::processTokenizeRequest(std::shared_ptr<GenAiServable
 }
 
 absl::Status GenAiServable::parseRequest(std::shared_ptr<GenAiServableExecutionContext>& executionContext) {
-    auto sessionStore = processSessionStateStore();
-    SessionTurnContext sessionTurn;
-    if (auto sessionId = getSessionIdHeader(executionContext->payload.headers); sessionId.has_value()) {
-        if (sessionStore->enabled()) {
-            auto turn = sessionStore->beginTurn(sessionId.value(), executionContext->payload.body, *executionContext->payload.parsedJson);
-            if (!turn.ok())
-                return turn.status();
-            sessionTurn = std::move(*turn);
-        } else {
-            static std::once_flag warningOnce;
-            std::call_once(warningOnce, []() {
-                SPDLOG_LOGGER_WARN(llm_calculator_logger,
-                    "X-OVMS-Session-ID received but OVMS_SESSION_STORE_DIR is not configured; session persistence is disabled");
-            });
-        }
-    }
-
     try {
         if (executionContext->endpoint == Endpoint::RESPONSES) {
             executionContext->apiHandler = std::make_shared<OpenAIResponsesHandler>(*executionContext->payload.parsedJson,
@@ -645,14 +648,6 @@ absl::Status GenAiServable::parseRequest(std::shared_ptr<GenAiServableExecutionC
     }
     executionContext->inputRequest = std::move(*inputRequestResult);
 
-    if (sessionTurn.active) {
-        auto journalStatus = sessionStore->recordGenerationConfig(
-            sessionTurn,
-            executionContext->inputRequest.generationConfig,
-            executionContext->apiHandler->getToolChoice());
-        if (!journalStatus.ok())
-            return journalStatus;
-    }
     return absl::OkStatus();
 }
 
@@ -680,6 +675,15 @@ absl::Status GenAiServable::validateInputCompatibility(std::shared_ptr<GenAiServ
 absl::Status GenAiServable::prepareInputs(std::shared_ptr<GenAiServableExecutionContext>& executionContext) {
     if (executionContext->apiHandler == nullptr) {
         return absl::Status(absl::StatusCode::kInvalidArgument, "API handler is not initialized");
+    }
+
+    if (executionContext->sessionTurn.active) {
+        auto journalStatus = processSessionStateStore()->recordGenerationConfig(
+            executionContext->sessionTurn,
+            executionContext->inputRequest.generationConfig,
+            executionContext->apiHandler->getToolChoice());
+        if (!journalStatus.ok())
+            return journalStatus;
     }
 
     auto status = validateInputCompatibility(executionContext);

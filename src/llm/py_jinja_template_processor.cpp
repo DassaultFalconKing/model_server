@@ -48,11 +48,6 @@ bool PyJinjaTemplateProcessor::applyChatTemplate(PyJinjaTemplateProcessor& templ
         py::exec(R"(
             output = ""
             error = ""
-            def _agent_log(hypothesisId, message, data):
-                import time as _t
-                rec = {"sessionId":"afec93","hypothesisId":hypothesisId,"location":"py_jinja_template_processor.cpp:applyChatTemplate","message":message,"data":data,"timestamp":int(_t.time()*1000),"runId":"post-fix"}
-                with open(r"C:\git\model_server-gemma4-clean\debug-afec93.log", "a", encoding="utf-8") as _f:
-                    _f.write(json.dumps(rec, default=str) + "\n")
             try:
                 request_json = json.loads(request_body)
                 messages = request_json["messages"]
@@ -70,39 +65,12 @@ bool PyJinjaTemplateProcessor::applyChatTemplate(PyJinjaTemplateProcessor& templ
                     raise Exception("add_generation_prompt accepts values true or false")
 
                 tools = request_json["tools"] if "tools" in request_json else None
-                # #region agent log
-                msg_shapes = []
-                for i, m in enumerate(messages if isinstance(messages, list) else []):
-                    if not isinstance(m, dict):
-                        msg_shapes.append({"i": i, "type": type(m).__name__, "preview": str(m)[:80]})
-                        continue
-                    tc = m.get("tool_calls")
-                    fn_args_t = None
-                    tc0_t = None
-                    if isinstance(tc, list) and tc:
-                        tc0_t = type(tc[0]).__name__
-                        if isinstance(tc[0], dict):
-                            fn = tc[0].get("function")
-                            if isinstance(fn, dict):
-                                fn_args_t = type(fn.get("arguments")).__name__
-                    msg_shapes.append({"i": i, "type": type(m).__name__, "role": m.get("role"), "keys": list(m.keys()), "content_type": type(m.get("content")).__name__, "tool_calls_type": type(tc).__name__, "tool_calls0_type": tc0_t, "arguments_type": fn_args_t})
-                tools_t = type(tools).__name__
-                tools0_t = type(tools[0]).__name__ if isinstance(tools, list) and tools else None
-                _agent_log("A-B-C-D", "pre-render message/tool shapes", {"n_messages": len(messages) if isinstance(messages, list) else None, "messages_type": type(messages).__name__, "tools_type": tools_t, "tools0_type": tools0_t, "shapes": msg_shapes})
-                # #endregion
                 if tools is None:
                     output = chat_template.render(messages=messages, bos_token=bos_token, eos_token=eos_token, add_generation_prompt=add_generation_prompt, **chat_template_kwargs)
                 else:
                     output = tool_chat_template.render(messages=messages, tools=tools, bos_token=bos_token, eos_token=eos_token, add_generation_prompt=add_generation_prompt, **chat_template_kwargs)
             except Exception as e:
                 error = str(e)
-                # #region agent log
-                try:
-                    import traceback as _tb
-                    _agent_log("E", "jinja render exception", {"error": error, "traceback": _tb.format_exc()[-4000:]})
-                except Exception:
-                    pass
-                # #endregion
         )",
             py::globals(), locals);
 

@@ -190,6 +190,7 @@ private:
 struct GenAiServableExecutionContext {
     // Common API related members
     HttpPayload payload;
+    SessionTurnContext sessionTurn;
     Endpoint endpoint;
     std::shared_ptr<OpenAIApiHandler> apiHandler;
     // Populated in parseRequest(); carries all GenAI inputs including the generation config.

@@ -16,8 +16,6 @@
 
 #include "chat_template_adapter.hpp"
 
-#include <chrono>
-#include <fstream>
 #include <string>
 #include <variant>
 
@@ -104,44 +102,6 @@ void applyToHistory(const ChatTemplateCaps& caps, ov::genai::ChatHistory& chatHi
     if (caps.parseToolResponseJsonContent) {
         toolResponseJsonContentToObjectHistory(chatHistory);
     }
-    // #region agent log
-    {
-        std::string argsType = "absent";
-        std::string contentType = "absent";
-        try {
-            auto messages = chatHistory.get_messages();
-            if (messages.is_array()) {
-                for (size_t i = 0; i < messages.size(); ++i) {
-                    auto msg = messages[i];
-                    if (msg.is_object() && msg.contains("tool_calls") && msg["tool_calls"].is_array() && msg["tool_calls"].size() > 0) {
-                        auto tc0 = msg["tool_calls"][0];
-                        if (tc0.is_object() && tc0.contains("function") && tc0["function"].is_object() && tc0["function"].contains("arguments")) {
-                            auto args = tc0["function"]["arguments"];
-                            argsType = args.is_string() ? "string" : args.is_object() ? "object" : "other";
-                        }
-                    }
-                    if (msg.is_object() && msg.contains("role") && msg["role"].is_string() && msg["role"].get_string() == "tool" && msg.contains("content")) {
-                        auto c = msg["content"];
-                        contentType = c.is_string() ? "string" : c.is_object() ? "object" : c.is_array() ? "array" : "other";
-                    }
-                }
-            }
-        } catch (...) {
-            argsType = "exception";
-        }
-        std::ofstream dbg("C:\\git\\model_server-gemma4-clean\\debug-afec93.log", std::ios::app);
-        if (dbg) {
-            const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch())
-                                .count();
-            dbg << "{\"sessionId\":\"afec93\",\"hypothesisId\":\"C\",\"location\":\"chat_template_adapter.cpp:applyToHistory\",\"message\":\"post-adapter argument/content types\",\"data\":{\"requiresObjectArguments\":"
-                << (caps.requiresObjectArguments ? "true" : "false")
-                << ",\"parseToolResponseJsonContent\":" << (caps.parseToolResponseJsonContent ? "true" : "false")
-                << ",\"arguments_type\":\"" << argsType << "\",\"tool_content_type\":\"" << contentType
-                << "\"},\"timestamp\":" << ms << ",\"runId\":\"post-fix\"}\n";
-        }
-    }
-    // #endregion
     if (!caps.missnamedReasoningField.empty()) {
         injectReasoningIntoMissnamedSection(chatHistory, caps.missnamedReasoningField);
     }

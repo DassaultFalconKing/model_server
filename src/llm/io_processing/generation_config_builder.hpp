@@ -120,6 +120,21 @@ public:
         requiredTags->at_least_one = true;
         requiredTags->stop_after_first = false;
         ov::genai::StructuredOutputConfig::StructuralTag structuralTag = requiredTags;
+        if (request.toolChoice == "required") {
+            // Google Gemma4 may open/close its thought channel before choosing a
+            // tool after a tool response. Do not force arguments into that phase.
+            // Reasoning is optional; the following tool grammar remains mandatory.
+            using Structured = ov::genai::StructuredOutputConfig;
+            auto thought = std::make_shared<Structured::Tag>();
+            thought->begin = "<|channel>thought\n";
+            thought->content = Structured::AnyText();
+            thought->end = "<channel|>";
+            auto optionalThought = std::make_shared<Structured::Union>();
+            optionalThought->elements = {Structured::ConstString(""), thought};
+            auto sequence = std::make_shared<Structured::Concat>();
+            sequence->elements = {optionalThought, requiredTags};
+            structuralTag = sequence;
+        }
         setStructuralTagsConfig(structuralTag);
     }
 };

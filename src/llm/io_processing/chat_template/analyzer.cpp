@@ -15,8 +15,6 @@
 //*****************************************************************************
 #include "analyzer.hpp"
 
-#include <chrono>
-#include <fstream>
 #include <string>
 
 namespace ovms {
@@ -60,20 +58,6 @@ ChatTemplateAnalysisResult ChatTemplateAnalyzer::analyze(const std::string& temp
         const bool mapsResponse = contains(templateSource, "response is mapping");
         const bool iteratesPartsWithGet = contains(templateSource, "part.get('type')");
         result.caps.parseToolResponseJsonContent = mapsResponse && !iteratesPartsWithGet;
-        // #region agent log
-        {
-            std::ofstream dbg("C:\\git\\model_server-gemma4-clean\\debug-afec93.log", std::ios::app);
-            if (dbg) {
-                const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                    std::chrono::system_clock::now().time_since_epoch())
-                                    .count();
-                dbg << "{\"sessionId\":\"afec93\",\"hypothesisId\":\"D\",\"location\":\"analyzer.cpp:analyze\",\"message\":\"gemma4 parseToolResponseJsonContent\",\"data\":{\"mapsResponse\":"
-                    << (mapsResponse ? "true" : "false") << ",\"iteratesPartsWithGet\":" << (iteratesPartsWithGet ? "true" : "false")
-                    << ",\"parseToolResponseJsonContent\":" << (result.caps.parseToolResponseJsonContent ? "true" : "false")
-                    << "},\"timestamp\":" << ms << ",\"runId\":\"post-fix\"}\n";
-            }
-        }
-        // #endregion
         return result;
     }
 

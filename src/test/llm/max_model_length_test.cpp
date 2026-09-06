@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 #include <rapidjson/document.h>
 
+#include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <optional>
 #include <string>
@@ -24,6 +26,8 @@
 #include <openvino/genai/tokenizer.hpp>
 
 #include "../../llm/servable.hpp"
+#include "../../llm/visual_language_model/legacy/servable.hpp"
+#include "../../utils/env_guard.hpp"
 #include "../../llm/servable_initializer.hpp"
 #include "src/test/test_utils.hpp"
 #include "src/test/light_test_utils.hpp"
@@ -191,6 +195,49 @@ rapidjson::Document makeSessionRequest(const std::optional<uint32_t>& seed = std
 }  // namespace
 
 class SessionStateStoreTest : public TestWithTempDir {};
+
+TEST_F(SessionStateStoreTest, LegacyVlmLoadsSessionBeforeItsOverriddenParser) {
+    // The process store snapshots its environment once. Re-exec so this test
+    // is independent of requests made by other suites in the same binary.
+    ::testing::FLAGS_gtest_death_test_style = "threadsafe";
+    ASSERT_EXIT({
+        const auto exercise = [&]() {
+            EnvGuard environment;
+            environment.set("OVMS_SESSION_STORE_DIR", directoryPath);
+            VisualLanguageModelLegacyServable servable;
+            auto context = servable.createExecutionContext();
+            HttpPayload payload;
+            payload.uri = "/v1/chat/completions";
+            payload.headers.emplace("X-OVMS-Session-ID", "legacy-vlm");
+            payload.body = R"({"model":"gemma4","messages":[],"seed":42})";
+            payload.parsedJson = std::make_shared<rapidjson::Document>();
+            payload.parsedJson->Parse(payload.body.c_str());
+            ASSERT_TRUE(servable.loadRequest(context, payload).ok());
+            EXPECT_TRUE(std::filesystem::exists(directoryPath + "/legacy-vlm/manifest.json"));
+            EXPECT_TRUE(std::filesystem::exists(directoryPath + "/legacy-vlm/turns/000000000001/raw-request.json"));
+
+            // A later request without an explicit seed must inherit the first seed
+            // before the legacy parser extracts its GenerationConfig.
+            payload.parsedJson->RemoveMember("seed");
+            payload.body = R"({"model":"gemma4","messages":[]})";
+            auto nextContext = servable.createExecutionContext();
+            ASSERT_TRUE(servable.loadRequest(nextContext, payload).ok());
+            ASSERT_TRUE(nextContext->payload.parsedJson->HasMember("seed"));
+            EXPECT_EQ((*nextContext->payload.parsedJson)["seed"].GetUint(), 42u);
+            EXPECT_TRUE(std::filesystem::exists(directoryPath + "/legacy-vlm/turns/000000000002/effective-request.json"));
+
+            // Reload through a fresh store, without the process cache.
+            SessionStateStore restarted(directoryPath, 1, 1024 * 1024, 64 * 1024);
+            payload.parsedJson->RemoveMember("seed");
+            auto resumed = restarted.beginTurn("legacy-vlm", payload.body, *payload.parsedJson);
+            ASSERT_TRUE(resumed.ok());
+            EXPECT_EQ(resumed->seed, 42u);
+            EXPECT_EQ(resumed->turnIndex, 3u);
+        };
+        exercise();
+        std::exit(::testing::Test::HasFailure() ? 1 : 0);
+    }, ::testing::ExitedWithCode(0), "");
+}
 
 TEST_F(SessionStateStoreTest, FirstTurnWithoutSeedGeneratesAndPersistsNonZeroSeed) {
     SessionStateStore store(directoryPath, 4, 1024 * 1024, 64 * 1024);
