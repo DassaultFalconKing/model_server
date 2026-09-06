@@ -22,7 +22,9 @@
 namespace ovms {
 
 class Gemma4ToolParser : public BaseOutputParser {
-protected:
+public:
+    // Public protocol constants are also used by the private recursive parser
+    // implementation and conformance tests. They are semantic markers, not state.
     static const std::string TOOL_CALL_START_TAG;
     static const std::string TOOL_CALL_END_TAG;
     static const std::string TOOL_CALL_NAME_PREFIX;
@@ -30,6 +32,7 @@ protected:
     static const std::string TURN_END_TAG;
     static const std::string TOOL_RESPONSE_START_TAG;
 
+protected:
     enum class State {
         Content,
         ToolCallStarted,
@@ -63,7 +66,8 @@ public:
         std::optional<OutputParsingConfig> configOverride = std::nullopt) :
         BaseOutputParser(tokenizer,
             configOverride.has_value() ? std::move(*configOverride) : defaultParsingConfig()) {
-        for (const auto& [name, _] : toolsSchemas) {
+        for (const auto& [name, schema] : toolsSchemas) {
+            (void)schema;
             allowedToolNames.insert(name);
         }
         enforceToolRegistry = !allowedToolNames.empty();
