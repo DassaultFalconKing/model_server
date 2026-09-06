@@ -48,6 +48,11 @@ public:
         OutputParsingConfig cfg;
         cfg.startTags = {"<|tool_call>"};
         cfg.tokenIdStartTags = {"<|tool_call>"};
+        // Real Gemma4 traces occasionally omit the repeated tool marker after a
+        // reasoning channel and continue directly with call:name{...}. The generic
+        // OutputParser returns to UNKNOWN after reasoning; preambleStartTags is the
+        // deliberately narrow hook for this variant and is not matched mid-content.
+        cfg.preambleStartTags = {"call:"};
         cfg.endTag = "<tool_call|>";
         cfg.needsSpecialTokens = true;
         return cfg;
