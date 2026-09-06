@@ -50,7 +50,9 @@ ChatTemplateAnalysisResult ChatTemplateAnalyzer::analyze(const std::string& temp
         result.detectedToolParser = "gemma4";
         result.detectedReasoningParser = "gemma4";  // gemma is always tied to its own parser for reasoning
         result.caps.supportsToolCalls = true;
-        result.caps.parseToolResponseJsonContent = true;
+        // Only templates with an explicit mapping branch can safely receive a JSON object
+        // in role:tool content. Older Gemma4 templates keep their original string behavior.
+        result.caps.parseToolResponseJsonContent = contains(templateSource, "response is mapping");
         return result;
     }
 

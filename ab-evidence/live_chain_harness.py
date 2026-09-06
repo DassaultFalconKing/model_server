@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """Reproducible Gemma4 chained-tool acceptance harness.
 
-This harness records the exact two-request conversation used to validate:
-  1. model -> inspect_repository_state tool call,
+Validates and records the exact two-request conversation for:
+  1. model -> inspect_repository_state,
   2. read-only local Git execution,
-  3. tool result -> publish_review_evidence tool call,
-  4. byte-exact propagation of the commit SHA into commit_sha.
+  3. tool result -> publish_review_evidence,
+  4. byte-exact propagation of the commit SHA.
 
+The second step can run as a named control, required tool selection, or auto.
 Python standard library only. The executor performs read-only Git/filesystem
-operations. The only HTTP traffic is to the configured OVMS endpoint.
+operations; HTTP is limited to the configured OVMS endpoint.
 """
 
 import argparse
 import json
-import os
 from pathlib import Path
 import subprocess
 import sys
@@ -24,6 +24,7 @@ import urllib.request
 CHAT_PATH = "/v3/chat/completions"
 DEFAULT_TIMEOUT_S = 180
 SHA40_LEN = 40
+SECOND_TOOL_CHOICES = ("named", "required", "auto")
 
 
 def dump_json(path, value):
@@ -122,7 +123,8 @@ def inspect_repository_state(repo_root, requested_sha):
     head_sha = run_git(repo_root, "rev-parse", "HEAD").stdout.strip()
     resolved_sha = run_git(repo_root, "rev-parse", "%s^{commit}" % requested_sha).stdout.strip()
     changed_files = [
-        line for line in run_git(
+        line
+        for line in run_git(
             repo_root,
             "diff-tree",
             "--no-commit-id",
@@ -182,7 +184,13 @@ def build_request1(model, tools, repo_root, commit_sha):
     }
 
 
-def build_request2(request1, assistant_message, tool_call, tool_result, tools):
+def second_tool_choice(mode):
+    if mode == "named":
+        return {"type": "function", "function": {"name": "publish_review_evidence"}}
+    return mode
+
+
+def build_request2(request1, assistant_message, tool_call, tool_result, tools, mode):
     call_id = tool_call.get("id")
     if not isinstance(call_id, str) or not call_id:
         raise AssertionError("first tool call has no id")
@@ -192,7 +200,7 @@ def build_request2(request1, assistant_message, tool_call, tool_result, tools):
         "seed": 42,
         "max_tokens": 1024,
         "stream": False,
-        "tool_choice": {"type": "function", "function": {"name": "publish_review_evidence"}},
+        "tool_choice": second_tool_choice(mode),
         "tools": tools,
         "messages": [
             request1["messages"][0],
@@ -215,6 +223,7 @@ def main():
     parser.add_argument("--commit-sha", required=True)
     parser.add_argument("--catalog", required=True)
     parser.add_argument("--out-dir", required=True)
+    parser.add_argument("--second-tool-choice", choices=SECOND_TOOL_CHOICES, default="named")
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT_S)
     args = parser.parse_args()
 
@@ -248,9 +257,21 @@ def main():
     tool_result = inspect_repository_state(repo_root, args.commit_sha)
     if tool_result["resolved_sha"] != args.commit_sha:
         raise AssertionError("requested SHA resolved to a different commit")
+    if tool_result["head_sha"] != args.commit_sha:
+        raise AssertionError(
+            "worktree HEAD %s does not match acceptance SHA %s"
+            % (tool_result["head_sha"], args.commit_sha)
+        )
     dump_json(out_dir / "tool1-result.json", tool_result)
 
-    request2 = build_request2(request1, assistant1, call1, tool_result, chain_tools)
+    request2 = build_request2(
+        request1,
+        assistant1,
+        call1,
+        tool_result,
+        chain_tools,
+        args.second_tool_choice,
+    )
     dump_json(out_dir / "request2-input.json", request2)
     status2, response2, raw2, elapsed2 = post_json(endpoint, request2, args.timeout)
     (out_dir / "request2-response.raw").write_text(raw2, encoding="utf-8")
@@ -275,6 +296,7 @@ def main():
         "endpoint": endpoint,
         "model": args.model,
         "commit_sha": args.commit_sha,
+        "second_tool_choice": args.second_tool_choice,
         "request1": {
             "http": status1,
             "elapsed_s": round(elapsed1, 3),
