@@ -157,3 +157,13 @@ TEST(Gemma4GenerationContractTest, ObjectSchemaIsPassedWithoutLosingNestedConstr
     ASSERT_EQ(tags.tags.size(), 1u);
     EXPECT_EQ(std::get<Structured::JSONSchema>(tags.tags[0].content).value, schema);
 }
+
+TEST(Gemma4GenerationContractTest, RejectsHardNamesThatItsParserCannotExecute) {
+    for (const std::string name : {"bad name", "", "bad:name"}) {
+        OpenAIRequest request;
+        request.toolChoice = "required";
+        request.toolNameSchemaMap.emplace(name, ToolSchemaWrapper{nullptr, emptySchema});
+        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+        EXPECT_THROW(builder.parseConfigFromRequest(request), std::invalid_argument) << name;
+    }
+}

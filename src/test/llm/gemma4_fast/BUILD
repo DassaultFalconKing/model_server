@@ -2,6 +2,7 @@ load("//:common_settings.bzl", "COMMON_LOCAL_DEFINES", "COMMON_STATIC_LIBS_LINKO
 
 cc_test(
     name = "gemma4_parser_contract_test",
+    env_inherit = ["GEMMA4_TOKENIZER_PATH", "PATH"],
     srcs = ["gemma4_parser_contract_test.cpp"],
     deps = [
         "@com_google_googletest//:gtest_main",
@@ -9,6 +10,7 @@ cc_test(
         "//src/llm:output_parsers",
         "//src/llm:text_streamer",
         "//third_party:genai",
+        "//third_party:openvino",
     ],
     copts = COPTS_TESTS,
     local_defines = COMMON_LOCAL_DEFINES,

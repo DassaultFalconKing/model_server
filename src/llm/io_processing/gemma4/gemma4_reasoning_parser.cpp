@@ -28,17 +28,9 @@ void Gemma4ReasoningParser::skipToken(const std::vector<int64_t>& generatedToken
     }
 }
 
-std::optional<Delta> Gemma4ReasoningParser::parseChunk(const std::string& chunk, const std::vector<int64_t>& /*tokens*/, ov::genai::GenerationFinishReason finishReason) {
-    if (chunk.empty()) {
-        SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Received empty chunk for Gemma4ReasoningParser");
-        return std::nullopt;
-    }
-
-    if (chunk.find(parsingConfig.startTags[0]) != std::string::npos || chunk.find(parsingConfig.endTag) != std::string::npos) {
-        return std::nullopt;
-    } else {
-        return ReasoningDelta{chunk};
-    }
-    return std::nullopt;
+std::optional<Delta> Gemma4ReasoningParser::parseChunk(const std::string& chunk, const std::vector<int64_t>& tokens, ov::genai::GenerationFinishReason finishReason) {
+    // The base parser strips the configured boundaries without discarding text
+    // that shares their chunk, and resets its entry state between requests.
+    return Qwen3ReasoningParser::parseChunk(chunk, tokens, finishReason);
 }
 }  // namespace ovms

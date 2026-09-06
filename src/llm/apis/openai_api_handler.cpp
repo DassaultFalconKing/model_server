@@ -250,6 +250,9 @@ absl::Status OpenAIApiHandler::parseTools() {
             }
         }
     } else {
+        if (toolChoice != "auto" && toolChoice != "none") {
+            return absl::InvalidArgumentError("tool_choice requires at least one tool");
+        }
         toolChoice = "none";  // If tools are not provided, set toolChoice to "none"
     }
 

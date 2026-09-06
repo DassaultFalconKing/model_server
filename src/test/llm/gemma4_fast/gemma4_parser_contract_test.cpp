@@ -18,6 +18,7 @@
 #include <openvino/genai/tokenizer.hpp>
 
 #include <cstddef>
+#include <cstdlib>
 #include <memory>
 #include <string>
 #include <utility>
@@ -25,6 +26,8 @@
 #include <vector>
 
 #include "../../../llm/io_processing/output_parser.hpp"
+#include "../../../llm/io_processing/gemma4/gemma4_reasoning_parser.hpp"
+#include "../../../llm/io_processing/gemma4/gemma4_tool_parser.hpp"
 #include "../../../llm/ovms_text_streamer.hpp"
 #include "../../platform_utils.hpp"
 
@@ -85,10 +88,8 @@ ParsedOutput parseWithStreamer(
         streamer.write(token);
     streamer.end();
 
-    for (auto& tc : toolCalls) {
-        if (!tc.arguments.empty())
-            result.toolCalls.push_back(std::move(tc));
-    }
+    // Match the API accumulator: never hide header-only or sparse calls.
+    result.toolCalls = std::move(toolCalls);
     return result;
 }
 
@@ -97,7 +98,8 @@ protected:
     static std::unique_ptr<ov::genai::Tokenizer> tokenizer;
 
     static void SetUpTestSuite() {
-        tokenizer = std::make_unique<ov::genai::Tokenizer>(tokenizerPath);
+        const char* configured = std::getenv("GEMMA4_TOKENIZER_PATH");
+        tokenizer = std::make_unique<ov::genai::Tokenizer>(configured ? configured : tokenizerPath);
     }
 
     static void TearDownTestSuite() {
@@ -177,4 +179,77 @@ TEST_F(Gemma4ParserFastContractTest, MalformedCallIsBoundedAndLaterValidCallSurv
     ASSERT_EQ(parsed.toolCalls.size(), 1u);
     EXPECT_EQ(parsed.toolCalls[0].name, "question");
     EXPECT_EQ(parsed.toolCalls[0].arguments, R"({"questions":[]})");
+}
+
+TEST_F(Gemma4ParserFastContractTest, TruncatedArgumentsEmitNoToolCall) {
+    auto parsed = parse(R"(<|tool_call>call:question{questions:[)");
+    EXPECT_TRUE(parsed.toolCalls.empty());
+}
+
+TEST_F(Gemma4ParserFastContractTest, ConsecutiveCallsKeepContiguousIndices) {
+    auto parsed = parse(R"(<|tool_call>call:question{questions:[]}<tool_call|><|tool_call>call:question{questions:[]}<tool_call|>)");
+    ASSERT_EQ(parsed.toolCalls.size(), 2u);
+    for (const auto& call : parsed.toolCalls) {
+        EXPECT_EQ(call.name, "question");
+        EXPECT_EQ(call.arguments, R"({"questions":[]})");
+        EXPECT_FALSE(call.id.empty());
+    }
+    EXPECT_NE(parsed.toolCalls[0].id, parsed.toolCalls[1].id);
+}
+
+TEST_F(Gemma4ParserFastContractTest, JsonStringEndMarkerIsPayload) {
+    auto parsed = parse(R"(<|tool_call>call:question{"text":"keep <tool_call|> literal","questions":[]}<tool_call|>)");
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].arguments, R"({"text":"keep <tool_call|> literal","questions":[]})");
+    EXPECT_TRUE(parsed.content.empty());
+}
+
+TEST_F(Gemma4ParserFastContractTest, NativeStringEndMarkerIsPayload) {
+    auto parsed = parse(R"(<|tool_call>call:question{text:<|"|>keep <tool_call|> literal<|"|>,questions:[]}<tool_call|>)");
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].arguments, R"({"text":"keep <tool_call|> literal","questions":[]})");
+    EXPECT_TRUE(parsed.content.empty());
+}
+
+TEST_F(Gemma4ParserFastContractTest, PreservesJsonEscapesAndWindowsPaths) {
+    auto parsed = parse(R"(<|tool_call>call:question{"questions":[],"path":"C:\\git\\x","text":"quote: \"x\"; slash: \\; braces: {}[]"}<tool_call|>)");
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].arguments, R"({"questions":[],"path":"C:\\git\\x","text":"quote: \"x\"; slash: \\; braces: {}[]"})");
+}
+
+TEST_F(Gemma4ParserFastContractTest, ReasoningBoundaryChunkKeepsText) {
+    Gemma4ReasoningParser parser(*tokenizer);
+    auto delta = parser.parseChunk("<|channel>thought\nNeed user input<channel|>", {}, ov::genai::GenerationFinishReason::STOP);
+    ASSERT_TRUE(delta.has_value());
+    ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*delta));
+    EXPECT_EQ(std::get<ReasoningDelta>(*delta).text, "Need user input");
+}
+
+TEST_F(Gemma4ParserFastContractTest, CompleteCallSurvivesEveryByteSplit) {
+    const std::string input = R"(<|tool_call>call:question{"text":"keep <tool_call|> literal","questions":[]}<tool_call|>)";
+    for (size_t split = 0; split <= input.size(); ++split) {
+        SCOPED_TRACE(split);
+        OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
+        std::vector<ToolCallDelta> calls;
+        for (const auto& chunk : {input.substr(0, split), input.substr(split)}) {
+            auto delta = parser.parseChunk(chunk, {}, true, ov::genai::GenerationFinishReason::NONE);
+            if (delta && std::holds_alternative<ToolCallDelta>(*delta))
+                calls.push_back(std::get<ToolCallDelta>(*delta));
+        }
+        auto final = parser.parseChunk("", {}, true, ov::genai::GenerationFinishReason::STOP);
+        if (final && std::holds_alternative<ToolCallDelta>(*final))
+            calls.push_back(std::get<ToolCallDelta>(*final));
+        ASSERT_EQ(calls.size(), 1u);
+        EXPECT_EQ(calls[0].name.value_or(""), "question");
+        EXPECT_EQ(calls[0].arguments, R"({"text":"keep <tool_call|> literal","questions":[]})");
+    }
+}
+
+TEST_F(Gemma4ParserFastContractTest, NonGemmaReasoningDoesNotTreatLiteralToolMarkerAsBoundary) {
+    OutputParser parser(*tokenizer, "gemma4", "qwen3", questionTools());
+    parser.parseChunk("<think>", {}, true, ov::genai::GenerationFinishReason::NONE);
+    auto delta = parser.parseChunk("literal <|tool_call> example", {}, true, ov::genai::GenerationFinishReason::NONE);
+    ASSERT_TRUE(delta.has_value());
+    ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*delta));
+    EXPECT_EQ(std::get<ReasoningDelta>(*delta).text, "literal <|tool_call> example");
 }
