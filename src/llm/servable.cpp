@@ -555,11 +555,11 @@ absl::Status GenAiServable::loadRequest(std::shared_ptr<GenAiServableExecutionCo
     executionContext->sessionTurn = {};
     auto sessionId = getSessionIdHeader(executionContext->payload.headers);
     const char* storeDir = std::getenv("OVMS_SESSION_STORE_DIR");
-    SPDLOG_LOGGER_INFO(llm_calculator_logger,
-        "session-state: uri={} header_count={} session_id={} store_enabled={} store_path={}",
+    SPDLOG_LOGGER_DEBUG(llm_calculator_logger,
+        "session-state: uri={} header_count={} session_present={} store_enabled={} store_path={}",
         payload.uri,
         payload.headers.size(),
-        sessionId.value_or("<absent>"),
+        sessionId.has_value(),
         sessionStore->enabled(),
         storeDir ? storeDir : "<unset>");
     if (sessionId.has_value()) {
@@ -567,15 +567,13 @@ absl::Status GenAiServable::loadRequest(std::shared_ptr<GenAiServableExecutionCo
             auto turn = sessionStore->beginTurn(sessionId.value(), executionContext->payload.body, *executionContext->payload.parsedJson);
             if (!turn.ok()) {
                 SPDLOG_LOGGER_ERROR(llm_calculator_logger,
-                    "session-state: beginTurn failed session_id={} status={}",
-                    sessionId.value(),
+                    "session-state: beginTurn failed status={}",
                     turn.status().ToString());
                 return turn.status();
             }
             executionContext->sessionTurn = std::move(*turn);
-            SPDLOG_LOGGER_INFO(llm_calculator_logger,
-                "session-state: beginTurn session_id={} turn={} seed={} store_path={}",
-                executionContext->sessionTurn.sessionId,
+            SPDLOG_LOGGER_DEBUG(llm_calculator_logger,
+                "session-state: beginTurn turn={} seed={} store_path={}",
                 executionContext->sessionTurn.turnIndex,
                 executionContext->sessionTurn.seed,
                 storeDir ? storeDir : "<unset>");
