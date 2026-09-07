@@ -589,6 +589,7 @@ bool Gemma4ToolParser::parseInContentState() {
     if (toolCallStartTagPos != std::string::npos) {
         if (toolCallStartTagPos > streamingPosition)
             return true;
+        currentCallStart = toolCallStartTagPos;
         streamingPosition = toolCallStartTagPos + TOOL_CALL_START_TAG.length();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
@@ -599,6 +600,7 @@ bool Gemma4ToolParser::parseInContentState() {
     if (bareCallPos.has_value()) {
         if (bareCallPos.value() > streamingPosition)
             return true;
+        currentCallStart = bareCallPos.value();
         streamingPosition += TOOL_CALL_NAME_PREFIX.size();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
@@ -694,6 +696,7 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
     const size_t nextCallPos = streamingContent.find(TOOL_CALL_NAME_PREFIX, streamingPosition);
 
     if (nextCallPos != std::string::npos && (endTagPos == std::string::npos || nextCallPos < endTagPos)) {
+        currentCallStart = nextCallPos;
         streamingPosition = nextCallPos + TOOL_CALL_NAME_PREFIX.size();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
@@ -736,6 +739,8 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
         const size_t keep = currentState == State::ToolCallParameters ? 1 : 0;
         streamingContent.erase(0, streamingPosition - keep);
         streamingPosition = keep;
+        if (currentCallStart > streamingPosition)
+            currentCallStart = streamingPosition;
     }
     if (!chunk.empty())
         streamingContent += chunk;
@@ -778,6 +783,14 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
     }
 
     if (finishReason != ov::genai::GenerationFinishReason::NONE) {
+        if (currentState == State::ToolCallStarted && currentCallStart < streamingContent.size()) {
+            auto content = streamingContent.substr(currentCallStart);
+            streamingPosition = streamingContent.size();
+            currentState = State::Content;
+            currentCallValid = false;
+            toolCall = {};
+            return wrapDeltaContent(content);
+        }
         if (currentState == State::ToolCallParameters)
             parseToolCallParametersState();
         if (currentState == State::ToolCallEnded && currentCallValid && !toolCall.arguments.empty()) {
