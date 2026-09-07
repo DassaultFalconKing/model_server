@@ -5,62 +5,42 @@ Status: ACTIVE OPERATING DOCUMENT
 
 ## Purpose
 
-This file records the currently authorized investigation lanes that can proceed in parallel without multiple agents editing the same parser/generator code and manufacturing conflicts for sport.
+This file records investigation lanes that can proceed in parallel without multiple agents editing the same parser/generator code.
 
 ## Lane 1 — clean integration lineage investigation
 
-Goal:
+Status: **COMPLETE — NEEDS_DESIGN_DECISION**.
 
-Determine the minimal production + regression-test patchset required to reconstruct the current Gemma4 parser/generator/tool-calling semantics on top of fresh upstream-derived fork `main`.
-
-The investigation must work at commit/file/symbol/semantic-change level, not propose wholesale merges of historical feature branches.
-
-Primary source coordinates:
+Evidence authority:
 
 ```text
-upstream main:
-5fe145e54064d7a048fd7cdc9603f4bde6f0f175
-
-fork main at investigation start:
-be410567f2b3f8146eda87087beb59b67199c893
-
-parser hardening:
-fix/gemma4-parser-hardening-post-f36d2d75
-d1c21ac1a54d499e644e7619155944a3875fd071
-
-generator feature:
-feature/gemma4-llamacpp-auto-generator-port
-6db0c8fb797a15f5acfd0c4d23b4ef1a75eae196
-
-Responses policy fix:
-fix/gemma4-responses-parallel-tool-policy
-34c2f23d58e96a2c2ef1b3e2f940909c3131ace5
+repo:   DassaultFalconKing/OpenVino-For-Gemma-4
+branch: fix/gemma4-candidate-local-acceptance
+commit: f62350dbb58222afdf47b9232c72fcbaf25642d0
+file:   docs/gemmamonster-leading-docs/2026-09-07-gemma4-clean-port-investigation.md
 ```
 
-Required output:
+The investigation re-resolved upstream/fork/parser/generator/Responses refs and established:
 
-- minimal parser production port;
-- minimal generator/API production port;
-- exact regression tests to retain;
-- upstream overlap/conflicts;
-- session-store cleanup finding;
-- clean prototype diffstat if safe to construct;
-- recommended commit structure for the final integration PR;
-- explicit files/directories to exclude from the clean port.
+- exact clean source base: upstream `5fe145e54064d7a048fd7cdc9603f4bde6f0f175`;
+- 12-file expected production tool-calling surface;
+- exact parser commit/symbol set and coupling rules;
+- exact generator/API/parallel-tool-call source coordinates;
+- mandatory Responses one-line fix `34c2f23d...`;
+- session-store test contract status `REWRITE`;
+- known 8-file upstream textual overlap;
+- session/template production stack deferred from the clean tool-calling PR unless separately approved;
+- no wholesale merges of parser/generator historical branches.
 
-Forbidden as final solution:
+Canonical integration result is incorporated into [`INTEGRATION-BASELINE.md`](INTEGRATION-BASELINE.md).
 
-```text
-git merge fix/gemma4-parser-hardening-post-f36d2d75
-git merge feature/gemma4-llamacpp-auto-generator-port
-git merge 35c5262d9b270005da18a505c06bf3a412394f3b
-```
+Remaining design decision before implementation: confirm that the session/template stack remains a separate PR. Until explicitly changed, leading policy is **defer/separate**.
 
 ## Lane 2 — Windows/Bazel acceptance environment investigation
 
-Goal:
+Status: **ACTIVE**.
 
-Make the focused Windows C++ acceptance lane reproducible without modifying Gemma production code.
+Goal: make focused Windows C++ acceptance reproducible without modifying Gemma production code.
 
 Investigate:
 
@@ -70,36 +50,27 @@ Investigate:
 - Python/PYTHONHOME/PYTHON_BIN_PATH behavior;
 - OpenVINO/OpenCV environment;
 - Bazel cache/server analysis stalls;
-- minimum Gemma4 tokenizer fixture needed by parser contract tests;
+- minimum Gemma4 tokenizer fixture needed by parser/generator contracts;
 - Bazel sandbox `STATUS_DLL_NOT_FOUND` cases;
 - fragility in `windows_build_fast.ps1` preflight logic.
 
-Required result states remain:
+Required result vocabulary remains `PASS / FAIL / BLOCKED / NOT_RUN`.
 
-```text
-PASS
-FAIL
-BLOCKED
-NOT_RUN
-```
-
-The absence of the full 26B model must not be used to classify tokenizer-only unit tests as universally blocked.
+The absence of the full 26B model must not classify tokenizer-only unit tests as universally blocked.
 
 ## Lane 3 — Acceptance Matrix v1 ownership
 
-The canonical promotion gate is:
+Status: **ACTIVE CANONICAL GATE**.
 
-[`ACCEPTANCE-MATRIX-V1.md`](ACCEPTANCE-MATRIX-V1.md)
-
-The matrix may be refined when an investigation demonstrates that a case is impossible, redundant, incorrectly scoped or missing a real regression class. Changes to the matrix are leading-contract changes and must explain the evidence that caused them.
+[`ACCEPTANCE-MATRIX-V1.md`](ACCEPTANCE-MATRIX-V1.md) is the promotion contract. Muse evidence adds concrete final-candidate checks that must be represented in that gate: `Gemma4OutputParserTest.*`, `smoke_tool_call.py --mode all`, the full 17-case runtime probe, streaming `delta.tool_calls`/`finish_reason=tool_calls` without markup leakage, and a TRACE proving the hard required/named lane starts at the Gemma tool-call token boundary.
 
 ## Lane 4 — differential parser corpus
 
-Not yet assigned.
+Status: **NOT ASSIGNED**.
 
 Planned scope:
 
-- canonical native call forms;
+- canonical native calls;
 - recursive values;
 - numeric-looking scalars;
 - Windows paths/backslashes;
@@ -109,11 +80,11 @@ Planned scope:
 - malformed/truncated calls;
 - unary vs streaming split permutations.
 
-The corpus should compare deterministic invariants, not blindly force parity with peer runtimes.
+The corpus compares deterministic invariants, not blind parity with peer runtimes.
 
 ## Lane 5 — runtime/performance harness
 
-Not yet assigned.
+Status: **NOT ASSIGNED**.
 
 Planned measurements on the exact built candidate:
 
@@ -129,36 +100,39 @@ wall tok/s
 structured-output/xgrammar initialization/compile cost when observable
 ```
 
-No grammar cache work is authorized until measured compiler/initialization overhead is materially visible in request latency or throughput.
+No grammar cache work is authorized until measured compiler/initialization overhead is materially visible.
 
 ## Lane 6 — live Arc 140V acceptance
 
-Blocked until a clean integration candidate and usable Windows build exist.
+Status: **BLOCKED ON CLEAN CANDIDATE + WINDOWS BUILD**.
 
 Required live ingredients:
 
-- exact candidate SHA;
-- exact built `ovms.exe` + SHA256;
-- Intel Arc 140V target;
-- Gemma4 Wondernuttz/Heretic 26B lane or explicitly superseding model;
+- exact candidate SHA and upstream base;
+- exact built/deployed `ovms.exe`, version and SHA256;
+- Intel Arc 140V;
+- Gemma4 Wondernuttz/Heretic 26B lane or recorded superseding model;
 - pinned Google canonical template;
-- raw requests/responses;
-- server logs;
-- tool-choice + streaming + chained-loop matrix.
+- `vlm-stable`, JINJA, REST 8000 launch provenance;
+- `smoke_tool_call.py --mode all`;
+- full 17-case probe;
+- required/named first-token TRACE;
+- raw requests/responses/server logs;
+- tool-choice, streaming and chained-loop matrix.
 
 ## Lane 7 — OpenCode/NovaClaw dogfood
 
-Blocked until basic live OVMS matrix is credible.
+Status: **BLOCKED ON BASIC LIVE OVMS MATRIX**.
 
-OpenCode must exercise real request shapes, including complex `question` schemas.
+OpenCode must exercise real request shapes including complex `question` schemas.
 
-NovaClaw must exercise fragmented streaming and chained tool-result behavior. A client-side failure must be separated from raw OVMS protocol behavior before being attributed to parser/generator code.
+NovaClaw must exercise later-turn and fragmented streaming/tool-result behavior. Client failure must be separated from raw OVMS behavior before attribution to parser/generator code.
 
 ## Lane ownership rule
 
-An investigator may read any lane's evidence but must not edit another lane's production code unless the coordinator explicitly reassigns scope.
+An investigator may read any lane's evidence but must not edit another lane's production code unless scope is explicitly reassigned.
 
-If an investigation discovers a production bug outside its scope, report:
+If an investigation discovers an out-of-scope production bug, report:
 
 ```text
 BOUNDARY
