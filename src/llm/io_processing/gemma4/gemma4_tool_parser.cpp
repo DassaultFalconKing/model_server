@@ -116,6 +116,37 @@ bool saneToolName(const std::string& name) {
     });
 }
 
+bool bareCallLineBoundary(const std::string& content, size_t candidate, size_t from) {
+    if (candidate == from)
+        return true;
+
+    const size_t lineStartPos = content.rfind('\n', candidate - 1);
+    const size_t lineStart = lineStartPos == std::string::npos ? from : lineStartPos + 1;
+    if (lineStart < from)
+        return false;
+
+    for (size_t i = lineStart; i < candidate; ++i) {
+        const char c = content[i];
+        if (c != ' ' && c != '\t' && c != '\r')
+            return false;
+    }
+    return true;
+}
+
+bool couldStillBecomeAllowedTool(const std::string& partialName,
+    const std::unordered_set<std::string>& allowedToolNames,
+    bool enforceToolRegistry) {
+    if (!saneToolName(partialName))
+        return partialName.empty();
+    if (!enforceToolRegistry)
+        return true;
+    for (const auto& allowed : allowedToolNames) {
+        if (allowed.rfind(partialName, 0) == 0)
+            return true;
+    }
+    return false;
+}
+
 // Recover only the observed native leak shape where `call:` starts a logical line
 // (optionally indented). This deliberately rejects prose such as
 // `Documentation example: call:foo{...}` and quoted examples. The candidate is
@@ -127,18 +158,7 @@ std::optional<size_t> findRecoverableBareCall(
     bool enforceToolRegistry) {
     size_t candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, from);
     while (candidate != std::string::npos) {
-        bool lineBoundary = candidate == from;
-        if (!lineBoundary) {
-            const size_t lineStartPos = content.rfind('\n', candidate - 1);
-            const size_t lineStart = lineStartPos == std::string::npos ? from : lineStartPos + 1;
-            lineBoundary = lineStart >= from;
-            for (size_t i = lineStart; lineBoundary && i < candidate; ++i) {
-                const char c = content[i];
-                if (c != ' ' && c != '\t' && c != '\r')
-                    lineBoundary = false;
-            }
-        }
-        if (!lineBoundary) {
+        if (!bareCallLineBoundary(content, candidate, from)) {
             candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size());
             continue;
         }
@@ -152,12 +172,40 @@ std::optional<size_t> findRecoverableBareCall(
         if (parenPos != std::string::npos && (argsPos == std::string::npos || parenPos < argsPos))
             argsPos = parenPos;
         if (argsPos == std::string::npos)
-            return candidate;  // hold a streaming prefix until the argument opener arrives
+            return std::nullopt;
 
         std::string name = content.substr(nameStart, argsPos - nameStart);
         trimLocal(name);
         const bool allowed = saneToolName(name) && (!enforceToolRegistry || allowedToolNames.count(name) != 0);
         if (allowed)
+            return candidate;
+
+        candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size());
+    }
+    return std::nullopt;
+}
+
+// Hold only an incomplete line-start `call:` prefix that can still become an
+// allowed bare tool call in a later chunk. Once whitespace or any non-name byte
+// appears before an argument opener, it is ordinary content and must be emitted.
+std::optional<size_t> findPendingRecoverableBareCallPrefix(
+    const std::string& content,
+    size_t from,
+    const std::unordered_set<std::string>& allowedToolNames,
+    bool enforceToolRegistry) {
+    size_t candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, from);
+    while (candidate != std::string::npos) {
+        if (!bareCallLineBoundary(content, candidate, from)) {
+            candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size());
+            continue;
+        }
+
+        const size_t nameStart = candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size();
+        const std::string suffix = content.substr(nameStart);
+        const bool namePrefixOnly = std::all_of(suffix.begin(), suffix.end(), [](unsigned char c) {
+            return std::isalnum(c) || c == '_' || c == '-' || c == '.';
+        });
+        if (namePrefixOnly && couldStillBecomeAllowedTool(suffix, allowedToolNames, enforceToolRegistry))
             return candidate;
 
         candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size());
@@ -556,6 +604,13 @@ bool Gemma4ToolParser::parseInContentState() {
         currentCallValid = true;
         return false;
     }
+
+    const auto pendingBareCallPos = findPendingRecoverableBareCallPrefix(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
+    if (pendingBareCallPos.has_value()) {
+        if (pendingBareCallPos.value() > streamingPosition)
+            return true;
+        return false;
+    }
     return true;
 }
 
@@ -702,6 +757,9 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
             const auto bareCallPos = findRecoverableBareCall(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
             if (bareCallPos.has_value() && (contentEnd == std::string::npos || bareCallPos.value() < contentEnd))
                 contentEnd = bareCallPos.value();
+            const auto pendingBareCallPos = findPendingRecoverableBareCallPrefix(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
+            if (pendingBareCallPos.has_value() && (contentEnd == std::string::npos || pendingBareCallPos.value() < contentEnd))
+                contentEnd = pendingBareCallPos.value();
             std::string content = contentEnd == std::string::npos
                 ? streamingContent.substr(streamingPosition)
                 : streamingContent.substr(streamingPosition, contentEnd - streamingPosition);
