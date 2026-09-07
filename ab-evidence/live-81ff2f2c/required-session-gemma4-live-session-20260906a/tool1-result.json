@@ -1,0 +1,37 @@
+{
+  "repository": "C:\\git\\model_server-gemma4-google-template-session-state",
+  "head_sha": "81ff2f2cae8b79cc22f7103cf4c29eb1953f9789",
+  "requested_sha": "81ff2f2cae8b79cc22f7103cf4c29eb1953f9789",
+  "resolved_sha": "81ff2f2cae8b79cc22f7103cf4c29eb1953f9789",
+  "head_matches_requested": true,
+  "dirty": true,
+  "status_porcelain": [
+    " M src/llm/servable.cpp",
+    " M src/test/kfs_rest_test.cpp",
+    " M src/test/llm/max_model_length_test.cpp",
+    " M src/test/multi_part_parser_drogon_test.cpp",
+    "?? ab-evidence/live-81ff2f2c/ovms-sha256.txt",
+    "?? ab-evidence/live-81ff2f2c/ovms-version.txt",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request1-input.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request1-response.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request1-response.raw",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/session-config.json",
+    "?? bazel-model_server-gemma4-google-template-session-state/"
+  ],
+  "changed_files": [
+    "src/llm/io_processing/generation_config_builder.hpp",
+    "src/test/llm/generation_config/gemma4_generation_contract_test.cpp"
+  ],
+  "generated_artifacts": [
+    "bazel-bin",
+    "bazel-out",
+    "bazel-testlogs",
+    "ab-evidence"
+  ],
+  "origin": "https://github.com/DassaultFalconKing/model_server.git",
+  "executor": {
+    "read_only": true,
+    "allow_network": false,
+    "source_mutation_observed": false
+  }
+}
