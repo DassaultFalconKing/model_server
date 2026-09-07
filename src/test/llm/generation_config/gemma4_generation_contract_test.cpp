@@ -75,20 +75,20 @@ TEST(Gemma4GenerationContractTest, AbsentToolsAndNonePreserveResponseFormat) {
     }
 }
 
-TEST(Gemma4GenerationContractTest, TracksHardToolChoiceForValidationFallbackPolicy) {
-    for (const std::string choice : {"", "none", "auto"}) {
-        OpenAIRequest request;
-        request.toolChoice = choice;
-        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
-        builder.parseConfigFromRequest(request);
-        EXPECT_FALSE(builder.hasHardToolChoice()) << choice;
-    }
-    for (const std::string choice : {"required", "second"}) {
-        auto request = requestWithTools(choice);
-        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
-        builder.parseConfigFromRequest(request);
-        EXPECT_TRUE(builder.hasHardToolChoice()) << choice;
-    }
+TEST(Gemma4GenerationContractTest, ValidationFallbackPolicyIsGemmaSpecific) {
+    auto request = requestWithTools("required");
+
+    GenerationConfigBuilder gemma({}, "gemma4", false, STANDARD);
+    gemma.parseConfigFromRequest(request);
+    ASSERT_TRUE(gemma.getConfig().structured_output_config.has_value());
+    gemma.unsetStructuredOutputConfig();
+    EXPECT_TRUE(gemma.getConfig().structured_output_config.has_value());
+
+    GenerationConfigBuilder hermes({}, "hermes3", false, STANDARD);
+    hermes.parseConfigFromRequest(request);
+    ASSERT_TRUE(hermes.getConfig().structured_output_config.has_value());
+    hermes.unsetStructuredOutputConfig();
+    EXPECT_FALSE(hermes.getConfig().structured_output_config.has_value());
 }
 
 TEST(Gemma4GenerationContractTest, HardChoicesAllowReasoningBeforeMandatoryToolSelection) {
@@ -174,6 +174,33 @@ TEST(Gemma4GenerationContractTest, AutoUsesTriggeredToolGrammarAndHardChoicesSta
                 ASSERT_EQ(tags.tags.size(), choice == "second" ? 1u : 2u);
                 if (choice == "second")
                     EXPECT_EQ(tags.tags[0].begin, "<|tool_call>call:second");
+            }
+        }
+    }
+}
+
+TEST(Gemma4GenerationContractTest, ParallelToolCallsControlsGrammarRepeatability) {
+    for (const std::string choice : {"auto", "required", "second"}) {
+        for (bool parallel : {false, true}) {
+            SCOPED_TRACE(choice + std::string(parallel ? ":parallel" : ":single"));
+            auto request = requestWithTools(choice);
+            request.parallelToolCalls = parallel;
+            GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+            builder.parseConfigFromRequest(request);
+
+            if (choice == "auto") {
+                const auto& triggered = autoGrammar(builder.getConfig());
+                EXPECT_EQ(triggered.stop_after_first, !parallel);
+            } else {
+                const auto& root = rootGrammar(builder.getConfig());
+                ASSERT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Union>>(root));
+                const auto& alternatives = *std::get<std::shared_ptr<Structured::Union>>(root);
+                ASSERT_EQ(alternatives.elements.size(), 2u);
+                const auto& toolsOnly = *std::get<std::shared_ptr<Structured::TagsWithSeparator>>(alternatives.elements[0]);
+                EXPECT_EQ(toolsOnly.stop_after_first, !parallel);
+                const auto& thoughtThenTools = *std::get<std::shared_ptr<Structured::Concat>>(alternatives.elements[1]);
+                const auto& toolsAfterThought = *std::get<std::shared_ptr<Structured::TagsWithSeparator>>(thoughtThenTools.elements[1]);
+                EXPECT_EQ(toolsAfterThought.stop_after_first, !parallel);
             }
         }
     }
