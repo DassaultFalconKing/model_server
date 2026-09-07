@@ -38,6 +38,70 @@ namespace {
 
 using JsonWriter = rapidjson::Writer<rapidjson::StringBuffer>;
 
+// Tool arguments are JSON text, not machine arithmetic. Preserve number tokens
+// without routing large integers/decimals through uint64_t or double.
+class NumberPreservingWriter : public JsonWriter {
+public:
+    explicit NumberPreservingWriter(rapidjson::StringBuffer& buffer) : JsonWriter(buffer) {}
+    bool RawNumber(const char* value, rapidjson::SizeType length, bool) {
+        return RawValue(value, length, rapidjson::kNumberType);
+    }
+};
+
+bool isJsonNumberLexeme(const std::string& token) {
+    if (token.empty())
+        return false;
+
+    size_t pos = 0;
+    if (token[pos] == '-') {
+        ++pos;
+        if (pos == token.size())
+            return false;
+    }
+
+    if (token[pos] == '0') {
+        ++pos;
+    } else if (token[pos] >= '1' && token[pos] <= '9') {
+        do {
+            ++pos;
+        } while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])));
+    } else {
+        return false;
+    }
+
+    if (pos < token.size() && token[pos] == '.') {
+        ++pos;
+        const size_t fractionStart = pos;
+        while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])))
+            ++pos;
+        if (pos == fractionStart)
+            return false;
+    }
+
+    if (pos < token.size() && (token[pos] == 'e' || token[pos] == 'E')) {
+        ++pos;
+        if (pos < token.size() && (token[pos] == '+' || token[pos] == '-'))
+            ++pos;
+        const size_t exponentStart = pos;
+        while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])))
+            ++pos;
+        if (pos == exponentStart)
+            return false;
+    }
+
+    return pos == token.size();
+}
+
+std::optional<std::string> normalizeJsonLosslessly(const std::string& input) {
+    rapidjson::StringStream stream(input.c_str());
+    rapidjson::Reader reader;
+    rapidjson::StringBuffer buffer;
+    NumberPreservingWriter writer(buffer);
+    if (!reader.Parse<rapidjson::kParseNumbersAsStringsFlag>(stream, writer) || stream.Tell() != input.size())
+        return std::nullopt;
+    return std::string(buffer.GetString(), buffer.GetSize());
+}
+
 void trimLocal(std::string& value) {
     auto notSpace = [](unsigned char c) { return !std::isspace(c); };
     value.erase(value.begin(), std::find_if(value.begin(), value.end(), notSpace));
@@ -116,11 +180,22 @@ class NativeValueParser {
     }
 
     bool writeJsonToken(const std::string& token) {
-        rapidjson::Document doc;
-        doc.Parse(token.c_str());
-        if (doc.HasParseError())
+        if (!token.empty() && (std::isdigit(static_cast<unsigned char>(token.front())) || token.front() == '-')) {
+            // The native grammar already delimits this scalar. Keep its lexical
+            // spelling; parsing it through a DOM would round large values.
+            if (!isJsonNumberLexeme(token))
+                return false;
+            return writer.RawValue(token.data(), static_cast<rapidjson::SizeType>(token.size()), rapidjson::kNumberType);
+        }
+        auto normalized = normalizeJsonLosslessly(token);
+        if (!normalized)
             return false;
-        return doc.Accept(writer);
+        // This path accepts a quoted string or a bare scalar only.
+        const auto type = normalized->front() == '"' ? rapidjson::kStringType :
+            normalized->front() == 't' ? rapidjson::kTrueType :
+            normalized->front() == 'f' ? rapidjson::kFalseType :
+            normalized->front() == 'n' ? rapidjson::kNullType : rapidjson::kNumberType;
+        return writer.RawValue(normalized->data(), normalized->size(), type);
     }
 
     bool parseDelimitedString() {
@@ -353,15 +428,6 @@ std::optional<std::string> normalizeSingleNativeValue(const std::string& arg) {
     if (value.empty())
         return std::nullopt;
 
-    rapidjson::Document doc;
-    doc.Parse(value.c_str());
-    if (!doc.HasParseError()) {
-        rapidjson::StringBuffer buffer;
-        JsonWriter writer(buffer);
-        doc.Accept(writer);
-        return std::string(buffer.GetString(), buffer.GetSize());
-    }
-
     rapidjson::StringBuffer buffer;
     JsonWriter writer(buffer);
     NativeValueParser parser(value, writer);
@@ -374,15 +440,6 @@ std::optional<std::string> normalizeSingleNativeValue(const std::string& arg) {
 
 std::optional<std::string> Gemma4ToolParser::parseNativeArgumentsBody(const std::string& argumentsBody) {
     const std::string jsonCandidate = "{" + argumentsBody + "}";
-    rapidjson::Document doc;
-    doc.Parse(jsonCandidate.c_str());
-    if (!doc.HasParseError() && doc.IsObject()) {
-        rapidjson::StringBuffer buffer;
-        JsonWriter writer(buffer);
-        doc.Accept(writer);
-        return std::string(buffer.GetString(), buffer.GetSize());
-    }
-
     rapidjson::StringBuffer buffer;
     JsonWriter writer(buffer);
     NativeValueParser parser(argumentsBody, writer);
@@ -617,6 +674,14 @@ ToolCallDelta Gemma4ToolParser::wrapDeltaArgs(const std::string& argsStr, int in
 }
 
 std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, const std::vector<int64_t>& /*tokens*/, ov::genai::GenerationFinishReason finishReason) {
+    // Emitted deltas own their strings. Only the unconsumed suffix belongs to
+    // this parser; it is not conversation memory. Preserve the argument opener
+    // while its container is incomplete (the scanner starts one byte before pos).
+    if (streamingPosition >= 4096) {
+        const size_t keep = currentState == State::ToolCallParameters ? 1 : 0;
+        streamingContent.erase(0, streamingPosition - keep);
+        streamingPosition = keep;
+    }
     if (!chunk.empty())
         streamingContent += chunk;
 
