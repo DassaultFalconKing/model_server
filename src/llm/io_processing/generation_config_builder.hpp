@@ -38,6 +38,12 @@
 namespace ovms {
 
 class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
+    enum class ToolConstraintMode {
+        Disabled,
+        Auto,
+        Hard,
+    };
+
     static bool isValidToolName(const std::string& name) {
         return !name.empty() && std::all_of(name.begin(), name.end(), [](unsigned char c) {
             return std::isalnum(c) || c == '_' || c == '-' || c == '.';
@@ -50,6 +56,16 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
 
     static bool isHardToolChoiceImpl(const std::string& toolChoice) {
         return toolChoice == "required" || isNamedToolChoice(toolChoice);
+    }
+
+    static ToolConstraintMode getToolConstraintMode(const OpenAIRequest& request) {
+        if (request.toolNameSchemaMap.empty() || request.toolChoice == "none") {
+            return ToolConstraintMode::Disabled;
+        }
+        if (request.toolChoice.empty() || request.toolChoice == "auto") {
+            return ToolConstraintMode::Auto;
+        }
+        return ToolConstraintMode::Hard;
     }
 
     static ov::genai::StructuredOutputConfig::Tag buildToolTag(const std::string& toolName, const ToolSchemaWrapper& toolSchemaWrapper) {
@@ -86,6 +102,47 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         return tags;
     }
 
+    static ov::genai::StructuredOutputConfig::StructuralTag buildAutoToolGrammar(
+        std::vector<ov::genai::StructuredOutputConfig::Tag> toolTags) {
+        using Structured = ov::genai::StructuredOutputConfig;
+        auto triggeredTags = std::make_shared<Structured::TriggeredTags>();
+        triggeredTags->triggers = {"<|tool_call>"};
+        triggeredTags->tags = std::move(toolTags);
+        // TriggeredTags itself supplies the free-text prefix. Setting at_least_one
+        // would prohibit ordinary prose and turn OpenAI `auto` into `required`.
+        triggeredTags->at_least_one = false;
+        triggeredTags->stop_after_first = false;
+        return triggeredTags;
+    }
+
+    static ov::genai::StructuredOutputConfig::StructuralTag buildMandatoryToolGrammar(
+        std::vector<ov::genai::StructuredOutputConfig::Tag> toolTags) {
+        using Structured = ov::genai::StructuredOutputConfig;
+
+        auto requiredTags = std::make_shared<Structured::TagsWithSeparator>();
+        requiredTags->tags = std::move(toolTags);
+        requiredTags->separator = "";
+        requiredTags->at_least_one = true;
+        requiredTags->stop_after_first = false;
+
+        // Google Gemma4 may open/close its thought channel before choosing a
+        // tool after a tool response, including for a named choice. Selecting
+        // a name restricts the available tags, not the model's thought phase.
+        // xgrammar rejects empty ConstString, so optional thought is a Union of
+        // tools-only versus thought-then-tools rather than Concat("", thought).
+        auto thought = std::make_shared<Structured::Tag>();
+        thought->begin = "<|channel>thought\n";
+        thought->content = Structured::AnyText();
+        thought->end = "<channel|>";
+
+        auto thoughtThenTools = std::make_shared<Structured::Concat>();
+        thoughtThenTools->elements = {thought, requiredTags};
+
+        auto alternatives = std::make_shared<Structured::Union>();
+        alternatives->elements = {requiredTags, thoughtThenTools};
+        return alternatives;
+    }
+
 public:
     Gemma4GenerationConfigBuilder() = delete;
     explicit Gemma4GenerationConfigBuilder(const ov::genai::GenerationConfig& baseConfig, bool enableToolGuidedGeneration, DecodingMethod decodingMethod) :
@@ -94,50 +151,36 @@ public:
     void parseConfigFromRequest(const OpenAIRequest& request) override {
         BaseGenerationConfigBuilder::parseConfigFromRequest(request);
 
-        const bool hardToolChoice = isHardToolChoiceImpl(request.toolChoice);
-        if (hardToolChoice && request.toolNameSchemaMap.empty()) {
+        if (isHardToolChoiceImpl(request.toolChoice) && request.toolNameSchemaMap.empty()) {
             throw std::invalid_argument("Gemma4 hard tool_choice requires at least one available tool schema");
         }
         if (request.responseFormat.has_value() && request.toolChoice != "none" && !request.toolNameSchemaMap.empty()) {
             throw std::invalid_argument("Gemma4 response_format cannot be combined with active tool generation constraints");
         }
-        if (request.toolNameSchemaMap.empty() || request.toolChoice == "none") {
-            return;
-        }
 
-        if (!hardToolChoice) {
-            config.structured_output_config.reset();
+        const ToolConstraintMode mode = getToolConstraintMode(request);
+        if (mode == ToolConstraintMode::Disabled) {
             return;
         }
 
         auto toolTags = buildToolTags(request);
         if (toolTags.empty()) {
-            throw std::invalid_argument("Gemma4 hard tool_choice did not produce an enforceable tool tag");
+            throw std::invalid_argument("Gemma4 active tool_choice did not produce an enforceable tool tag");
         }
-        auto requiredTags = std::make_shared<ov::genai::StructuredOutputConfig::TagsWithSeparator>();
-        requiredTags->tags = std::move(toolTags);
-        requiredTags->separator = "";
-        requiredTags->at_least_one = true;
-        requiredTags->stop_after_first = false;
-        ov::genai::StructuredOutputConfig::StructuralTag structuralTag = requiredTags;
-        if (hardToolChoice) {
-            // Google Gemma4 may open/close its thought channel before choosing a
-            // tool after a tool response, including for a named choice. Selecting
-            // a name restricts the available tags, not the model's thought phase.
-            // xgrammar rejects empty ConstString, so optional thought is a Union of
-            // tools-only versus thought-then-tools rather than Concat("", thought).
-            using Structured = ov::genai::StructuredOutputConfig;
-            auto thought = std::make_shared<Structured::Tag>();
-            thought->begin = "<|channel>thought\n";
-            thought->content = Structured::AnyText();
-            thought->end = "<channel|>";
-            auto thoughtThenTools = std::make_shared<Structured::Concat>();
-            thoughtThenTools->elements = {thought, requiredTags};
-            auto alternatives = std::make_shared<Structured::Union>();
-            alternatives->elements = {requiredTags, thoughtThenTools};
-            structuralTag = alternatives;
+
+        switch (mode) {
+        case ToolConstraintMode::Auto:
+            // OpenVINO GenAI TriggeredTags maps to xgrammar's lazy structural-tag
+            // dispatch: normal text is unconstrained until the tool marker appears,
+            // then the selected request tool name and JSON schema become authoritative.
+            setStructuralTagsConfig(buildAutoToolGrammar(std::move(toolTags)));
+            return;
+        case ToolConstraintMode::Hard:
+            setStructuralTagsConfig(buildMandatoryToolGrammar(std::move(toolTags)));
+            return;
+        case ToolConstraintMode::Disabled:
+            return;
         }
-        setStructuralTagsConfig(structuralTag);
     }
 };
 
