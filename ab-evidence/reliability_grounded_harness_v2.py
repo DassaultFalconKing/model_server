@@ -36,7 +36,20 @@ def strict_classify_campaign_a(legacy, original_classifier, trial):
     _message, calls, _finish_reason = legacy.extract_tool_calls(trial.get("response"))
     if len(calls) > 1:
         return "D_WRONG_TOOL", "expected exactly one structured tool call, got %d" % len(calls)
-    return original_classifier(trial)
+    outcome, reason = original_classifier(trial)
+    if outcome != "PASS" or not calls:
+        return outcome, reason
+    source = trial.get("tool_result")
+    expected = source.get("repository") if isinstance(source, dict) else None
+    if isinstance(expected, str):
+        arguments = calls[0].get("function", {}).get("arguments", {})
+        if isinstance(arguments, str):
+            arguments = json.loads(arguments)  # The original classifier validated JSON.
+        repository = arguments.get("repository")
+        # Accept Windows slash spelling, but never drop a drive or alter a path.
+        if not isinstance(repository, str) or repository.replace("\\", "/") != expected.replace("\\", "/"):
+            return "F_GROUNDED_VALUE_CORRUPTED", "repository expected %r got %r" % (expected, repository)
+    return outcome, reason
 
 
 def strict_classify_campaign_b(legacy, original_classifier, trial):
@@ -72,6 +85,7 @@ def augment_summary(path):
         "sampled_thinking_contract": "temperature=0.9, seed omitted",
         "allow_no_tool_contract": "no structured tool call may be emitted",
         "tool_call_multiplicity_contract": "campaign A requires exactly one structured call once a call is emitted",
+        "repository_fidelity_contract": "campaign A copies tool-result repository, allowing slash spelling only",
         "frozen_v1_evidence_rewritten": False,
     }
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

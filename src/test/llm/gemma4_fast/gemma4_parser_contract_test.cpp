@@ -33,6 +33,14 @@
 
 using namespace ovms;
 
+namespace ovms {
+struct Gemma4ToolParserTestAccess {
+    static size_t bufferedBytes(const Gemma4ToolParser& parser) {
+        return parser.streamingContent.size();
+    }
+};
+}
+
 namespace {
 template <class... Ts>
 struct Overloaded : Ts... {
@@ -252,4 +260,37 @@ TEST_F(Gemma4ParserFastContractTest, NonGemmaReasoningDoesNotTreatLiteralToolMar
     ASSERT_TRUE(delta.has_value());
     ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*delta));
     EXPECT_EQ(std::get<ReasoningDelta>(*delta).text, "literal <|tool_call> example");
+}
+
+TEST_F(Gemma4ParserFastContractTest, PreservesNumbersBeyondMachinePrecision) {
+    const std::string numbers = "[18446744073709551617,-9223372036854775809,0.123456789012345678901,1e400,-0]";
+    for (const std::string key : {"values", "\"values\""}) {
+        auto parsed = parse("<|tool_call>call:question{" + key + ":" + numbers + "}<tool_call|>");
+        ASSERT_EQ(parsed.toolCalls.size(), 1u);
+        EXPECT_EQ(parsed.toolCalls[0].arguments, "{\"values\":" + numbers + "}");
+    }
+    EXPECT_EQ(Gemma4ToolParser::normalizeArgStr(numbers), numbers);
+}
+
+TEST_F(Gemma4ParserFastContractTest, ManyCallsReleaseConsumedBufferAndKeepOwnedDeltas) {
+    Gemma4ToolParser parser(*tokenizer);
+    std::vector<ToolCallDelta> calls;
+    for (int i = 0; i < 300; ++i) {
+        const std::string input = "<|tool_call>call:question{value:" + std::to_string(i) + "}<tool_call|>";
+        // Drive every internal phase, retaining deltas as a caller would.
+        for (int phase = 0; phase < 6; ++phase) {
+            auto delta = parser.parseChunk(phase == 0 ? input : "", {}, ov::genai::GenerationFinishReason::NONE);
+            if (delta && std::holds_alternative<ToolCallDelta>(*delta))
+                calls.push_back(std::get<ToolCallDelta>(*delta));
+        }
+        EXPECT_LT(Gemma4ToolParserTestAccess::bufferedBytes(parser), 8192u);
+    }
+    ASSERT_EQ(calls.size(), 300u);
+    for (int i = 0; i < 300; ++i) {
+        EXPECT_EQ(calls[i].index, i);
+        EXPECT_EQ(calls[i].arguments, "{\"value\":" + std::to_string(i) + "}");
+    }
+    parser.resetState();
+    EXPECT_EQ(Gemma4ToolParserTestAccess::bufferedBytes(parser), 0u);
+    EXPECT_EQ(calls.front().arguments, "{\"value\":0}");
 }

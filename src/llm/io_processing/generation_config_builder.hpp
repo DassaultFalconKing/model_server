@@ -120,9 +120,10 @@ public:
         requiredTags->at_least_one = true;
         requiredTags->stop_after_first = false;
         ov::genai::StructuredOutputConfig::StructuralTag structuralTag = requiredTags;
-        if (request.toolChoice == "required") {
+        if (hardToolChoice) {
             // Google Gemma4 may open/close its thought channel before choosing a
-            // tool after a tool response. Do not force arguments into that phase.
+            // tool after a tool response, including for a named choice. Selecting
+            // a name restricts the available tags, not the model's thought phase.
             // xgrammar rejects empty ConstString, so optional thought is a Union of
             // tools-only versus thought-then-tools rather than Concat("", thought).
             using Structured = ov::genai::StructuredOutputConfig;

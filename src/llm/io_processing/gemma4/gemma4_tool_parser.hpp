@@ -99,6 +99,7 @@ public:
     static std::string parseObjectParameter(const std::string& argumentStr);
 
 private:
+    friend struct Gemma4ToolParserTestAccess;
     static std::optional<std::string> parseNativeArgumentsBody(const std::string& argumentsBody);
     static std::optional<size_t> findMatchingContainerEnd(const std::string& text, size_t openPos, char openChar, char closeChar, size_t& malformedEndTag);
     static std::string normalizeToolName(std::string rawName);

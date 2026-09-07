@@ -19,6 +19,17 @@ class FakeLegacy:
 
 
 class HarnessV2ContractTests(unittest.TestCase):
+    def test_campaign_a_checks_repository_even_when_sha_passes(self):
+        for repository, expected in [("C:/git/repo", "PASS"), (":/git/repo", "F_GROUNDED_VALUE_CORRUPTED"),
+                                     (None, "F_GROUNDED_VALUE_CORRUPTED")]:
+            with self.subTest(repository=repository):
+                trial = {"tool_result": {"repository": "C:\\git\\repo"}, "response": {
+                    "choices": [{"message": {"tool_calls": [{"function": {
+                        "name": "publish_review_evidence", "arguments": json.dumps({"repository": repository})
+                    }}]}}]}}
+                outcome, _ = v2.strict_classify_campaign_a(FakeLegacy, lambda _: ("PASS", "SHA matched"), trial)
+                self.assertEqual(outcome, expected)
+
     def test_sampled_thinking_cells_omit_seed(self):
         args = SimpleNamespace(
             n_think_off=0,
