@@ -48,6 +48,50 @@ public:
     }
 };
 
+bool isJsonNumberLexeme(const std::string& token) {
+    if (token.empty())
+        return false;
+
+    size_t pos = 0;
+    if (token[pos] == '-') {
+        ++pos;
+        if (pos == token.size())
+            return false;
+    }
+
+    if (token[pos] == '0') {
+        ++pos;
+    } else if (token[pos] >= '1' && token[pos] <= '9') {
+        do {
+            ++pos;
+        } while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])));
+    } else {
+        return false;
+    }
+
+    if (pos < token.size() && token[pos] == '.') {
+        ++pos;
+        const size_t fractionStart = pos;
+        while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])))
+            ++pos;
+        if (pos == fractionStart)
+            return false;
+    }
+
+    if (pos < token.size() && (token[pos] == 'e' || token[pos] == 'E')) {
+        ++pos;
+        if (pos < token.size() && (token[pos] == '+' || token[pos] == '-'))
+            ++pos;
+        const size_t exponentStart = pos;
+        while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])))
+            ++pos;
+        if (pos == exponentStart)
+            return false;
+    }
+
+    return pos == token.size();
+}
+
 std::optional<std::string> normalizeJsonLosslessly(const std::string& input) {
     rapidjson::StringStream stream(input.c_str());
     rapidjson::Reader reader;
@@ -139,6 +183,8 @@ class NativeValueParser {
         if (!token.empty() && (std::isdigit(static_cast<unsigned char>(token.front())) || token.front() == '-')) {
             // The native grammar already delimits this scalar. Keep its lexical
             // spelling; parsing it through a DOM would round large values.
+            if (!isJsonNumberLexeme(token))
+                return false;
             return writer.RawValue(token.data(), static_cast<rapidjson::SizeType>(token.size()), rapidjson::kNumberType);
         }
         auto normalized = normalizeJsonLosslessly(token);
