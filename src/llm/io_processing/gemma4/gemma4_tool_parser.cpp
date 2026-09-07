@@ -14,6 +14,7 @@
 #include <cctype>
 #include <optional>
 #include <string>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -49,6 +50,55 @@ bool saneToolName(const std::string& name) {
     return std::all_of(name.begin(), name.end(), [](unsigned char c) {
         return std::isalnum(c) || c == '_' || c == '-' || c == '.';
     });
+}
+
+// Recover only the observed native leak shape where `call:` starts a logical line
+// (optionally indented). This deliberately rejects prose such as
+// `Documentation example: call:foo{...}` and quoted examples. The candidate is
+// still validated again by the normal argument parser before it becomes executable.
+std::optional<size_t> findRecoverableBareCall(
+    const std::string& content,
+    size_t from,
+    const std::unordered_set<std::string>& allowedToolNames,
+    bool enforceToolRegistry) {
+    size_t candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, from);
+    while (candidate != std::string::npos) {
+        bool lineBoundary = candidate == from;
+        if (!lineBoundary) {
+            const size_t lineStartPos = content.rfind('\n', candidate - 1);
+            const size_t lineStart = lineStartPos == std::string::npos ? from : lineStartPos + 1;
+            lineBoundary = lineStart >= from;
+            for (size_t i = lineStart; lineBoundary && i < candidate; ++i) {
+                const char c = content[i];
+                if (c != ' ' && c != '\t' && c != '\r')
+                    lineBoundary = false;
+            }
+        }
+        if (!lineBoundary) {
+            candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size());
+            continue;
+        }
+
+        const size_t nameStart = candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size();
+        const size_t bracePos = content.find('{', nameStart);
+        const size_t parenPos = content.find('(', nameStart);
+        size_t argsPos = std::string::npos;
+        if (bracePos != std::string::npos)
+            argsPos = bracePos;
+        if (parenPos != std::string::npos && (argsPos == std::string::npos || parenPos < argsPos))
+            argsPos = parenPos;
+        if (argsPos == std::string::npos)
+            return candidate;  // hold a streaming prefix until the argument opener arrives
+
+        std::string name = content.substr(nameStart, argsPos - nameStart);
+        trimLocal(name);
+        const bool allowed = saneToolName(name) && (!enforceToolRegistry || allowedToolNames.count(name) != 0);
+        if (allowed)
+            return candidate;
+
+        candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size());
+    }
+    return std::nullopt;
 }
 
 class NativeValueParser {
@@ -440,10 +490,11 @@ bool Gemma4ToolParser::parseInContentState() {
         return false;
     }
 
-    // The generic OutputParser may route the preamble-only `call:` variant here
-    // after a reasoning end boundary. Do not search for it later in arbitrary
-    // content: accept it only exactly at the current phase entry position.
-    if (streamingContent.compare(streamingPosition, TOOL_CALL_NAME_PREFIX.size(), TOOL_CALL_NAME_PREFIX) == 0) {
+    const auto bareCallPos = findRecoverableBareCall(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
+    if (bareCallPos.has_value()) {
+        if (bareCallPos.value() > streamingPosition)
+            return true;
+        streamingPosition += TOOL_CALL_NAME_PREFIX.size();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
         return false;
@@ -531,7 +582,7 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
     const size_t nextCallPos = streamingContent.find(TOOL_CALL_NAME_PREFIX, streamingPosition);
 
     if (nextCallPos != std::string::npos && (endTagPos == std::string::npos || nextCallPos < endTagPos)) {
-        streamingPosition = nextCallPos;
+        streamingPosition = nextCallPos + TOOL_CALL_NAME_PREFIX.size();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
         return true;
@@ -582,7 +633,10 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
             return std::nullopt;
         }
         if (currentState == State::Content) {
-            const size_t contentEnd = streamingContent.find(TOOL_CALL_START_TAG, streamingPosition);
+            size_t contentEnd = streamingContent.find(TOOL_CALL_START_TAG, streamingPosition);
+            const auto bareCallPos = findRecoverableBareCall(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
+            if (bareCallPos.has_value() && (contentEnd == std::string::npos || bareCallPos.value() < contentEnd))
+                contentEnd = bareCallPos.value();
             std::string content = contentEnd == std::string::npos
                 ? streamingContent.substr(streamingPosition)
                 : streamingContent.substr(streamingPosition, contentEnd - streamingPosition);
