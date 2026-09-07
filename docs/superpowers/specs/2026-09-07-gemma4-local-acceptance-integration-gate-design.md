@@ -145,7 +145,7 @@ LOCAL_ACCEPTED =
   + live Gemma4
 ```
 
-If platform limitations prevent exact lazy-auto behavior, the candidate must not fabricate PASS. The corresponding case is classified as `BLOCKED_BY_PLATFORM` with raw evidence, and the overall Maintainer-PR promotion decision is made explicitly from that state.
+If platform limitations prevent exact lazy-auto behavior, the candidate must not fabricate PASS. The corresponding case is classified as `BLOCKED_BY_PLATFORM` with raw evidence. Any required acceptance case classified `BLOCKED_BY_PLATFORM` makes the candidate `NOT_LOCAL_ACCEPTED` and prevents promotion to `MAINTAINER_PR_SOURCE` unless this design contract is explicitly revised in a later approved design change.
 
 ## Required acceptance matrix
 
