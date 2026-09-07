@@ -1,0 +1,2 @@
+Stop not required - no ovms.exe and port 18000 free at session start.
+OLD_OVMS_STOPPED: PASS

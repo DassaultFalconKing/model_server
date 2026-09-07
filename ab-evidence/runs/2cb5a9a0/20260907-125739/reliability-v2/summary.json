@@ -1,0 +1,1694 @@
+{
+  "provenance": {
+    "git_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+    "production_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "binary_path": "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\ovms.exe",
+    "binary_sha256": "38067689f79ae6f6be2d951a7827c84768265f74ff35142a5f847bcc563668d4",
+    "model": "gemma4-26-heretic",
+    "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+    "parser_name": "gemma4",
+    "chat_template_mode": "JINJA",
+    "model_default_temperature": 1.0,
+    "model_default_top_p": 0.95,
+    "model_default_top_k": 64,
+    "started_utc": "2026-09-07T11:17:21.446608+00:00"
+  },
+  "generated_utc": "2026-09-07T11:29:57.583993+00:00",
+  "cells": {
+    "B_ambiguous": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      }
+    },
+    "B_distractor_prose": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      }
+    },
+    "B_overwrite": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      }
+    },
+    "B_renamed": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      }
+    },
+    "B_same_name": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "outcomes": {
+        "F_GROUNDED_VALUE_CORRUPTED": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      }
+    },
+    "B_sec_conflict_two_tools": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "outcomes": {
+        "F_GROUNDED_VALUE_CORRUPTED": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      }
+    },
+    "B_sec_fake_sha_prose": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      }
+    },
+    "B_sec_json_array": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "outcomes": {
+        "D_WRONG_TOOL": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      }
+    },
+    "B_sec_json_scalar": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "outcomes": {
+        "D_WRONG_TOOL": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      }
+    },
+    "B_sec_malformed_json": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "outcomes": {
+        "D_WRONG_TOOL": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      }
+    },
+    "B_sec_prompt_injection": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      }
+    },
+    "B_ungrounded_extra_fields": {
+      "n": 1,
+      "pass": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 1,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.7934567085261071
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "low": 0.20654329147389294,
+        "high": 1.0
+      }
+    },
+    "auto_A1": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "auto_A2": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "auto_A3": {
+      "n": 2,
+      "pass": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.6576280471103807
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2
+      },
+      "tool_action_attempt_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.6576280471103807
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      }
+    },
+    "auto_A4": {
+      "n": 2,
+      "pass": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.6576280471103807
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2
+      },
+      "tool_action_attempt_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.6576280471103807
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      }
+    },
+    "auto_A5": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "named_t0_s42": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "I_TRUNCATED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "required_t0_s42": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "thinking_off_t09_seed_omitted": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "thinking_off_t0_s42": {
+      "n": 2,
+      "pass": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.6576280471103807
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2
+      },
+      "tool_action_attempt_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.6576280471103807
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      }
+    },
+    "thinking_on_t09_seed_omitted": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 1,
+        "rate": 0.3333333333333333,
+        "low": 0.0614903152761605,
+        "high": 0.7923450448735121
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2,
+        "PASS": 1
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 2,
+        "rate": 0.6666666666666666,
+        "low": 0.2076549551264879,
+        "high": 0.9385096847238394
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 1,
+        "rate": 0.3333333333333333,
+        "low": 0.0614903152761605,
+        "high": 0.7923450448735121
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      }
+    },
+    "thinking_on_t0_s42": {
+      "n": 2,
+      "pass": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 2
+      },
+      "tool_action_attempt_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.6576280471103807
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "low": 0.34237195288961925,
+        "high": 1.0
+      }
+    }
+  },
+  "campaigns": {
+    "A": {
+      "n": 19,
+      "pass": {
+        "n": 19,
+        "k": 3,
+        "rate": 0.15789473684210525,
+        "low": 0.055203710399278266,
+        "high": 0.3756592764317668
+      },
+      "outcomes": {
+        "I_TRUNCATED": 3,
+        "PASS": 3,
+        "G_UNGROUNDED_VALUE_INVENTED": 13
+      },
+      "tool_action_attempt_rate": {
+        "n": 19,
+        "k": 16,
+        "rate": 0.8421052631578947,
+        "low": 0.6243407235682331,
+        "high": 0.9447962896007217
+      },
+      "structured_tool_call_rate": {
+        "n": 19,
+        "k": 16,
+        "rate": 0.8421052631578947,
+        "low": 0.6243407235682331,
+        "high": 0.9447962896007217
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 16,
+        "k": 16,
+        "rate": 1.0,
+        "low": 0.8063865817272802,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 16,
+        "k": 16,
+        "rate": 1.0,
+        "low": 0.8063865817272802,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 19,
+        "k": 13,
+        "rate": 0.6842105263157895,
+        "low": 0.4601001017506463,
+        "high": 0.846358289955714
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 19,
+        "k": 3,
+        "rate": 0.15789473684210525,
+        "low": 0.055203710399278266,
+        "high": 0.3756592764317668
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 16,
+        "k": 16,
+        "rate": 1.0,
+        "low": 0.8063865817272802,
+        "high": 1.0
+      }
+    },
+    "thinking": {
+      "n": 10,
+      "pass": {
+        "n": 10,
+        "k": 3,
+        "rate": 0.3,
+        "low": 0.10778928748621183,
+        "high": 0.6032267800204347
+      },
+      "outcomes": {
+        "G_UNGROUNDED_VALUE_INVENTED": 7,
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 10,
+        "k": 10,
+        "rate": 1.0,
+        "low": 0.7224598312333834,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 10,
+        "k": 10,
+        "rate": 1.0,
+        "low": 0.7224598312333834,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 10,
+        "k": 10,
+        "rate": 1.0,
+        "low": 0.7224598312333834,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 10,
+        "k": 10,
+        "rate": 1.0,
+        "low": 0.7224598312333834,
+        "high": 1.0
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 10,
+        "k": 7,
+        "rate": 0.7,
+        "low": 0.39677321997956516,
+        "high": 0.892210712513788
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 10,
+        "k": 3,
+        "rate": 0.3,
+        "low": 0.10778928748621183,
+        "high": 0.6032267800204347
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 10,
+        "k": 10,
+        "rate": 1.0,
+        "low": 0.7224598312333834,
+        "high": 1.0
+      }
+    },
+    "B": {
+      "n": 12,
+      "pass": {
+        "n": 12,
+        "k": 6,
+        "rate": 0.5,
+        "low": 0.2537781703934222,
+        "high": 0.7462218296065778
+      },
+      "outcomes": {
+        "F_GROUNDED_VALUE_CORRUPTED": 2,
+        "PASS": 6,
+        "G_UNGROUNDED_VALUE_INVENTED": 1,
+        "D_WRONG_TOOL": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 12,
+        "k": 12,
+        "rate": 1.0,
+        "low": 0.7574992425007574,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 12,
+        "k": 12,
+        "rate": 1.0,
+        "low": 0.7574992425007574,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 12,
+        "k": 12,
+        "rate": 1.0,
+        "low": 0.7574992425007574,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 12,
+        "k": 7,
+        "rate": 0.5833333333333334,
+        "low": 0.3195073356553728,
+        "high": 0.8067425380947535
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 12,
+        "k": 1,
+        "rate": 0.08333333333333333,
+        "low": 0.014864709450773478,
+        "high": 0.35388592179859524
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 12,
+        "k": 6,
+        "rate": 0.5,
+        "low": 0.2537781703934222,
+        "high": 0.7462218296065778
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 12,
+        "k": 7,
+        "rate": 0.5833333333333334,
+        "low": 0.3195073356553728,
+        "high": 0.8067425380947535
+      }
+    }
+  },
+  "key_rates": {
+    "named_success": {
+      "n": 3,
+      "k": 0,
+      "rate": 0.0,
+      "low": 0.0,
+      "high": 0.5615060804490177
+    },
+    "required_success": {
+      "n": 3,
+      "k": 3,
+      "rate": 1.0,
+      "low": 0.43849391955098227,
+      "high": 1.0
+    },
+    "auto_success": {
+      "n": 13,
+      "k": 0,
+      "rate": 0.0,
+      "low": 0.0,
+      "high": 0.22810184305529166
+    },
+    "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+      "n": 38,
+      "k": 38,
+      "rate": 1.0,
+      "low": 0.90818706741616,
+      "high": 0.9999999999999999
+    },
+    "grounded_exact_value_fidelity_conditional_on_intended_parsed_call": {
+      "n": 38,
+      "k": 33,
+      "rate": 0.868421052631579,
+      "low": 0.7267282994850112,
+      "high": 0.9424621712426856
+    },
+    "ungrounded_hallucination_rate": {
+      "n": 41,
+      "k": 21,
+      "rate": 0.5121951219512195,
+      "low": 0.36484259315865186,
+      "high": 0.657458127600643
+    }
+  },
+  "n_total": 41,
+  "measurement_contract": {
+    "schema_version": 2,
+    "parser_attempt_observability": "api_visible_only",
+    "parser_metric_name": "api_visible_parser_recognition_conditional_on_api_visible_attempted_call",
+    "sampled_thinking_contract": "temperature=0.9, seed omitted",
+    "allow_no_tool_contract": "no structured tool call may be emitted",
+    "tool_call_multiplicity_contract": "campaign A requires exactly one structured call once a call is emitted",
+    "frozen_v1_evidence_rewritten": false
+  }
+}

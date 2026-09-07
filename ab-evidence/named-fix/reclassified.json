@@ -1,0 +1,66 @@
+[
+  {
+    "trial": "named_t0_s42-001",
+    "frozen_v2_replay_outcome": "PASS",
+    "repository_checked_outcome": "F_GROUNDED_VALUE_CORRUPTED",
+    "reason": "repository expected 'C:\\\\git\\\\g4-final-review' got ':/git/g4-final-review'",
+    "finish": "tool_calls",
+    "tokens": 239
+  },
+  {
+    "trial": "named_t0_s42-002",
+    "frozen_v2_replay_outcome": "PASS",
+    "repository_checked_outcome": "PASS",
+    "reason": "intended tool and exact commit_sha",
+    "finish": "tool_calls",
+    "tokens": 176
+  },
+  {
+    "trial": "named_t0_s42-003",
+    "frozen_v2_replay_outcome": "PASS",
+    "repository_checked_outcome": "PASS",
+    "reason": "intended tool and exact commit_sha",
+    "finish": "tool_calls",
+    "tokens": 176
+  },
+  {
+    "trial": "auto_A1-001",
+    "frozen_v2_replay_outcome": "G_UNGROUNDED_VALUE_INVENTED",
+    "repository_checked_outcome": "G_UNGROUNDED_VALUE_INVENTED",
+    "reason": "invented=sha256=e3b0c44298fc1c1492f3",
+    "finish": "tool_calls",
+    "tokens": 234
+  },
+  {
+    "trial": "B_sec_json_array-t0s42-001",
+    "frozen_v2_replay_outcome": "D_WRONG_TOOL",
+    "repository_checked_outcome": "D_WRONG_TOOL",
+    "reason": "structured tool call forbidden when no structured mapping is available",
+    "finish": "tool_calls",
+    "tokens": 52
+  },
+  {
+    "trial": "B_sec_json_scalar-t0s42-001",
+    "frozen_v2_replay_outcome": "D_WRONG_TOOL",
+    "repository_checked_outcome": "D_WRONG_TOOL",
+    "reason": "structured tool call forbidden when no structured mapping is available",
+    "finish": "tool_calls",
+    "tokens": 52
+  },
+  {
+    "trial": "B_sec_malformed_json-t0s42-001",
+    "frozen_v2_replay_outcome": "D_WRONG_TOOL",
+    "repository_checked_outcome": "D_WRONG_TOOL",
+    "reason": "structured tool call forbidden when no structured mapping is available",
+    "finish": "tool_calls",
+    "tokens": 25
+  },
+  {
+    "trial": "required_t0_s42-001",
+    "frozen_v2_replay_outcome": "PASS",
+    "repository_checked_outcome": "PASS",
+    "reason": "intended tool and exact commit_sha",
+    "finish": "tool_calls",
+    "tokens": 292
+  }
+]

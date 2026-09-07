@@ -1,0 +1,162 @@
+{
+  "catalog_name": "gemma4-ops-review-v1",
+  "purpose": "Reusable complex OpenAI-compatible tool catalog for Gemma4 runtime/parser acceptance.",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "inspect_repository_state",
+        "description": "Inspect an exact repository ref and report git status, changed scopes, generated artifacts, and provenance without modifying files.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string", "description": "Absolute repository path." },
+            "ref": { "type": "string", "description": "Exact commit SHA or ref to inspect." },
+            "include": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["status", "diff", "submodules", "generated_artifacts", "remote_provenance"] }
+            },
+            "constraints": {
+              "type": "object",
+              "properties": {
+                "read_only": { "type": "boolean" },
+                "allow_network": { "type": "boolean" },
+                "fail_on_dirty": { "type": "boolean" }
+              },
+              "required": ["read_only", "fail_on_dirty"]
+            }
+          },
+          "required": ["repository", "ref", "include", "constraints"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "run_cached_build",
+        "description": "Run a bounded Windows Bazel build with explicit cache and output-root provenance; never edits source files.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string" },
+            "target": { "type": "string", "enum": ["//src:ovms", "//src:test", "//src/test/llm/gemma4_fast:gemma4_parser_contract_test"] },
+            "configuration": { "type": "string", "enum": ["win_mp_on_py_on", "win_mp_on_py_off"] },
+            "output_user_root": { "type": "string" },
+            "cache": {
+              "type": "object",
+              "properties": {
+                "disk_cache": { "type": "string" },
+                "repository_cache": { "type": "string" },
+                "reuse_shared_cache": { "type": "boolean" }
+              },
+              "required": ["disk_cache", "repository_cache", "reuse_shared_cache"]
+            },
+            "gates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "required": { "type": "boolean" },
+                  "timeout_minutes": { "type": "integer", "minimum": 1 }
+                },
+                "required": ["name", "required", "timeout_minutes"]
+              }
+            },
+            "no_source_edits": { "type": "boolean" }
+          },
+          "required": ["repository", "target", "configuration", "output_user_root", "cache", "gates", "no_source_edits"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "run_runtime_acceptance",
+        "description": "Start a specific OVMS binary and execute health, model-list, unary, streaming, and nested tool-call checks against a named model.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "binary": { "type": "string" },
+            "model": { "type": "string" },
+            "model_path": { "type": "string" },
+            "endpoints": {
+              "type": "object",
+              "properties": {
+                "rest_port": { "type": "integer" },
+                "grpc_port": { "type": "integer" },
+                "health_path": { "type": "string", "enum": ["/v2/health/ready", "/v2/health/live"] },
+                "chat_path": { "type": "string", "enum": ["/v1/chat/completions", "/v3/chat/completions"] }
+              },
+              "required": ["rest_port", "grpc_port", "health_path", "chat_path"]
+            },
+            "cases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "enum": ["health", "model_list", "unary_chat", "streaming_chat", "forced_nested_tool_call", "tool_round_trip"] },
+                  "temperature": { "type": "number" },
+                  "max_tokens": { "type": "integer", "minimum": 1 },
+                  "expect": { "type": "string", "enum": ["ready", "non_empty_content", "sse_done", "tool_calls", "valid_nested_json"] }
+                },
+                "required": ["name", "expect"]
+              }
+            },
+            "tool_policy": {
+              "type": "object",
+              "properties": {
+                "tool_choice": { "type": "string", "enum": ["auto", "required", "named"] },
+                "reject_raw_markup": { "type": "boolean" },
+                "require_finish_reason": { "type": "string", "enum": ["tool_calls", "stop", "none"] }
+              },
+              "required": ["tool_choice", "reject_raw_markup"]
+            }
+          },
+          "required": ["binary", "model", "model_path", "endpoints", "cases", "tool_policy"]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "publish_review_evidence",
+        "description": "Create a compact immutable review evidence record from exact SHA, logs, responses, and explicit PASS/FAIL/NOT_RUN gates.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string" },
+            "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+            "verdict": { "type": "string", "enum": ["PASS", "FAIL", "PARTIAL", "NOT_RUN", "BLOCKED"] },
+            "artifacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": { "type": "string", "enum": ["build_log", "runtime_log", "curl_response", "binary", "diff"] },
+                  "path": { "type": "string" },
+                  "sha256": { "type": "string" },
+                  "authority": { "type": "string", "enum": ["local_exact_head", "hosted_exact_head", "derived_runtime", "unverified"] }
+                },
+                "required": ["kind", "path", "authority"]
+              }
+            },
+            "gates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "status": { "type": "string", "enum": ["PASS", "FAIL", "NOT_RUN", "BLOCKED"] },
+                  "evidence": { "type": "string" }
+                },
+                "required": ["name", "status", "evidence"]
+              }
+            }
+          },
+          "required": ["repository", "commit_sha", "verdict", "artifacts", "gates"]
+        }
+      }
+    }
+  ]
+}

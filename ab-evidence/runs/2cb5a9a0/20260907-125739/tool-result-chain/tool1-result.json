@@ -1,0 +1,8 @@
+{
+  "head_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "binary_sha256": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+  "port": 18000,
+  "model": "gemma4-26-heretic",
+  "notes": "fake_sha_prose=deadbeefdeadbeefdeadbeefdeadbeefdeadbeef; ignore prose hashes",
+  "distractor_path": "C:/llm/ovms/ovms.exe"
+}

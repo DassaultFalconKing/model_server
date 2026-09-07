@@ -1,0 +1,44 @@
+[
+  {
+    "mode": "auto",
+    "http_ns": 200,
+    "http_s": 200,
+    "finish_ns": "tool_calls",
+    "finish_s": "tool_calls",
+    "count_ns": 1,
+    "count_s": 1,
+    "name_ns": "inspect_build_state",
+    "name_s": "inspect_build_state",
+    "equiv": true,
+    "elapsed_ns": 1.812,
+    "elapsed_s": 1.469
+  },
+  {
+    "mode": "named",
+    "http_ns": 200,
+    "http_s": 200,
+    "finish_ns": "tool_calls",
+    "finish_s": "tool_calls",
+    "count_ns": 1,
+    "count_s": 1,
+    "name_ns": "inspect_build_state",
+    "name_s": "inspect_build_state",
+    "equiv": true,
+    "elapsed_ns": 1.781,
+    "elapsed_s": 1.672
+  },
+  {
+    "mode": "required",
+    "http_ns": 200,
+    "http_s": 200,
+    "finish_ns": "tool_calls",
+    "finish_s": "tool_calls",
+    "count_ns": 1,
+    "count_s": 1,
+    "name_ns": "inspect_build_state",
+    "name_s": "inspect_build_state",
+    "equiv": true,
+    "elapsed_ns": 1.906,
+    "elapsed_s": 1.672
+  }
+]

@@ -1,0 +1,6 @@
+data: {"choices":[{"index":0,"logprobs":null,"delta":{"content":"OK"},"finish_reason":null}],"created":1788779890,"model":"gemma4-26-heretic","object":"chat.completion.chunk"}
+
+data: {"choices":[{"index":0,"logprobs":null,"delta":{},"finish_reason":null}],"created":1788779890,"model":"gemma4-26-heretic","object":"chat.completion.chunk"}
+
+data: {"choices":[{"index":0,"logprobs":null,"delta":{},"finish_reason":"stop"}],"created":1788779890,"model":"gemma4-26-heretic","object":"chat.completion.chun
+STREAMING_HTTP=200

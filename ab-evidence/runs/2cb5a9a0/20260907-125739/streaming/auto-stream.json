@@ -1,0 +1,20 @@
+{
+  "status": 200,
+  "body": {
+    "assembled": {
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "6gNqfOk1G",
+          "type": "function",
+          "function": {
+            "name": "inspect_build_state",
+            "arguments": "{\"repo_path\":\"'C:/git/model_server-gemma4-google-template-session-state'\"}"
+          }
+        }
+      ],
+      "finish_reason": "tool_calls"
+    },
+    "raw_preview": "167\r\ndata: {\"choices\":[{\"index\":0,\"logprobs\":null,\"delta\":{\"tool_calls\":[{\"id\":\"6gNqfOk1G\",\"type\":\"function\",\"index\":0,\"function\":{\"name\":\"inspect_build_state\",\"arguments\":\"{\\\"repo_path\\\":\\\"'C:/git/model_server-gemma4-google-template-session-state'\\\"}\"}}]},\"finish_reason\":null}],\"created\":1788780695,\"model\":\"gemma4-26-heretic\",\"object\":\"chat.completion.chunk\"}\n\n\r\n15c\r\ndata: {\"choices\":[{\"index\":0,\"logprobs\":null,\"delta\":{},\"finish_reason\":null}],\"created\":1788780695,\"model\":\"gemma4-26-heretic\",\"object\":\"chat.completion.chunk\"}\n\ndata: {\"choices\":[{\"index\":0,\"logprobs\":null,\"delta\":{},\"finish_reason\":\"tool_calls\"}],\"created\":1788780695,\"model\":\"gemma4-26-heretic\",\"object\":\"chat.completion.chunk\"}\n\ndata: [DONE]\n\n\r\n0\r\n\r\n"
+  }
+}

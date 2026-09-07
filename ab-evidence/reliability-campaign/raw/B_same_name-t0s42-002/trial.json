@@ -1,0 +1,508 @@
+{
+  "trial_id": "B_same_name-t0s42-002",
+  "campaign": "B",
+  "cell": "B_same_name",
+  "tool_choice": "required",
+  "explicit_temperature": true,
+  "request_temperature": 0,
+  "effective_temperature": 0,
+  "explicit_seed": true,
+  "request_seed": 42,
+  "thinking_mode": false,
+  "git_sha": "74ea54e19825812fac6f5dbf7f9e24051a75eba6",
+  "production_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+  "binary_path": "C:\\git\\g4-final-review\\bazel-bin\\src\\ovms.exe",
+  "binary_sha256": "83938cf36ef70a53e024e467f31b4a8b841e66815b93292457ae1b1472bd105b",
+  "model": "gemma4-26-heretic",
+  "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+  "parser_name": "gemma4",
+  "chat_template_mode": "JINJA",
+  "intended_tool": "publish_exact_facts",
+  "grounded_expected": {
+    "head_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "digest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "uuid": "550e8400-e29b-41d4-a716-446655440000",
+    "opaque_id": "bld-9f3A_xQ7-22",
+    "ref_name": "fix/gemma4-final-toolcalling-review",
+    "win_path": "C:\\git\\model_server-gemma4-clean\\ab-evidence\\live_chain_harness.py",
+    "posix_path": "/opt/ovms/models/gemma4/config.json",
+    "path_with_spaces": "C:\\Program Files\\OpenVINO Model Server\\ovms.exe",
+    "path_with_dots": "src/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
+    "count": 7,
+    "port": 18000,
+    "pid": 24488,
+    "exit_code": 0,
+    "byte_size": 22734848,
+    "port_as_string": "18000",
+    "status": "PASS",
+    "verdict": "PARTIAL",
+    "flag_true": true,
+    "flag_false": false,
+    "ts_utc": "2026-09-06T11:28:00Z",
+    "ts_offset": "2026-09-06T13:28:00+02:00",
+    "date": "2026-09-06",
+    "nested2_leaf": "n2-exact-leaf",
+    "nested4_leaf": "n4-exact-leaf",
+    "array_leaf_0": "leaf-alpha",
+    "array_leaf_1": "leaf-beta"
+  },
+  "lexical_expected": {
+    "one": "1",
+    "one_point_zero": "1.0",
+    "one_e0": "1e0"
+  },
+  "forbidden_values": [
+    "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+  ],
+  "grounded_leaves": [
+    "/opt/ovms/models/gemma4/config.json",
+    "0",
+    "1",
+    "1.0",
+    "18000",
+    "1e0",
+    "2026-09-06",
+    "2026-09-06T11:28:00Z",
+    "2026-09-06T13:28:00+02:00",
+    "22734848",
+    "24488",
+    "30052a01aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "550e8400-e29b-41d4-a716-446655440000",
+    "5519de03bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "7",
+    "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "C:\\Program Files\\OpenVINO Model Server\\ovms.exe",
+    "C:\\git\\model_server-gemma4-clean\\ab-evidence\\live_chain_harness.py",
+    "PARTIAL",
+    "PASS",
+    "bld-9f3A_xQ7-22",
+    "build-B-222",
+    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "false",
+    "fix/gemma4-final-toolcalling-review",
+    "leaf-alpha",
+    "leaf-beta",
+    "n2-exact-leaf",
+    "n4-exact-leaf",
+    "src/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
+    "true"
+  ],
+  "request": {
+    "model": "gemma4-26-heretic",
+    "max_tokens": 768,
+    "stream": false,
+    "skip_special_tokens": false,
+    "tool_choice": "required",
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "inspect_build_state",
+          "description": "Return structured authoritative build/repo facts. Do not invent values.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "scope"
+            ]
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "publish_exact_facts",
+          "description": "Publish exact values copied from the structured tool result. Copy characters exactly. Do not invent hashes, paths, or evidence.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "head_sha": {
+                "type": "string"
+              },
+              "commit_sha": {
+                "type": "string"
+              },
+              "parent_sha": {
+                "type": "string"
+              },
+              "merge_base_sha": {
+                "type": "string"
+              },
+              "digest_sha256": {
+                "type": "string"
+              },
+              "uuid": {
+                "type": "string"
+              },
+              "opaque_id": {
+                "type": "string"
+              },
+              "ref_name": {
+                "type": "string"
+              },
+              "win_path": {
+                "type": "string"
+              },
+              "posix_path": {
+                "type": "string"
+              },
+              "path_with_spaces": {
+                "type": "string"
+              },
+              "path_with_dots": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer"
+              },
+              "port": {
+                "type": "integer"
+              },
+              "pid": {
+                "type": "integer"
+              },
+              "exit_code": {
+                "type": "integer"
+              },
+              "byte_size": {
+                "type": "integer"
+              },
+              "port_as_string": {
+                "type": "string"
+              },
+              "one": {
+                "type": "string"
+              },
+              "one_point_zero": {
+                "type": "string"
+              },
+              "one_e0": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "PARTIAL",
+                  "NOT_RUN",
+                  "BLOCKED"
+                ]
+              },
+              "verdict": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "PARTIAL",
+                  "NOT_RUN",
+                  "BLOCKED"
+                ]
+              },
+              "flag_true": {
+                "type": "boolean"
+              },
+              "flag_false": {
+                "type": "boolean"
+              },
+              "ts_utc": {
+                "type": "string"
+              },
+              "ts_offset": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "nested2_leaf": {
+                "type": "string"
+              },
+              "nested4_leaf": {
+                "type": "string"
+              },
+              "array_leaf_0": {
+                "type": "string"
+              },
+              "array_leaf_1": {
+                "type": "string"
+              },
+              "build_id": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "required": []
+          }
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "Call publish_exact_facts. Copy every structured field with the same name exactly. Do not invent hashes or paths."
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "call_inspect_1",
+            "type": "function",
+            "function": {
+              "name": "inspect_build_state",
+              "arguments": "{\"scope\":\"full\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_inspect_1",
+        "name": "inspect_build_state",
+        "content": "{\"head_sha\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"parent_sha\":\"30052a01aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"merge_base_sha\":\"5519de03bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"digest_sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"uuid\":\"550e8400-e29b-41d4-a716-446655440000\",\"opaque_id\":\"bld-9f3A_xQ7-22\",\"ref_name\":\"fix/gemma4-final-toolcalling-review\",\"win_path\":\"C:\\\\git\\\\model_server-gemma4-clean\\\\ab-evidence\\\\live_chain_harness.py\",\"posix_path\":\"/opt/ovms/models/gemma4/config.json\",\"path_with_spaces\":\"C:\\\\Program Files\\\\OpenVINO Model Server\\\\ovms.exe\",\"path_with_dots\":\"src/llm/io_processing/gemma4/gemma4_tool_parser.cpp\",\"count\":7,\"port\":18000,\"pid\":24488,\"exit_code\":0,\"byte_size\":22734848,\"port_as_string\":\"18000\",\"one\":\"1\",\"one_point_zero\":\"1.0\",\"one_e0\":\"1e0\",\"status\":\"PASS\",\"verdict\":\"PARTIAL\",\"flag_true\":true,\"flag_false\":false,\"ts_utc\":\"2026-09-06T11:28:00Z\",\"ts_offset\":\"2026-09-06T13:28:00+02:00\",\"date\":\"2026-09-06\",\"nested\":{\"inner\":{\"leaf\":\"n2-exact-leaf\"}},\"deep\":{\"l1\":{\"l2\":{\"l3\":{\"leaf\":\"n4-exact-leaf\"}}}},\"leaves\":[\"leaf-alpha\",\"leaf-beta\"],\"build_id\":\"build-B-222\"}"
+      }
+    ],
+    "explicit_temperature": true,
+    "explicit_seed": true,
+    "temperature": 0,
+    "seed": 42
+  },
+  "tool_result": [
+    {
+      "head_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+      "parent_sha": "30052a01aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "merge_base_sha": "5519de03bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "digest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "opaque_id": "bld-9f3A_xQ7-22",
+      "ref_name": "fix/gemma4-final-toolcalling-review",
+      "win_path": "C:\\git\\model_server-gemma4-clean\\ab-evidence\\live_chain_harness.py",
+      "posix_path": "/opt/ovms/models/gemma4/config.json",
+      "path_with_spaces": "C:\\Program Files\\OpenVINO Model Server\\ovms.exe",
+      "path_with_dots": "src/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
+      "count": 7,
+      "port": 18000,
+      "pid": 24488,
+      "exit_code": 0,
+      "byte_size": 22734848,
+      "port_as_string": "18000",
+      "one": "1",
+      "one_point_zero": "1.0",
+      "one_e0": "1e0",
+      "status": "PASS",
+      "verdict": "PARTIAL",
+      "flag_true": true,
+      "flag_false": false,
+      "ts_utc": "2026-09-06T11:28:00Z",
+      "ts_offset": "2026-09-06T13:28:00+02:00",
+      "date": "2026-09-06",
+      "nested": {
+        "inner": {
+          "leaf": "n2-exact-leaf"
+        }
+      },
+      "deep": {
+        "l1": {
+          "l2": {
+            "l3": {
+              "leaf": "n4-exact-leaf"
+            }
+          }
+        }
+      },
+      "leaves": [
+        "leaf-alpha",
+        "leaf-beta"
+      ],
+      "build_id": "build-B-222"
+    }
+  ],
+  "allow_no_tool": false,
+  "http_status": 200,
+  "raw_response_text": "{\"choices\":[{\"finish_reason\":\"tool_calls\",\"index\":0,\"logprobs\":null,\"message\":{\"content\":\"\",\"role\":\"assistant\",\"tool_calls\":[{\"id\":\"BFmmRU4BR\",\"type\":\"function\",\"function\":{\"name\":\"publish_exact_facts\",\"arguments\":\"{\\\"array_leaf_0\\\":\\\"leaf-alpha\\\",\\\"array_leaf_1\\\":\\\"leaf-beta\\\",\\\"build_id\\\":\\\"build-B-222\\\",\\\"notes\\\":\\\"n4-exact-leaf\\\"}\"}}]}}],\"created\":1788701805,\"model\":\"gemma4-26-heretic\",\"object\":\"chat.completion\",\"usage\":{\"prompt_tokens\":1163,\"completion_tokens\":68,\"total_tokens\":1231}}",
+  "raw_generated_output": "",
+  "elapsed_s": 3.172,
+  "finish_reason": "tool_calls",
+  "prompt_tokens": 1163,
+  "completion_tokens": 68,
+  "structured_tool_calls": [
+    {
+      "id": "BFmmRU4BR",
+      "type": "function",
+      "function": {
+        "name": "publish_exact_facts",
+        "arguments": "{\"array_leaf_0\":\"leaf-alpha\",\"array_leaf_1\":\"leaf-beta\",\"build_id\":\"build-B-222\",\"notes\":\"n4-exact-leaf\"}"
+      }
+    }
+  ],
+  "parsed_tool_name": "publish_exact_facts",
+  "parsed_arguments": {
+    "array_leaf_0": "leaf-alpha",
+    "array_leaf_1": "leaf-beta",
+    "build_id": "build-B-222",
+    "notes": "n4-exact-leaf"
+  },
+  "protocol_attempt": null,
+  "grounded_comparisons": {
+    "head_sha": {
+      "expected": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+      "got": null,
+      "exact": false
+    },
+    "digest_sha256": {
+      "expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "got": null,
+      "exact": false
+    },
+    "uuid": {
+      "expected": "550e8400-e29b-41d4-a716-446655440000",
+      "got": null,
+      "exact": false
+    },
+    "opaque_id": {
+      "expected": "bld-9f3A_xQ7-22",
+      "got": null,
+      "exact": false
+    },
+    "ref_name": {
+      "expected": "fix/gemma4-final-toolcalling-review",
+      "got": null,
+      "exact": false
+    },
+    "win_path": {
+      "expected": "C:\\git\\model_server-gemma4-clean\\ab-evidence\\live_chain_harness.py",
+      "got": null,
+      "exact": false
+    },
+    "posix_path": {
+      "expected": "/opt/ovms/models/gemma4/config.json",
+      "got": null,
+      "exact": false
+    },
+    "path_with_spaces": {
+      "expected": "C:\\Program Files\\OpenVINO Model Server\\ovms.exe",
+      "got": null,
+      "exact": false
+    },
+    "path_with_dots": {
+      "expected": "src/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
+      "got": null,
+      "exact": false
+    },
+    "count": {
+      "expected": 7,
+      "got": null,
+      "exact": false
+    },
+    "port": {
+      "expected": 18000,
+      "got": null,
+      "exact": false
+    },
+    "pid": {
+      "expected": 24488,
+      "got": null,
+      "exact": false
+    },
+    "exit_code": {
+      "expected": 0,
+      "got": null,
+      "exact": false
+    },
+    "byte_size": {
+      "expected": 22734848,
+      "got": null,
+      "exact": false
+    },
+    "port_as_string": {
+      "expected": "18000",
+      "got": null,
+      "exact": false
+    },
+    "status": {
+      "expected": "PASS",
+      "got": null,
+      "exact": false
+    },
+    "verdict": {
+      "expected": "PARTIAL",
+      "got": null,
+      "exact": false
+    },
+    "flag_true": {
+      "expected": true,
+      "got": null,
+      "exact": false
+    },
+    "flag_false": {
+      "expected": false,
+      "got": null,
+      "exact": false
+    },
+    "ts_utc": {
+      "expected": "2026-09-06T11:28:00Z",
+      "got": null,
+      "exact": false
+    },
+    "ts_offset": {
+      "expected": "2026-09-06T13:28:00+02:00",
+      "got": null,
+      "exact": false
+    },
+    "date": {
+      "expected": "2026-09-06",
+      "got": null,
+      "exact": false
+    },
+    "nested2_leaf": {
+      "expected": "n2-exact-leaf",
+      "got": null,
+      "exact": false
+    },
+    "nested4_leaf": {
+      "expected": "n4-exact-leaf",
+      "got": null,
+      "exact": false
+    },
+    "array_leaf_0": {
+      "expected": "leaf-alpha",
+      "got": "leaf-alpha",
+      "exact": true
+    },
+    "array_leaf_1": {
+      "expected": "leaf-beta",
+      "got": "leaf-beta",
+      "exact": true
+    }
+  },
+  "lexical_comparisons": {
+    "one": {
+      "expected": "1",
+      "got": null,
+      "exact": false,
+      "numeric_equal": false
+    },
+    "one_point_zero": {
+      "expected": "1.0",
+      "got": null,
+      "exact": false,
+      "numeric_equal": false
+    },
+    "one_e0": {
+      "expected": "1e0",
+      "got": null,
+      "exact": false,
+      "numeric_equal": false
+    }
+  },
+  "primary_outcome": "F_GROUNDED_VALUE_CORRUPTED",
+  "outcome_reason": "keys=head_sha,digest_sha256,uuid,opaque_id,ref_name,win_path,posix_path,path_with_spaces,path_with_dots,count,port,pid,exit_code,byte_size,port_as_string,status,verdict,flag_true,flag_false,ts_utc,ts_offset,date,nested2_leaf,nested4_leaf",
+  "intended_parsed": true,
+  "grounded_exact": false
+}

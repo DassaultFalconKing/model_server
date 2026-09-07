@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "Uh2yN9BHS",
+            "type": "function",
+            "function": {
+              "name": "inspect_repository_state",
+              "arguments": "{\"include\":[\"status\",\"diff\",\"generated_artifacts\",\"remote_provenance\"],\"ref\":\"798e99e04d53fba2b1c87bd6b88260f0d6c3ca83\",\"constraints\":{\"fail_on_dirty\":false,\"read_only\":true,\"allow_network\":false},\"repository\":\"C:\\\\git\\\\g4-final-review\"}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788685188,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 270,
+    "completion_tokens": 119,
+    "total_tokens": 389
+  }
+}

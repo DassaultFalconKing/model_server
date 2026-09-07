@@ -1,0 +1,44 @@
+{
+  "repository": "C:\\git\\model_server-gemma4-google-template-session-state",
+  "head_sha": "7d00c5fe63c5f81e6c06972a974cd57fd7180326",
+  "requested_sha": "7d00c5fe63c5f81e6c06972a974cd57fd7180326",
+  "resolved_sha": "7d00c5fe63c5f81e6c06972a974cd57fd7180326",
+  "head_matches_requested": true,
+  "dirty": true,
+  "status_porcelain": [
+    "?? ab-evidence/live-81ff2f2c/ovms-sha256.txt",
+    "?? ab-evidence/live-81ff2f2c/ovms-version.txt",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/checkpoint.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request1-input.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request1-response.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request1-response.raw",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request2-input.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request2-response.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/request2-response.raw",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/session-config.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/summary.json",
+    "?? ab-evidence/live-81ff2f2c/required-session-gemma4-live-session-20260906a/tool1-result.json",
+    "?? ab-evidence/live-reallyfinal/ovms-sha256.txt",
+    "?? ab-evidence/live-reallyfinal/ovms-version.txt",
+    "?? ab-evidence/live-reallyfinal/required-session-gemma4-reallyfinal-required/request1-input.json",
+    "?? ab-evidence/live-reallyfinal/required-session-gemma4-reallyfinal-required/request1-response.json",
+    "?? ab-evidence/live-reallyfinal/required-session-gemma4-reallyfinal-required/request1-response.raw",
+    "?? ab-evidence/live-reallyfinal/required-session-gemma4-reallyfinal-required/session-config.json",
+    "?? bazel-model_server-gemma4-google-template-session-state/"
+  ],
+  "changed_files": [
+    "src/llm/servable.cpp"
+  ],
+  "generated_artifacts": [
+    "bazel-bin",
+    "bazel-out",
+    "bazel-testlogs",
+    "ab-evidence"
+  ],
+  "origin": "https://github.com/DassaultFalconKing/model_server.git",
+  "executor": {
+    "read_only": true,
+    "allow_network": false,
+    "source_mutation_observed": false
+  }
+}

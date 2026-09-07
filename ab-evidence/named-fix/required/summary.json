@@ -1,0 +1,10 @@
+[
+  {
+    "trial": "required_t0_s42-001",
+    "before": "PASS",
+    "after": "PASS",
+    "reason": "intended tool and exact commit_sha",
+    "finish": "tool_calls",
+    "tokens": 292
+  }
+]

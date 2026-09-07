@@ -118,6 +118,8 @@ function Invoke-BazelStep(
         "--config=$script:BazelConfig",
         "--disk_cache=$DiskCache",
         "--repository_cache=$RepositoryCache",
+        "--repo_env=OpenVINO_DIR=$OpenVinoDir",
+        "--repo_env=OpenCV_DIR=$OpenCvDir",
         "--profile=$profile",
         "--action_env", "OpenVINO_DIR=$OpenVinoDir",
         "--action_env", "OpenCV_DIR=$OpenCvDir",
@@ -208,6 +210,12 @@ try {
     Import-BatchEnvironment $openvinoSetup
     $opencvSetup = Join-Path $OpenCvDir "setup_vars_opencv4.cmd"
     Import-BatchEnvironment $opencvSetup
+    # Repository rules interpolate these paths into Starlark string literals.
+    # Forward slashes work for Windows/CMake and avoid invalid escapes such as \o.
+    $OpenVinoDir = $OpenVinoDir.Replace('\', '/')
+    $OpenCvDir = $OpenCvDir.Replace('\', '/')
+    $env:OpenVINO_DIR = $OpenVinoDir
+    $env:OpenCV_DIR = $OpenCvDir
 
     if ($Mode -ne "Dev" -and -not $NoStamp) {
         $originalVersion = Get-Content -Raw -LiteralPath $versionPath
@@ -240,10 +248,15 @@ try {
     Write-Host "  OpenCV_DIR:        $OpenCvDir"
 
     if (-not $SkipFastTests) {
+        # Bazel's Windows test launcher needs an explicit DLL search path.
+        # env_inherit alone does not reliably forward Windows' mixed-case Path.
+        $runtimeRoot = Split-Path $OpenVinoDir -Parent
+        $testPath = (Join-Path $runtimeRoot "bin\intel64\Release") + ";" +
+            (Join-Path $runtimeRoot "3rdparty\tbb\bin") + ";" + $env:PATH
         Invoke-BazelStep "test" "gemma-fast-tests" @(
             "//src/test/llm/generation_config:gemma4_generation_contract_test",
             "//src/test/llm/gemma4_fast:gemma4_parser_contract_test"
-        ) @("--test_output=errors", "--test_timeout=600")
+        ) @("--test_output=errors", "--test_timeout=600", "--test_env=PATH=$testPath")
     }
 
     if ($Mode -eq "Dev") {

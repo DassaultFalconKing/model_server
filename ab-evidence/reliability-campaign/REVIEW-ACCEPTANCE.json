@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "reviewed_evidence_commit": "4ea60d7937229af8e6c43c0a02e6ffbcba9aa9a3",
+  "review_delta_base": "74ea54e19825812fac6f5dbf7f9e24051a75eba6",
+  "evidence_production_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+  "current_reallyfinal_authority_at_review": "00b678aa5b35128899085265dd9a0a25136f8a25",
+  "disposition": "ACCEPTED_HISTORICAL_EVIDENCE_WITH_CAVEATS",
+  "frozen_trials_modified_by_review": false,
+  "runtime_production_files_in_cursor_delta": 0,
+  "integration_policy": "Integrate the evidence/docs semantically onto the current authority; do not treat this campaign as fresh acceptance evidence for 00b678aa or descendants.",
+  "consistency_checks": {
+    "cursor_delta_commits": 1,
+    "cursor_delta_files": 183,
+    "evidence_index_n_trials": 316,
+    "summary_n_total": 316,
+    "campaign_A_n": 180,
+    "campaign_thinking_n": 100,
+    "campaign_B_n": 36,
+    "non_pass_trials": 176,
+    "raw_failure_bundle_count_expected": 176,
+    "counts_consistent": true
+  },
+  "known_measurement_limits": [
+    {
+      "id": "THINKING_SAMPLE_SEED_CONTRACT_DEVIATION",
+      "severity": "material",
+      "detail": "The requested smaller sampled thinking comparison specified temperature=0.9 with seed omitted. The frozen harness/results use thinking_off_t09_s42 and thinking_on_t09_s42 with seed=42. Preserve these results as fixed-seed characterization; they do not satisfy the requested seed-omitted sampling cell."
+    },
+    {
+      "id": "PARSER_ATTEMPT_OBSERVABILITY_LIMIT",
+      "severity": "material",
+      "detail": "protocol_attempt() inspects assistant content/reasoning exposed by the parsed OpenAI response, not a raw backend token stream. parser_recognition_conditional_on_attempted_call therefore applies only to API-visible protocol attempts and cannot exclude parser-consumed or suppressed malformed attempts."
+    },
+    {
+      "id": "UNGROUNDED_DETECTOR_SCOPE",
+      "severity": "moderate",
+      "detail": "invented_values() primarily detects ungrounded SHA/SHA256-shaped values, supplemented by per-case forbidden values. The aggregate ungrounded_hallucination_rate is not a complete detector for arbitrary invented non-hash fields."
+    },
+    {
+      "id": "ALLOW_NO_TOOL_EMPTY_CALL_FALSE_POSITIVE",
+      "severity": "material",
+      "detail": "For allow_no_tool cases with empty expected fields, an emitted intended tool call with empty arguments can classify PASS when it uses no forbidden/hash value. These cases therefore do not fully enforce the intended no-call-on-nonmapping contract."
+    },
+    {
+      "id": "MULTIPLE_TOOL_CALL_MULTIPLICITY_GAP",
+      "severity": "moderate",
+      "detail": "Campaign A does not unconditionally reject len(tool_calls) != 1; an intended first call plus extra calls can evade the multiplicity check. No claim about exact-one-call reliability should be inferred without inspecting the affected trials."
+    },
+    {
+      "id": "FIXED_SEED_INTERVAL_INTERPRETATION",
+      "severity": "moderate",
+      "detail": "Wilson intervals over repeated fixed-seed cells describe observed repeated-run stability. They should not be presented as confidence intervals over independent stochastic model draws without an independence justification."
+    },
+    {
+      "id": "SOURCE_BINARY_BINDING_SCOPE",
+      "severity": "moderate",
+      "detail": "The campaign records production_sha and binary_sha256, but the harness does not independently derive the binary source SHA from the executable. Treat source-to-binary binding as recorded provenance unless corroborated by an external version/build stamp."
+    }
+  ],
+  "accepted_claim_scope": [
+    "The frozen campaign contains 316 recorded trials attributable in its provenance to production SHA 908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703 and binary SHA256 83938cf36ef70a53e024e467f31b4a8b841e66815b93292457ae1b1472bd105b.",
+    "Named and required cells in this historical campaign report 30/30 and 50/50 PASS respectively.",
+    "The campaign is useful evidence for grounded-value failure modes and auto/tool-choice characterization subject to the measurement limits above."
+  ],
+  "rejected_claim_scope": [
+    "Fresh acceptance of current 00b678aa/81ff2f2c runtime behavior.",
+    "Proof that all raw Gemma protocol attempts were recognized by the parser.",
+    "Completion of the requested temperature=0.9 seed-omitted thinking subcampaign.",
+    "A complete arbitrary-field hallucination rate.",
+    "Statistical independence of repeated fixed-seed trials."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "QNOuq5AJB",
+            "type": "function",
+            "function": {
+              "name": "publish_review_evidence",
+              "arguments": "{\"artifacts\":[{\"authority\":\"local_exact_head\",\"kind\":\"diff\",\"path\":\"src/test/llm/max_model_length_test.cpp\"}],\"commit_sha\":\"8f84ec0aca067f6b06a6eaf33db799037130c57f\",\"gates\":[{\"evidence\":\"Repository is dirty with multiple modified files and untracked files in ab-evidence/\",\"name\":\"Git Status Check\",\"status\":\"FAIL\"}],\"repository\":\"C:\\\\git\\\\model_server-gemma4-google-template-session-state\",\"verdict\":\"PARTIAL\"}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788711393,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 1962,
+    "completion_tokens": 168,
+    "total_tokens": 2130
+  }
+}

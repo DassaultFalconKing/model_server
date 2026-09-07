@@ -114,6 +114,12 @@ std::optional<Delta> OutputParser::parseToolCallChunk(const std::vector<int64_t>
     if (!toolParser) {
         throw std::runtime_error("Tool parser is not available, cannot parse tool call chunk");
     }
+    if (toolParser->getParsingConfig().ownsToolCallBoundaries) {
+        auto result = toolParser->parseChunk(streamOutputCache.getBuffer(), tokens, finishReason);
+        streamOutputCache.clear();
+        processingPhase = TOOL_CALLS_PROCESSING_TOOL;
+        return result;
+    }
     std::string remainder;
     const std::string& endTag = toolParser->getParsingConfig().endTag;
     if (!endTag.empty()) {
@@ -406,6 +412,8 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
         }
         return parseContentChunk();
     } else if (processingPhase == TOOL_CALLS_PROCESSING_TOOL) {
+        if (toolParser->getParsingConfig().ownsToolCallBoundaries)
+            return parseToolCallChunk(tokens, finishReason);
         TagLookupStatus toolEndTagStatus = streamOutputCache.lookupTag(toolParser->getParsingConfig().endTag);
         if (toolEndTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {
             return std::nullopt;

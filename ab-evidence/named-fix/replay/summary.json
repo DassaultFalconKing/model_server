@@ -1,0 +1,26 @@
+[
+  {
+    "trial": "named_t0_s42-001",
+    "before": "I_TRUNCATED",
+    "after": "PASS",
+    "reason": "intended tool and exact commit_sha",
+    "finish": "tool_calls",
+    "tokens": 239
+  },
+  {
+    "trial": "named_t0_s42-002",
+    "before": "I_TRUNCATED",
+    "after": "PASS",
+    "reason": "intended tool and exact commit_sha",
+    "finish": "tool_calls",
+    "tokens": 176
+  },
+  {
+    "trial": "named_t0_s42-003",
+    "before": "I_TRUNCATED",
+    "after": "PASS",
+    "reason": "intended tool and exact commit_sha",
+    "finish": "tool_calls",
+    "tokens": 176
+  }
+]

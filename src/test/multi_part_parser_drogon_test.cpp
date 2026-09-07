@@ -17,9 +17,39 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <cctype>
 #include <string>
+#include <unordered_map>
 
 #include "../http_frontend/multi_part_parser_drogon_impl.hpp"
+
+TEST(DrogonHttpHeaderCopy, SessionHeadersSurviveReqHeadersCopyUsedByV3Dispatcher) {
+    auto req = drogon::HttpRequest::newHttpRequest();
+    req->addHeader("X-OVMS-Session-ID", "gemma4-live-test");
+    req->addHeader("X-OVMS-Session-Store", "C:\\tmp\\gemma4-session-store");
+    req->addHeader("Content-Type", "application/json");
+
+    std::unordered_map<std::string, std::string> headers;
+    for (const auto& header : req->headers()) {
+        headers[header.first] = header.second;
+    }
+
+    auto asciiLower = [](std::string value) {
+        std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
+            return static_cast<char>(std::tolower(c));
+        });
+        return value;
+    };
+
+    std::unordered_map<std::string, std::string> lowered;
+    for (const auto& [name, value] : headers) {
+        lowered.emplace(asciiLower(name), value);
+    }
+    ASSERT_EQ(lowered["x-ovms-session-id"], "gemma4-live-test") << "inbound session headers never reached req->headers()";
+    ASSERT_EQ(lowered["x-ovms-session-store"], "C:\\tmp\\gemma4-session-store");
+    ASSERT_NE(lowered["content-type"].find("application/json"), std::string::npos);
+}
 
 // Sanity test, drogon already unit tests it in depth
 TEST(MultiPartParserDrogonImpl, GetFieldName) {

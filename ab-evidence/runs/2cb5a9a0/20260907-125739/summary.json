@@ -1,0 +1,235 @@
+{
+  "overall": "NOT_ACCEPTED",
+  "first_failing_gate": "GATE_12_RELIABILITY_NAMED_I_TRUNCATED",
+  "checks": {
+    "OLD_OVMS_STOPPED": "PASS",
+    "PORT_CLEAN_BEFORE_NEW_LAUNCH": "PASS",
+    "SOURCE_IDENTITY": "PASS",
+    "HARNESS_V2_UNIT_CONTRACT": "PASS",
+    "NEW_BUILD": "PASS",
+    "NEW_BINARY_PROVENANCE": "PASS",
+    "NEW_PROCESS_IDENTITY": "PASS",
+    "MODELS": "PASS",
+    "SESSION_WRITE": "PASS",
+    "NONE_CONTRACT": "PASS",
+    "AUTO_CONTRACT": "PASS",
+    "NAMED_CONTRACT": "PASS",
+    "REQUIRED_CONTRACT": "PASS",
+    "TOOL_RESULT_CHAIN": "PASS",
+    "GROUNDING_CONTRACT": "PASS",
+    "MULTIPLICITY_CONTRACT": "PASS",
+    "ALLOW_NO_TOOL_SMOKE": "PASS",
+    "ALLOW_NO_TOOL_CAMPAIGN_B": "FAIL",
+    "RESTART_RESUME": "PASS",
+    "RESTART_BINARY_SHA_MATCH": "PASS",
+    "STREAMING_EQUIV": "PASS",
+    "RELIABILITY_V2": "COMPLETED",
+    "RELIABILITY_NAMED_CELL": "FAIL",
+    "EVIDENCE": "PASS"
+  },
+  "binary_sha256": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+  "source_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "version_stamp": "2026.4.0.2cb5a9a0",
+  "smoke": {
+    "none": "PASS",
+    "auto": "PASS",
+    "named": "PASS",
+    "required": "PASS",
+    "chain": "PASS",
+    "restart": "PASS",
+    "allow_no_tool_smoke": "PASS"
+  },
+  "reliability_v2": {
+    "n_trials": 41,
+    "outcomes": {
+      "I_TRUNCATED": 3,
+      "PASS": 12,
+      "G_UNGROUNDED_VALUE_INVENTED": 21,
+      "F_GROUNDED_VALUE_CORRUPTED": 2,
+      "D_WRONG_TOOL": 3
+    },
+    "by_cell": {
+      "named_t0_s42": {
+        "I_TRUNCATED": 3
+      },
+      "required_t0_s42": {
+        "PASS": 3
+      },
+      "auto_A1": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "auto_A2": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "auto_A3": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2
+      },
+      "auto_A4": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2
+      },
+      "auto_A5": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "thinking_off_t0_s42": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2
+      },
+      "thinking_on_t0_s42": {
+        "PASS": 2
+      },
+      "thinking_off_t09_seed_omitted": {
+        "G_UNGROUNDED_VALUE_INVENTED": 3
+      },
+      "thinking_on_t09_seed_omitted": {
+        "G_UNGROUNDED_VALUE_INVENTED": 2,
+        "PASS": 1
+      },
+      "B_same_name": {
+        "F_GROUNDED_VALUE_CORRUPTED": 1
+      },
+      "B_renamed": {
+        "PASS": 1
+      },
+      "B_ambiguous": {
+        "PASS": 1
+      },
+      "B_overwrite": {
+        "PASS": 1
+      },
+      "B_distractor_prose": {
+        "PASS": 1
+      },
+      "B_sec_fake_sha_prose": {
+        "G_UNGROUNDED_VALUE_INVENTED": 1
+      },
+      "B_sec_prompt_injection": {
+        "PASS": 1
+      },
+      "B_sec_conflict_two_tools": {
+        "F_GROUNDED_VALUE_CORRUPTED": 1
+      },
+      "B_sec_malformed_json": {
+        "D_WRONG_TOOL": 1
+      },
+      "B_sec_json_array": {
+        "D_WRONG_TOOL": 1
+      },
+      "B_sec_json_scalar": {
+        "D_WRONG_TOOL": 1
+      },
+      "B_ungrounded_extra_fields": {
+        "PASS": 1
+      }
+    },
+    "key_rates": {
+      "named_success": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "required_success": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "auto_success": {
+        "n": 13,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.22810184305529166
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 38,
+        "k": 38,
+        "rate": 1.0,
+        "low": 0.90818706741616,
+        "high": 0.9999999999999999
+      },
+      "grounded_exact_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 38,
+        "k": 33,
+        "rate": 0.868421052631579,
+        "low": 0.7267282994850112,
+        "high": 0.9424621712426856
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 41,
+        "k": 21,
+        "rate": 0.5121951219512195,
+        "low": 0.36484259315865186,
+        "high": 0.657458127600643
+      }
+    },
+    "measurement_contract": {
+      "schema_version": 2,
+      "parser_attempt_observability": "api_visible_only",
+      "parser_metric_name": "api_visible_parser_recognition_conditional_on_api_visible_attempted_call",
+      "sampled_thinking_contract": "temperature=0.9, seed omitted",
+      "allow_no_tool_contract": "no structured tool call may be emitted",
+      "tool_call_multiplicity_contract": "campaign A requires exactly one structured call once a call is emitted",
+      "frozen_v1_evidence_rewritten": false
+    },
+    "thinking_off_t09_seed_omitted": {
+      "G_UNGROUNDED_VALUE_INVENTED": 3
+    },
+    "thinking_on_t09_seed_omitted": {
+      "G_UNGROUNDED_VALUE_INVENTED": 2,
+      "PASS": 1
+    }
+  },
+  "streaming": [
+    {
+      "mode": "auto",
+      "http_ns": 200,
+      "http_s": 200,
+      "finish_ns": "tool_calls",
+      "finish_s": "tool_calls",
+      "count_ns": 1,
+      "count_s": 1,
+      "name_ns": "inspect_build_state",
+      "name_s": "inspect_build_state",
+      "equiv": true,
+      "elapsed_ns": 1.812,
+      "elapsed_s": 1.469
+    },
+    {
+      "mode": "named",
+      "http_ns": 200,
+      "http_s": 200,
+      "finish_ns": "tool_calls",
+      "finish_s": "tool_calls",
+      "count_ns": 1,
+      "count_s": 1,
+      "name_ns": "inspect_build_state",
+      "name_s": "inspect_build_state",
+      "equiv": true,
+      "elapsed_ns": 1.781,
+      "elapsed_s": 1.672
+    },
+    {
+      "mode": "required",
+      "http_ns": 200,
+      "http_s": 200,
+      "finish_ns": "tool_calls",
+      "finish_s": "tool_calls",
+      "count_ns": 1,
+      "count_s": 1,
+      "name_ns": "inspect_build_state",
+      "name_s": "inspect_build_state",
+      "equiv": true,
+      "elapsed_ns": 1.906,
+      "elapsed_s": 1.672
+    }
+  ],
+  "notes": [
+    "Build used windows_build_fast.ps1 -Mode Verify -SkipFastTests after gemma-fast-tests returned exit 4 under polluted PATH; ovms binary rematerialized this session (mtime 2026-09-07 13:07:24).",
+    "Launch required PYTHONPATH to bazel-bin/src/python/binding for pyovms.pyd.",
+    "Reliability campaign A named_t0_s42 all I_TRUNCATED on frozen request2; smoke named/required/auto contracts PASS.",
+    "Campaign B allow_no_tool malformed/array/scalar cases emitted structured calls (D_WRONG_TOOL).",
+    "Auto cells frequently G_UNGROUNDED_VALUE_INVENTED (extra sha256 fields)."
+  ]
+}

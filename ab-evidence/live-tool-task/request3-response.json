@@ -1,0 +1,22 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "SHA: 798e99e04d53fba2b1c87bd6b860f0d6c3ca83\nWorktree is dirty: Yes\nGenerated artifacts exist: Yes\nRepository: C:\\git\\g4-final-review",
+        "role": "assistant",
+        "tool_calls": []
+      }
+    }
+  ],
+  "created": 1788685231,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 975,
+    "completion_tokens": 65,
+    "total_tokens": 1040
+  }
+}

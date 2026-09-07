@@ -27,8 +27,19 @@ OpenAIRequest requestWithTools(const std::string& choice) {
 
 template <typename T>
 const T& grammar(const ov::genai::GenerationConfig& config) {
-    return *std::get<std::shared_ptr<T>>(std::get<Structured::StructuralTag>(
-        config.structured_output_config.value().structural_tags_config.value()));
+    const auto& root = std::get<Structured::StructuralTag>(
+        config.structured_output_config.value().structural_tags_config.value());
+    if (const auto* sequence = std::get_if<std::shared_ptr<Structured::Concat>>(&root))
+        return *std::get<std::shared_ptr<T>>((*sequence)->elements.back());
+    if (const auto* alternatives = std::get_if<std::shared_ptr<Structured::Union>>(&root)) {
+        for (const auto& element : (*alternatives)->elements) {
+            if (const auto* tags = std::get_if<std::shared_ptr<T>>(&element))
+                return **tags;
+            if (const auto* sequence = std::get_if<std::shared_ptr<Structured::Concat>>(&element))
+                return *std::get<std::shared_ptr<T>>((*sequence)->elements.back());
+        }
+    }
+    return *std::get<std::shared_ptr<T>>(root);
 }
 }  // namespace
 
@@ -60,6 +71,39 @@ TEST(Gemma4GenerationContractTest, TracksHardToolChoiceForValidationFallbackPoli
         GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
         builder.parseConfigFromRequest(request);
         EXPECT_TRUE(builder.hasHardToolChoice()) << choice;
+    }
+}
+
+TEST(Gemma4GenerationContractTest, HardChoicesAllowReasoningBeforeMandatoryToolSelection) {
+    for (const std::string choice : {"required", "second"}) {
+        SCOPED_TRACE(choice);
+        auto request = requestWithTools(choice);
+        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(request);
+        const auto& root = std::get<Structured::StructuralTag>(
+            builder.getConfig().structured_output_config->structural_tags_config.value());
+        ASSERT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Union>>(root));
+        const auto& alternatives = *std::get<std::shared_ptr<Structured::Union>>(root);
+        ASSERT_EQ(alternatives.elements.size(), 2u);
+        const auto& toolsOnly = *std::get<std::shared_ptr<Structured::TagsWithSeparator>>(alternatives.elements[0]);
+        EXPECT_TRUE(toolsOnly.at_least_one);
+        EXPECT_EQ(toolsOnly.tags.size(), choice == "second" ? 1u : 2u);
+        if (choice == "second")
+            EXPECT_EQ(toolsOnly.tags[0].begin, "<|tool_call>call:second");
+        const auto& thoughtThenTools = *std::get<std::shared_ptr<Structured::Concat>>(alternatives.elements[1]);
+        ASSERT_EQ(thoughtThenTools.elements.size(), 2u);
+        const auto& thought = *std::get<std::shared_ptr<Structured::Tag>>(thoughtThenTools.elements[0]);
+        EXPECT_EQ(thought.begin, "<|channel>thought\n");
+        EXPECT_EQ(thought.end, "<channel|>");
+        const auto& toolsAfterThought = *std::get<std::shared_ptr<Structured::TagsWithSeparator>>(thoughtThenTools.elements[1]);
+        EXPECT_TRUE(toolsAfterThought.at_least_one);
+        EXPECT_EQ(toolsAfterThought.tags.size(), choice == "second" ? 1u : 2u);
+        if (choice == "second")
+            EXPECT_EQ(toolsAfterThought.tags[0].begin, "<|tool_call>call:second");
+
+        ov::genai::Tokenizer tokenizer(getGenericFullPathForSrcTest(
+            "/ovms/src/test/llm_testing/OpenVINO/gemma-4-E4B-it-int4-ov"));
+        EXPECT_NO_THROW(builder.validateStructuredOutputConfig(tokenizer));
     }
 }
 
@@ -156,4 +200,14 @@ TEST(Gemma4GenerationContractTest, ObjectSchemaIsPassedWithoutLosingNestedConstr
     const auto& tags = grammar<Structured::TagsWithSeparator>(builder.getConfig());
     ASSERT_EQ(tags.tags.size(), 1u);
     EXPECT_EQ(std::get<Structured::JSONSchema>(tags.tags[0].content).value, schema);
+}
+
+TEST(Gemma4GenerationContractTest, RejectsHardNamesThatItsParserCannotExecute) {
+    for (const std::string name : {"bad name", "", "bad:name"}) {
+        OpenAIRequest request;
+        request.toolChoice = "required";
+        request.toolNameSchemaMap.emplace(name, ToolSchemaWrapper{nullptr, emptySchema});
+        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+        EXPECT_THROW(builder.parseConfigFromRequest(request), std::invalid_argument) << name;
+    }
 }

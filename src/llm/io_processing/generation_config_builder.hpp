@@ -15,6 +15,8 @@
 //*****************************************************************************
 
 #pragma once
+#include <algorithm>
+#include <cctype>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -36,6 +38,12 @@
 namespace ovms {
 
 class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
+    static bool isValidToolName(const std::string& name) {
+        return !name.empty() && std::all_of(name.begin(), name.end(), [](unsigned char c) {
+            return std::isalnum(c) || c == '_' || c == '-' || c == '.';
+        });
+    }
+
     static bool isNamedToolChoice(const std::string& toolChoice) {
         return !toolChoice.empty() && toolChoice != "auto" && toolChoice != "none" && toolChoice != "required";
     }
@@ -62,11 +70,17 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
             if (it == request.toolNameSchemaMap.end()) {
                 throw std::invalid_argument("Gemma4 named tool_choice references an unavailable tool: " + request.toolChoice);
             }
+            if (!isValidToolName(it->first)) {
+                throw std::invalid_argument("Gemma4 tool name contains unsupported characters: " + it->first);
+            }
             tags.push_back(buildToolTag(it->first, it->second));
             return tags;
         }
         tags.reserve(request.toolNameSchemaMap.size());
         for (const auto& [toolName, toolSchemaWrapper] : request.toolNameSchemaMap) {
+            if (!isValidToolName(toolName)) {
+                throw std::invalid_argument("Gemma4 tool name contains unsupported characters: " + toolName);
+            }
             tags.push_back(buildToolTag(toolName, toolSchemaWrapper));
         }
         return tags;
@@ -106,6 +120,23 @@ public:
         requiredTags->at_least_one = true;
         requiredTags->stop_after_first = false;
         ov::genai::StructuredOutputConfig::StructuralTag structuralTag = requiredTags;
+        if (hardToolChoice) {
+            // Google Gemma4 may open/close its thought channel before choosing a
+            // tool after a tool response, including for a named choice. Selecting
+            // a name restricts the available tags, not the model's thought phase.
+            // xgrammar rejects empty ConstString, so optional thought is a Union of
+            // tools-only versus thought-then-tools rather than Concat("", thought).
+            using Structured = ov::genai::StructuredOutputConfig;
+            auto thought = std::make_shared<Structured::Tag>();
+            thought->begin = "<|channel>thought\n";
+            thought->content = Structured::AnyText();
+            thought->end = "<channel|>";
+            auto thoughtThenTools = std::make_shared<Structured::Concat>();
+            thoughtThenTools->elements = {thought, requiredTags};
+            auto alternatives = std::make_shared<Structured::Union>();
+            alternatives->elements = {requiredTags, thoughtThenTools};
+            structuralTag = alternatives;
+        }
         setStructuralTagsConfig(structuralTag);
     }
 };
