@@ -1,0 +1,27 @@
+{
+  "cmd": [
+    "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\ovms.exe",
+    "--model_path",
+    "C:\\llm\\models\\runtime\\gemma4-26-heretic-google-current",
+    "--model_name",
+    "gemma4-26-heretic",
+    "--rest_port",
+    "18000",
+    "--port",
+    "19000",
+    "--log_level",
+    "DEBUG",
+    "--log_path",
+    "C:\\git\\Session-state-data\\runs\\20260907T044637Z-2cb5a9a0\\generated-campaign\\wire-13\\ovms_server.log"
+  ],
+  "env_PATH_prepend": [
+    "C:\\llm\\ovms\\python",
+    "C:\\opt\\openvino\\runtime\\bin",
+    "C:\\opt\\openvino\\runtime\\3rdparty\\tbb\\bin",
+    "C:\\opt\\opencv_4.14.0\\x64\\vc17\\bin",
+    "C:\\opt\\Python312",
+    "C:\\git\\model_server-gemma4-fast"
+  ],
+  "PYTHONHOME": "C:\\opt\\Python312",
+  "PYTHONPATH": "C:\\llm\\ovms\\python;C:\\opt\\Python312\\Lib\\site-packages"
+}

@@ -1,0 +1,1 @@
+{"error":"Mediapipe execution failed. MP status - INVALID_ARGUMENT: CalculatorGraph::Run() failed: \nCalculator::Process() for node \"LLMExecutor\" failed: tool_choice requires at least one tool"}

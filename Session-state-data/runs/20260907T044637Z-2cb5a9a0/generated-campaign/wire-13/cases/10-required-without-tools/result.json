@@ -1,0 +1,28 @@
+{
+  "case": "10-required-without-tools",
+  "expect": "4xx",
+  "notes": "Negative control: required with no tools must fail closed.",
+  "max_tokens": 256,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "negative control returned 4xx as required",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 400,
+    "raw_len": 196,
+    "response_json_parse_error": null,
+    "choice_extract_error": "IndexError: list index out of range",
+    "finish_reason": null,
+    "content": null,
+    "content_markers": [],
+    "tool_calls": [],
+    "tool_count": 0,
+    "tool_ids": [],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 0.0,
+    "transport_error": "HTTPError"
+  }
+}

@@ -1,0 +1,24 @@
+
+Gemma-4 OVMS profile prepared
+  model:         C:\llm\models\runtime\gemma4-26-heretic-google-current
+  endpoint name: gemma4-26-heretic
+  profile:       vlm-stable
+  template:      JINJA
+  config:        C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\runtime\gemma4-26-heretic\vlm-stable\config.json
+  port:          18000
+  max tokens:    65536
+  session store: enabled (C:\llm\ovms-session-store-reliability-v2)
+
+Starting OVMS...
+  OVMS_SESSION_STORE_DIR=C:\llm\ovms-session-store-reliability-v2
+[2026-09-07 06:48:13.245][6616][serving][info][server.cpp:115] OpenVINO Model Server 2026.4.0.2cb5a9a0
+[2026-09-07 06:48:13.246][6616][serving][info][server.cpp:116] OpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4
+[2026-09-07 06:48:13.246][6616][serving][info][server.cpp:119] OpenVINO GenAI backend 2026.4.0.0-3401-5f7f1278107
+[2026-09-07 06:48:13.246][6616][serving][info][pythoninterpretermodule.cpp:37] PythonInterpreterModule starting
+[2026-09-07 06:48:13.246][6616][serving][info][pythoninterpretermodule.cpp:40] Initializing python interpreter
+[2026-09-07 06:48:13.263][6616][serving][info][pythoninterpretermodule.cpp:70] PythonInterpreterModule shutting down
+[2026-09-07 06:48:13.263][6616][serving][info][pythoninterpretermodule.cpp:74] PythonInterpreterModule shutdown
+Python version:
+3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]
+Python sys.path output:
+['', 'C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\python312.zip', 'C:\\opt\\Python312\\DLLs', 'C:\\opt\\Python312\\Lib', 'C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src', 'C:\\opt\\Python312', 'C:\\opt\\Python312\\Lib\\site-packages']

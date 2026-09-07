@@ -1,0 +1,5 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788766251.421610   25720 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: tool_choice requires at least one tool
+E0000 00:00:1788766251.437901   23772 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: tool_choice requires at least one tool

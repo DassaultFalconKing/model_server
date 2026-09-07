@@ -1,0 +1,635 @@
+#< CLIXML
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04"><Obj S="information" RefId="0"><TN RefId="0"><T>System.Management.Automation.InformationRecord</T><T>System.Object</T></TN><ToString /><Props><Obj N="MessageData" RefId="1"><TN RefId="1"><T>System.Management.Automation.HostInformationMessage</T><T>System.Object</T></TN><ToString /><Props><S N="Message"></S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7106267+02:00</DT><Obj N="Tags" RefId="2"><TN RefId="2"><T>System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]</T><T>System.Object</T></TN><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="3"><TNRef RefId="0" /><ToString>Gemma-4 OVMS profile prepared</ToString><Props><Obj N="MessageData" RefId="4"><TNRef RefId="1" /><ToString>Gemma-4 OVMS profile prepared</ToString><Props><S N="Message">Gemma-4 OVMS profile prepared</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.721725+02:00</DT><Obj N="Tags" RefId="5"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="6"><TNRef RefId="0" /><ToString>  model:         C:\llm\models\runtime\gemma4-26-heretic-google-current</ToString><Props><Obj N="MessageData" RefId="7"><TNRef RefId="1" /><ToString>  model:         C:\llm\models\runtime\gemma4-26-heretic-google-current</ToString><Props><S N="Message">  model:         C:\llm\models\runtime\gemma4-26-heretic-google-current</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7231888+02:00</DT><Obj N="Tags" RefId="8"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="9"><TNRef RefId="0" /><ToString>  endpoint name: gemma4-26-heretic</ToString><Props><Obj N="MessageData" RefId="10"><TNRef RefId="1" /><ToString>  endpoint name: gemma4-26-heretic</ToString><Props><S N="Message">  endpoint name: gemma4-26-heretic</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7239555+02:00</DT><Obj N="Tags" RefId="11"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="12"><TNRef RefId="0" /><ToString>  profile:       vlm-stable</ToString><Props><Obj N="MessageData" RefId="13"><TNRef RefId="1" /><ToString>  profile:       vlm-stable</ToString><Props><S N="Message">  profile:       vlm-stable</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7247389+02:00</DT><Obj N="Tags" RefId="14"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="15"><TNRef RefId="0" /><ToString>  template:      JINJA</ToString><Props><Obj N="MessageData" RefId="16"><TNRef RefId="1" /><ToString>  template:      JINJA</ToString><Props><S N="Message">  template:      JINJA</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7258396+02:00</DT><Obj N="Tags" RefId="17"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="18"><TNRef RefId="0" /><ToString>  config:        C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\runtime\gemma4-26-heretic\vlm-stable\config.json</ToString><Props><Obj N="MessageData" RefId="19"><TNRef RefId="1" /><ToString>  config:        C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\runtime\gemma4-26-heretic\vlm-stable\config.json</ToString><Props><S N="Message">  config:        C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\runtime\gemma4-26-heretic\vlm-stable\config.json</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7274251+02:00</DT><Obj N="Tags" RefId="20"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="21"><TNRef RefId="0" /><ToString>  port:          18000</ToString><Props><Obj N="MessageDatWARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788756665.774182   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.780443   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.784779   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.798590   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.813276   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.817776   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.832151   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.836557   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.850976   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.855918   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.870528   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.884097   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.897724   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.911314   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.926530   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.940126   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.955330   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.959858   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.963287   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.966874   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.980819   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.984594   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756665.998417   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.012044   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.025702   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.029898   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.033775   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.047634   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.051584   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.055381   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.059241   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.073032   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.086593   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.101177   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.105281   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.118839   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.132764   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.136926   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.151204   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.164978   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.168716   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.172117   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.185379   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.199737   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.203564   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.207012   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.221289   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.234592   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.248869   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.252632   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.266006   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.279753   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.293464   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.297180   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.300648   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.313818   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.317451   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.320968   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.324569   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.328285   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.332053   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.335631   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.339348   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.342963   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.356072   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.369548   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.384445   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.398135   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.402601   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.417583   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.422470   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.426314   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.440349   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.444969   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.458045   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.471954   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.475891   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.489973   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.504175   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.518828   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.532774   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.546792   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.550601   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.554317   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.568493   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.572745   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.576427   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.589985   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.604634   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.618252   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.632723   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.646080   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.649859   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.664293   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.677481   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.691026   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.695055   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.698835   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.702629   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.717209   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.730660   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.734545   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.747429   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.761329   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.764905   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.768486   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.771951   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.775422   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.788940   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.792634   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.806143   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.820766   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.824697   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.828395   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.842590   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.856807   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.870493   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.884217   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.888518   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.902006   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.916111   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.929682   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.933556   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.947412   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.951125   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.954464   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.957883   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.971504   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.975637   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.989123   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756666.992923   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.006211   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.010163   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.013711   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.026516   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.030434   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.034331   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.047081   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.050767   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.064106   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.077763   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.091094   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.105168   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.108924   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.112561   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.116188   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.119704   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.132943   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.147383   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.151361   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.154890   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.158304   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.162036   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.165732   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.169850   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.174243   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.178024   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.191150   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.194866   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.198347   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.210780   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.214215   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.228058   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.241052   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.255034   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.268655   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.272223   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.275772   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.289739   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.303365   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.307195   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.310688   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.324475   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.339433   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.343424   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.347117   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.359967   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.363856   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.367317   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.371819   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.377724   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.391329   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.395366   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.409684   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.424516   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.438621   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.451536   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.455854   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.460053   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.473869   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.477850   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.491087   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.496249   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.509546   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.514288   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.517815   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.521418   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.535124   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.539376   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.542944   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.546447   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.559338   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.573364   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.587313   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.591468   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.605458   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.609291   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.612702   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.616881   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.621095   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.635285   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.649530   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.663253   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.676816   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.680694   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.684656   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.688742   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.692846   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.696866   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.700344   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.713503   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.726831   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.730726   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.734396   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.748709   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.752744   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.766188   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.779826   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.793811   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.797585   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.801328   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.804977   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.818478   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.832917   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.847453   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.851009   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.864196   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.877934   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.881450   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.885070   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.898552   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.912070   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.925419   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.939407   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.943322   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.946825   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.950346   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.963606   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.967368   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.981671   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756667.996254   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.000458   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.004550   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.008464   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.013918   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.018241   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.022744   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.037143   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.040964   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.054811   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.068312   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.082324   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.095450   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.109029   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.122120   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.126137   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.140218   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.145549   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.149738   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.153848   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.167700   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.182019   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.196588   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.211069   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.226117   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.240308   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.254427   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.267810   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.272051   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.275549   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.300886   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.304467   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.307365   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.310576   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.323187   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.326820   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.330020   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.334170   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.346815   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.360004   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.373435   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.377276   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.380415   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.393286   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.406425   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.410096   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.413567   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.416499   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.429884   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.433202   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.446175   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.449818   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.464180   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.467880   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.481240   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.483829   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.496432   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.509121   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.521176   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.523546   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.534277   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.546786   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.559005   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.570860   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.574149   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+E0000 00:00:1788756668.577610   31476 calculator_graph.cc:898] INVALID_ARGUMENT: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize
+a" RefId="22"><TNRef RefId="1" /><ToString>  port:          18000</ToString><Props><S N="Message">  port:          18000</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7290509+02:00</DT><Obj N="Tags" RefId="23"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="24"><TNRef RefId="0" /><ToString>  max tokens:    65536</ToString><Props><Obj N="MessageData" RefId="25"><TNRef RefId="1" /><ToString>  max tokens:    65536</ToString><Props><S N="Message">  max tokens:    65536</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7322919+02:00</DT><Obj N="Tags" RefId="26"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="27"><TNRef RefId="0" /><ToString>  session store: enabled (C:\llm\ovms-session-store-reliability-v2)</ToString><Props><Obj N="MessageData" RefId="28"><TNRef RefId="1" /><ToString>  session store: enabled (C:\llm\ovms-session-store-reliability-v2)</ToString><Props><S N="Message">  session store: enabled (C:\llm\ovms-session-store-reliability-v2)</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7367765+02:00</DT><Obj N="Tags" RefId="29"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="30"><TNRef RefId="0" /><ToString /><Props><Obj N="MessageData" RefId="31"><TNRef RefId="1" /><ToString /><Props><S N="Message"></S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7376231+02:00</DT><Obj N="Tags" RefId="32"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="33"><TNRef RefId="0" /><ToString>Starting OVMS...</ToString><Props><Obj N="MessageData" RefId="34"><TNRef RefId="1" /><ToString>Starting OVMS...</ToString><Props><S N="Message">Starting OVMS...</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7413007+02:00</DT><Obj N="Tags" RefId="35"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj><Obj S="information" RefId="36"><TNRef RefId="0" /><ToString>  OVMS_SESSION_STORE_DIR=C:\llm\ovms-session-store-reliability-v2</ToString><Props><Obj N="MessageData" RefId="37"><TNRef RefId="1" /><ToString>  OVMS_SESSION_STORE_DIR=C:\llm\ovms-session-store-reliability-v2</ToString><Props><S N="Message">  OVMS_SESSION_STORE_DIR=C:\llm\ovms-session-store-reliability-v2</S><B N="NoNewLine">false</B><S N="ForegroundColor">Gray</S><S N="BackgroundColor">Black</S></Props></Obj><S N="Source">C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\launch.ps1</S><DT N="TimeGenerated">2026-09-07T06:49:11.7422242+02:00</DT><Obj N="Tags" RefId="38"><TNRef RefId="2" /><LST><S>PSHOST</S></LST></Obj><S N="User">MSI\Sheoldred</S><S N="Computer">WIN-D52PPDAKV0F</S><U32 N="ProcessId">20396</U32><U32 N="NativeThreadId">3516</U32><U32 N="ManagedThreadId">15</U32></Props></Obj></Objs>

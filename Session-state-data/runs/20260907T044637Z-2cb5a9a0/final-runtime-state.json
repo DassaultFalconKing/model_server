@@ -1,0 +1,10 @@
+{
+  "checked_utc": "2026-09-07T07:40:48.9504105Z",
+  "stopped_test_pid": 27040,
+  "remaining_ovms_processes": [],
+  "port_18000_listeners": [],
+  "source_git_status": [
+    "?? bazel-model_server-gemma4-google-template-session-state/"
+  ],
+  "tracked_source_modified": false
+}

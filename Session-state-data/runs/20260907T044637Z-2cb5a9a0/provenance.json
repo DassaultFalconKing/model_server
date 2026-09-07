@@ -1,0 +1,14 @@
+{
+  "generated_utc": "2026-09-07T09:40:00Z",
+  "source_repository": "C:\\git\\model_server-gemma4-google-template-session-state",
+  "branch": "fix/gemma4-google-template-session-state",
+  "git_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "binary_path": "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\ovms.exe",
+  "binary_sha256": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+  "binary_version": "OpenVINO Model Server 2026.4.0.2cb5a9a0",
+  "build_flags": "--config=win_mp_on_py_on",
+  "model": "gemma4-26-heretic",
+  "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+  "launcher_git_sha": "29c30980a2e31b954dc4290c8d78253c53a9fdeb",
+  "source_changes_made": false
+}

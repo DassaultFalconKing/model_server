@@ -1,0 +1,40 @@
+{
+  "case": "12-parameterless",
+  "expect": "get_server_time call with {} or empty arguments string",
+  "notes": "Parameterless function wire contract.",
+  "max_tokens": 256,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "wire contract holds (uncertain on semantic quality: see MODEL_QUALITY note)",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 367,
+    "response_json_parse_error": null,
+    "finish_reason": "tool_calls",
+    "content": "",
+    "content_markers": [],
+    "tool_calls": [
+      {
+        "id": "vgxZ1OS4V",
+        "type": "function",
+        "name": "get_server_time",
+        "arguments_raw": "{}",
+        "arguments_len": 2,
+        "arguments_parsed": {},
+        "arguments_parse_error": null,
+        "arguments_is_object": true,
+        "name_in_registry": true
+      }
+    ],
+    "tool_count": 1,
+    "tool_ids": [
+      "vgxZ1OS4V"
+    ],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 0.86
+  }
+}

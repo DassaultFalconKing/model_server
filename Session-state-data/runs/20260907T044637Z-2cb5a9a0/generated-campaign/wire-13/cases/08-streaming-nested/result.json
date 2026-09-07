@@ -1,0 +1,86 @@
+{
+  "case": "08-streaming-nested",
+  "expect": "SSE tool_call deltas reconstruct to one complete named call",
+  "notes": "Streaming nested: reconstruct every indexed call, no filtering of empty/sparse indices.",
+  "max_tokens": 768,
+  "stream": true,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "wire contract holds (uncertain on semantic quality: see MODEL_QUALITY note)",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 1389,
+    "sse_data_line_count": 4,
+    "sse_done": true,
+    "sse_chunks_parsed": 3,
+    "sse_chunk_errors": [],
+    "sse_indices_observed": [
+      0
+    ],
+    "sse_sparse_gaps": [],
+    "sse_reconstructed_calls": [
+      {
+        "index": 0,
+        "chunk_count": 1,
+        "ids": [
+          "2wbDCfygt"
+        ],
+        "names": [
+          "run_runtime_acceptance"
+        ],
+        "arguments_concat": "{\"binary\":\":/git/model_server-gemma4-fast/bazel-bin/src/ovms.exe\",\"model\":\"gemma4-26-heretic\",\"model_path\":\"C:/llm/models/OpenVINO/Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov\",\"endpoints\":{\"rest_port\":18000,\"grpc_port\":19000,\"health_path\":\"/v2/health/ready\",\"chat_path\":\"/v3/chat/completions\"},\"cases\":[{\"name\":\"health\",\"expect\":\"ready\"},{\"name\":\"unary_chat\",\"expect\":\"non_empty_content\"},{\"name\":\"streaming_chat\",\"expect\":\"sse_done\"},{\"name\":\"forced_nested_tool_call\",\"expect\":\"tool_calls\"},{\"name\":\"tool_round_trip\",\"expect\":\"valid_nested_json\"}],\"tool_policy\":{\"tool_choice\":\"auto\",\"reject_raw_markup\":true}}",
+        "arguments_concat_len": 646,
+        "empty_call": false,
+        "arguments_parsed": {
+          "binary": ":/git/model_server-gemma4-fast/bazel-bin/src/ovms.exe",
+          "model": "gemma4-26-heretic",
+          "model_path": "C:/llm/models/OpenVINO/Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov",
+          "endpoints": {
+            "rest_port": 18000,
+            "grpc_port": 19000,
+            "health_path": "/v2/health/ready",
+            "chat_path": "/v3/chat/completions"
+          },
+          "cases": [
+            {
+              "name": "health",
+              "expect": "ready"
+            },
+            {
+              "name": "unary_chat",
+              "expect": "non_empty_content"
+            },
+            {
+              "name": "streaming_chat",
+              "expect": "sse_done"
+            },
+            {
+              "name": "forced_nested_tool_call",
+              "expect": "tool_calls"
+            },
+            {
+              "name": "tool_round_trip",
+              "expect": "valid_nested_json"
+            }
+          ],
+          "tool_policy": {
+            "tool_choice": "auto",
+            "reject_raw_markup": true
+          }
+        },
+        "arguments_parse_error": null
+      }
+    ],
+    "tool_count": 1,
+    "finish_reasons_seen": [
+      "tool_calls"
+    ],
+    "finish_reason": "tool_calls",
+    "content_reconstructed": "",
+    "content_markers": [],
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 15.25
+  }
+}

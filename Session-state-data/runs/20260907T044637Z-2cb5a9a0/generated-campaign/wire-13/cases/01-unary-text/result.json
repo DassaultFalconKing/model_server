@@ -1,0 +1,26 @@
+{
+  "case": "01-unary-text",
+  "expect": "non_empty_content, finish stop, no tool calls",
+  "notes": "Baseline text generation contract.",
+  "max_tokens": 256,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "text contract holds",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 570,
+    "response_json_parse_error": null,
+    "finish_reason": "stop",
+    "content": "OpenVINO Model Server is a high-performance solution designed to deploy and serve optimized deep learning models for real-time inference. It enables seamless scaling of AI applications by providing a standardized API to run models across various hardware architectures, such as CPUs, GPUs, and FPGAs.",
+    "content_markers": [],
+    "tool_calls": [],
+    "tool_count": 0,
+    "tool_ids": [],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 2.453
+  }
+}

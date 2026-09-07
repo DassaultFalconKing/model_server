@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "session_id": "gen-r2-b2-c2-required",
+  "header": "X-OVMS-Session-ID",
+  "seed_mode": "server_persisted",
+  "requested_seed": null,
+  "temperature": 0.9,
+  "top_p": null,
+  "top_k": null,
+  "second_tool_choice": "required",
+  "model": "gemma4-26-heretic",
+  "commit_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57"
+}

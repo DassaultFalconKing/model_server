@@ -1,0 +1,1 @@
+{"choices":[{"finish_reason":"length","index":0,"logprobs":null,"message":{"content":"","role":"assistant","tool_calls":[]}}],"created":1788764665,"model":"gemma4-26-heretic","object":"chat.completion","usage":{"prompt_tokens":886,"completion_tokens":1024,"total_tokens":1910}}

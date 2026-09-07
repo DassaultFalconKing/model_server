@@ -1,0 +1,17 @@
+{
+  "method": "POST",
+  "url": "http://127.0.0.1:18000/v3/chat/completions",
+  "body": {
+    "model": "gemma4-26-heretic",
+    "temperature": 0,
+    "seed": 42,
+    "max_tokens": 256,
+    "stream": true,
+    "messages": [
+      {
+        "role": "user",
+        "content": "In exactly three short sentences, describe what a chat template does."
+      }
+    ]
+  }
+}

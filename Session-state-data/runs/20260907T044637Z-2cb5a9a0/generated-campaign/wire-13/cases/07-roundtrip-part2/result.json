@@ -1,0 +1,26 @@
+{
+  "case": "07-roundtrip-part2",
+  "expect": "final summary grounded in synthetic tool result; no re-emitted markers",
+  "notes": "Deterministic synthetic tool response; no real tool executed.",
+  "max_tokens": 512,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "roundtrip summary returned with synthetic tool result",
+  "uncertainty": "grounding quality is MODEL_QUALITY/uncertain; wire contract authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 358,
+    "response_json_parse_error": null,
+    "finish_reason": "stop",
+    "content": "The repository at `C:/git/g4-final-review` at ref `be410567` is currently **clean**.",
+    "content_markers": [],
+    "tool_calls": [],
+    "tool_count": 0,
+    "tool_ids": [],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 2.063
+  }
+}

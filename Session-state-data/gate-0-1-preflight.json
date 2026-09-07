@@ -1,0 +1,11 @@
+{
+  "captured_utc": "2026-09-07T04:30:15.7319524Z",
+  "old_ovms": [],
+  "port_18000_listeners": [],
+  "old_ovms_stopped": "PASS",
+  "port_18000_clean_before_launch": "PASS",
+  "source_before_sync": "f3283dd03f6c990eb5edf0af8bd0635e137510c5",
+  "source_after_sync": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "branch": "fix/gemma4-google-template-session-state",
+  "first_gate1_status": "BLOCKED_WORKTREE_NOT_CLEAN"
+}

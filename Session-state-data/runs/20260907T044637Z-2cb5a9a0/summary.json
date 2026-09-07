@@ -1,0 +1,45 @@
+{
+  "verdict": "NOT_ACCEPTED",
+  "reason": "Transport and parser contracts pass, but semantic tool-choice and grounding reliability do not.",
+  "build": {
+    "verdict": "PASS",
+    "focused_tests": "2/2",
+    "harness_unit_tests": "4/4"
+  },
+  "explicit_generated_requests": {
+    "total": 50,
+    "two_step_chain_requests": 36,
+    "wire_requests": 14,
+    "chain_runs": 18,
+    "chain_pass": 14,
+    "chain_fail": 4,
+    "wire_contract_pass": "14/14"
+  },
+  "reliability_campaign": {
+    "trials": 316,
+    "campaign_A_pass": "54/180",
+    "thinking_pass": "42/100",
+    "campaign_B_pass": "16/36",
+    "named_success": "0/30",
+    "required_success": "50/50",
+    "auto_success": "4/100",
+    "api_visible_parser_recognition": "279/279",
+    "grounded_exact_value_fidelity": "262/279",
+    "ungrounded_hallucination": "150/316"
+  },
+  "restart_resume": {
+    "verdict": "PASS",
+    "session_id": "gemma4-v2-restart-resume-fixed",
+    "turns_persisted": 2,
+    "exact_sha_transferred": true
+  },
+  "runtime_log_assessment": {
+    "active_inference_error_or_fatal": 0,
+    "out_of_resources": 0,
+    "xgrammar_errors": 0,
+    "early_environment_failure": "invalid inherited PYTHONHOME/PYTHONPATH",
+    "expected_negative_wire_reinitializations": 2
+  },
+  "production_source_changes": false,
+  "backup_manifest": "C:\\git\\Session-state-data\\backups\\bazel-junction-backup-manifest.json"
+}

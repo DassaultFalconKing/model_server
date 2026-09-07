@@ -1,0 +1,240 @@
+{
+  "trial_id": "B_ungrounded_extra_fields-t0s42-002",
+  "campaign": "B",
+  "cell": "B_ungrounded_extra_fields",
+  "tool_choice": "required",
+  "explicit_temperature": true,
+  "request_temperature": 0,
+  "effective_temperature": 0,
+  "explicit_seed": true,
+  "request_seed": 42,
+  "thinking_mode": false,
+  "git_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "production_sha": "7d00c5fe63c5f81e6c06972a974cd57fd7180326",
+  "binary_path": ".\\bazel-bin\\src\\ovms.exe",
+  "binary_sha256": "38067689f79ae6f6be2d951a7827c84768265f74ff35142a5f847bcc563668d4",
+  "model": "gemma4-26-heretic",
+  "endpoint": "http://127.0.0.1:18000/v3/v3/chat/completions",
+  "parser_name": "gemma4",
+  "chat_template_mode": "JINJA",
+  "intended_tool": "publish_exact_facts",
+  "grounded_expected": {
+    "commit_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703"
+  },
+  "lexical_expected": {},
+  "forbidden_values": [
+    "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  ],
+  "grounded_leaves": [
+    "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "PASS"
+  ],
+  "request": {
+    "model": "gemma4-26-heretic",
+    "max_tokens": 768,
+    "stream": false,
+    "skip_special_tokens": false,
+    "tool_choice": "required",
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "inspect_build_state",
+          "description": "Return structured authoritative build/repo facts. Do not invent values.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "scope"
+            ]
+          }
+        }
+      },
+      {
+        "type": "function",
+        "function": {
+          "name": "publish_exact_facts",
+          "description": "Publish exact values copied from the structured tool result. Copy characters exactly. Do not invent hashes, paths, or evidence.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "head_sha": {
+                "type": "string"
+              },
+              "commit_sha": {
+                "type": "string"
+              },
+              "parent_sha": {
+                "type": "string"
+              },
+              "merge_base_sha": {
+                "type": "string"
+              },
+              "digest_sha256": {
+                "type": "string"
+              },
+              "uuid": {
+                "type": "string"
+              },
+              "opaque_id": {
+                "type": "string"
+              },
+              "ref_name": {
+                "type": "string"
+              },
+              "win_path": {
+                "type": "string"
+              },
+              "posix_path": {
+                "type": "string"
+              },
+              "path_with_spaces": {
+                "type": "string"
+              },
+              "path_with_dots": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer"
+              },
+              "port": {
+                "type": "integer"
+              },
+              "pid": {
+                "type": "integer"
+              },
+              "exit_code": {
+                "type": "integer"
+              },
+              "byte_size": {
+                "type": "integer"
+              },
+              "port_as_string": {
+                "type": "string"
+              },
+              "one": {
+                "type": "string"
+              },
+              "one_point_zero": {
+                "type": "string"
+              },
+              "one_e0": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "PARTIAL",
+                  "NOT_RUN",
+                  "BLOCKED"
+                ]
+              },
+              "verdict": {
+                "type": "string",
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "PARTIAL",
+                  "NOT_RUN",
+                  "BLOCKED"
+                ]
+              },
+              "flag_true": {
+                "type": "boolean"
+              },
+              "flag_false": {
+                "type": "boolean"
+              },
+              "ts_utc": {
+                "type": "string"
+              },
+              "ts_offset": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "nested2_leaf": {
+                "type": "string"
+              },
+              "nested4_leaf": {
+                "type": "string"
+              },
+              "array_leaf_0": {
+                "type": "string"
+              },
+              "array_leaf_1": {
+                "type": "string"
+              },
+              "build_id": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "required": []
+          }
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "Call publish_exact_facts. Copy structured head_sha to commit_sha. Do not invent sha256, artifact paths, or extra evidence claims."
+      },
+      {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [
+          {
+            "id": "call_inspect_1",
+            "type": "function",
+            "function": {
+              "name": "inspect_build_state",
+              "arguments": "{\"scope\":\"full\"}"
+            }
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "tool_call_id": "call_inspect_1",
+        "name": "inspect_build_state",
+        "content": "{\"head_sha\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"status\":\"PASS\"}"
+      }
+    ],
+    "explicit_temperature": true,
+    "explicit_seed": true,
+    "temperature": 0,
+    "seed": 42
+  },
+  "tool_result": [
+    {
+      "head_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+      "status": "PASS"
+    }
+  ],
+  "allow_no_tool": false,
+  "http_status": 400,
+  "raw_response_text": "{\"error\":\"Mediapipe execution failed. MP status - INVALID_ARGUMENT: CalculatorGraph::Run() failed: \\nCalculator::Process() for node \\\"LLMExecutor\\\" failed: Wrong endpoint. Allowed endpoints: /v[13]/chat/completions, /v[13]/completions, /v[13]/responses, /v[13]/tokenize\"}",
+  "raw_generated_output": "",
+  "elapsed_s": 0.0,
+  "finish_reason": null,
+  "prompt_tokens": null,
+  "completion_tokens": null,
+  "structured_tool_calls": [],
+  "parsed_tool_name": null,
+  "parsed_arguments": null,
+  "protocol_attempt": null,
+  "primary_outcome": "HARNESS_ERROR",
+  "outcome_reason": "non-200 or unparseable response",
+  "intended_parsed": false,
+  "grounded_exact": false
+}

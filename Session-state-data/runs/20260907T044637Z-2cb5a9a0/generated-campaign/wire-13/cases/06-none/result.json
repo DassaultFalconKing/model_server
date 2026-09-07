@@ -1,0 +1,26 @@
+{
+  "case": "06-none",
+  "expect": "no tool_calls, plain text stop",
+  "notes": "tool_choice none must suppress generation grammar.",
+  "max_tokens": 256,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "no calls as required",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 702,
+    "response_json_parse_error": null,
+    "finish_reason": "stop",
+    "content": "I do not have access to your local file system, so I cannot directly inspect the files located at `C:/git/g4-final-review`.\n\nTo provide you with a summary, please **upload the files** or **paste the contents of the repository** (such as the README, file structure, or key source files) into our chat. Once you provide the content, I can analyze it and provide a plain text summary of the project's purpose, structure, and logic.",
+    "content_markers": [],
+    "tool_calls": [],
+    "tool_count": 0,
+    "tool_ids": [],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 4.125
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "verdict": "CHECKPOINT",
+  "next_action": "restart OVMS, then rerun this command with --resume and the same --out-dir",
+  "session_id": "gemma4-v2-restart-resume-fixed",
+  "commit_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57"
+}

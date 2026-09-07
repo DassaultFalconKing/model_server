@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "8bvJvwc1N",
+            "type": "function",
+            "function": {
+              "name": "publish_review_evidence",
+              "arguments": "{\"repository\":\":\\\\git\\\\model_server-gemma4-google-template-session-state\",\"commit_sha\":\"2cb5a9a0e8d22732de2d1c89f52795c2de612a57\",\"verdict\":\"PARTIAL\",\"artifacts\":[{\"kind\":\"diff\",\"path\":\"git_diff\",\"authority\":\"local_exact_head\"},{\"kind\":\"build_log\",\"path\":\"git_status\",\"authority\":\"local_exact_head\"}],\"gates\":[{\"name\":\"repository_clean\",\"status\":\"FAIL\",\"evidence\":\"repository is dirty\"},{\"name\":\"files_unchanged\",\"status\":\"FAIL\",\"evidence\":\"changed_files: ab-evidence/reliability_grounded_harness_v2.py, ab-evidence/test_reliability_grounded_harness_v2.py\"}]}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788763233,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 1094,
+    "completion_tokens": 266,
+    "total_tokens": 1360
+  }
+}

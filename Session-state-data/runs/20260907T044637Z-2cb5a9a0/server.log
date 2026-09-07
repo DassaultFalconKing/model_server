@@ -1,0 +1,21 @@
+
+Gemma-4 OVMS profile prepared
+  model:         C:\llm\models\runtime\gemma4-26-heretic-google-current
+  endpoint name: gemma4-26-heretic
+  profile:       vlm-stable
+  template:      JINJA
+  config:        C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\runtime\gemma4-26-heretic\vlm-stable\config.json
+  port:          18000
+  max tokens:    65536
+  session store: enabled (C:\llm\ovms-session-store-reliability-v2)
+
+Starting OVMS...
+  OVMS_SESSION_STORE_DIR=C:\llm\ovms-session-store-reliability-v2
+[2026-09-07 06:46:38.009][30500][serving][info][server.cpp:115] OpenVINO Model Server 2026.4.0.2cb5a9a0
+[2026-09-07 06:46:38.010][30500][serving][info][server.cpp:116] OpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4
+[2026-09-07 06:46:38.010][30500][serving][info][server.cpp:119] OpenVINO GenAI backend 2026.4.0.0-3401-5f7f1278107
+[2026-09-07 06:46:38.010][30500][serving][info][pythoninterpretermodule.cpp:37] PythonInterpreterModule starting
+[2026-09-07 06:46:38.010][30500][serving][info][pythoninterpretermodule.cpp:40] Initializing python interpreter
+[2026-09-07 06:46:38.022][30500][serving][error][server.cpp:637] Exception catch: failed to get the Python codec of the filesystem encoding - will now terminate.
+[2026-09-07 06:46:38.022][30500][serving][info][pythoninterpretermodule.cpp:70] PythonInterpreterModule shutting down
+[2026-09-07 06:46:38.022][30500][serving][info][pythoninterpretermodule.cpp:74] PythonInterpreterModule shutdown

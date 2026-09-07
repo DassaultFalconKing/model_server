@@ -1,0 +1,26 @@
+{
+  "case": "09-low-token-truncation",
+  "expect": "likely finish_reason length or incomplete arguments; classified TRUNCATION",
+  "notes": "Deliberate low-token run; failure here is expected truncation, not parser bug.",
+  "max_tokens": 16,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "TRUNCATION",
+  "reason": "truncated as designed with low max_tokens",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 276,
+    "response_json_parse_error": null,
+    "finish_reason": "length",
+    "content": "",
+    "content_markers": [],
+    "tool_calls": [],
+    "tool_count": 0,
+    "tool_ids": [],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 4.063
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "ClYO2PKUh",
+            "type": "function",
+            "function": {
+              "name": "publish_review_evidence",
+              "arguments": "{\"repository\":\":/C:/git/model_server-gemma4-google-template-session-state\",\"commit_sha\":\"2cb5a9a0e8d22732de2d1c89f52795c2de612a57\",\"verdict\":\"PARTIAL\",\"artifacts\":[{\"kind\":\"build_log\",\"path\":\"inspection_log.txt\",\"authority\":\"local_exact_head\"}],\"gates\":[{\"name\":\"Repository Integrity\",\"status\":\"FAIL\",\"evidence\":\"Repository is dirty. Changed files: ab-evidence/reliability_grounded_harness_v2.py, ab-evidence/test_reliability_grounded_harness_v2.py\"},{\"name\":\"Commit Match\",\"status\":\"PASS\",\"evidence\":\"Head SHA matches requested SHA.\"}]}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788766566,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 1095,
+    "completion_tokens": 265,
+    "total_tokens": 1360
+  }
+}

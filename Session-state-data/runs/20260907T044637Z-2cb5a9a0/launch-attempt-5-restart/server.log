@@ -1,0 +1,50 @@
+
+Gemma-4 OVMS profile prepared
+  model:         C:\llm\models\runtime\gemma4-26-heretic-google-current
+  endpoint name: gemma4-26-heretic
+  profile:       vlm-stable
+  template:      JINJA
+  config:        C:\git\gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\runtime\gemma4-26-heretic\vlm-stable\config.json
+  port:          18000
+  max tokens:    65536
+  session store: enabled (C:\llm\ovms-session-store-reliability-v2)
+
+Starting OVMS...
+  OVMS_SESSION_STORE_DIR=C:\llm\ovms-session-store-reliability-v2
+[2026-09-07 09:35:22.880][27956][serving][info][server.cpp:115] OpenVINO Model Server 2026.4.0.2cb5a9a0
+[2026-09-07 09:35:22.881][27956][serving][info][server.cpp:116] OpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4
+[2026-09-07 09:35:22.882][27956][serving][info][server.cpp:119] OpenVINO GenAI backend 2026.4.0.0-3401-5f7f1278107
+[2026-09-07 09:35:22.882][27956][serving][info][pythoninterpretermodule.cpp:37] PythonInterpreterModule starting
+[2026-09-07 09:35:22.882][27956][serving][info][pythoninterpretermodule.cpp:40] Initializing python interpreter
+[2026-09-07 09:35:22.920][27956][serving][info][pythoninterpretermodule.cpp:59] PythonInterpreterModule started
+[2026-09-07 09:35:23.573][27956][modelmanager][info][modelmanager.cpp:169] Available devices for Open VINO: CPU, GPU, NPU
+[2026-09-07 09:35:23.576][27956][serving][info][capimodule.cpp:40] C-APIModule starting
+[2026-09-07 09:35:23.576][27956][serving][info][capimodule.cpp:42] C-APIModule started
+[2026-09-07 09:35:23.576][27956][serving][info][grpcservermodule.cpp:106] GRPCServerModule starting
+[2026-09-07 09:35:23.576][27956][serving][info][grpcservermodule.cpp:110] GRPCServerModule started
+[2026-09-07 09:35:23.576][27956][serving][info][grpcservermodule.cpp:111] Port was not set. GRPC server will not be started.
+[2026-09-07 09:35:23.576][27956][serving][info][httpservermodule.cpp:35] HTTPServerModule starting
+[2026-09-07 09:35:23.577][27956][serving][info][httpservermodule.cpp:39] Will start 2 REST workers
+[2026-09-07 09:35:23.577][23540][serving][info][drogon_http_server.cpp:157] Binding REST server to address: 0.0.0.0:18000
+[2026-09-07 09:35:23.627][27956][serving][info][drogon_http_server.cpp:187] REST server listening on port 18000 with 2 unary threads and 2 streaming threads
+[2026-09-07 09:35:23.628][27956][serving][info][http_server.cpp:238] API key not provided via --api_key_file or API_KEY environment variable. Authentication will be disabled.
+[2026-09-07 09:35:23.628][27956][serving][info][httpservermodule.cpp:52] HTTPServerModule started
+[2026-09-07 09:35:23.628][27956][serving][info][httpservermodule.cpp:53] Started REST server at 0.0.0.0:18000
+[2026-09-07 09:35:23.629][27956][serving][info][servablemanagermodule.cpp:51] ServableManagerModule starting
+[2026-09-07 09:35:23.631][27956][serving][info][mediapipegraphdefinition.cpp:515] MediapipeGraphDefinition initializing graph nodes
+[2026-09-07 09:35:23.632][27956][modelmanager][info][servable_initializer.cpp:701] Initializing Visual Language Model Legacy servable
+[2026-09-07 09:35:51.800][27956][llm_calculator][info][servable_initializer.cpp:227] Auto-detected tool_parser: gemma4
+[2026-09-07 09:35:51.801][27956][llm_calculator][info][servable_initializer.cpp:237] Auto-detected reasoning_parser: gemma4
+[2026-09-07 09:35:51.803][29156][llm_executor][info][legacy_executor.cpp:76] All requests: 0;
+[2026-09-07 09:35:51.805][27956][modelmanager][info][mediapipegraphdefinition.cpp:297] Mediapipe: gemma4-26-heretic inputs: 
+name: input; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-07 09:35:51.805][27956][modelmanager][info][mediapipegraphdefinition.cpp:298] Mediapipe: gemma4-26-heretic outputs: 
+name: output; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-07 09:35:51.806][27956][modelmanager][info][mediapipegraphdefinition.cpp:299] Mediapipe: gemma4-26-heretic kfs pass through: false
+[2026-09-07 09:35:51.806][27956][modelmanager][info][pipelinedefinitionstatus.hpp:60] Mediapipe: gemma4-26-heretic state changed to: AVAILABLE after handling: ValidationPassedEvent: 
+[2026-09-07 09:35:51.806][27956][serving][info][servablemanagermodule.cpp:55] ServableManagerModule started
+[2026-09-07 09:35:51.806][15572][modelmanager][info][modelmanager.cpp:1048] Started model manager thread
+[2026-09-07 09:35:51.806][23128][modelmanager][info][modelmanager.cpp:1067] Started cleaner thread
+[2026-09-07 09:36:06.156][9084][llm_calculator][info][servable.cpp:385] session-state: constructing store from OVMS_SESSION_STORE_DIR=C:\llm\ovms-session-store-reliability-v2
+[2026-09-07 09:36:06.288][29156][llm_executor][info][legacy_executor.cpp:76] All requests: 1;
+[2026-09-07 09:36:18.506][29156][llm_executor][info][legacy_executor.cpp:76] All requests: 0;

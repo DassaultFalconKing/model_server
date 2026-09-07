@@ -1,0 +1,52 @@
+{
+  "case": "03-auto-tool",
+  "expect": "model decides; either stop with text or tool_calls; wire contract must hold either way",
+  "notes": "Auto selection: native unconstrained generation; parser validates.",
+  "max_tokens": 512,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "auto chose tool; wire contract holds (semantic choice uncertain)",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 593,
+    "response_json_parse_error": null,
+    "finish_reason": "tool_calls",
+    "content": "",
+    "content_markers": [],
+    "tool_calls": [
+      {
+        "id": "6gAg1fhpK",
+        "type": "function",
+        "name": "inspect_repository_state",
+        "arguments_raw": "{\"constraints\":{\"allow_network\":false,\"fail_on_dirty\":false,\"read_only\":true},\"include\":[\"status\",\"diff\"],\"ref\":\"be410567f2b3f8146eda87087beb59b67199c893\",\"repository\":\"C:/git/g4-final-review\"}",
+        "arguments_len": 193,
+        "arguments_parsed": {
+          "constraints": {
+            "allow_network": false,
+            "fail_on_dirty": false,
+            "read_only": true
+          },
+          "include": [
+            "status",
+            "diff"
+          ],
+          "ref": "be410567f2b3f8146eda87087beb59b67199c893",
+          "repository": "C:/git/g4-final-review"
+        },
+        "arguments_parse_error": null,
+        "arguments_is_object": true,
+        "name_in_registry": true
+      }
+    ],
+    "tool_count": 1,
+    "tool_ids": [
+      "6gAg1fhpK"
+    ],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 7.297
+  }
+}

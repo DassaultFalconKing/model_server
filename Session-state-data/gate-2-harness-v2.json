@@ -1,0 +1,14 @@
+{
+  "source_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "python": "C:\\opt\\Python312\\python.exe",
+  "inherited_pythonhome_failure": "C:\\llm\\ovms\\python caused ModuleNotFoundError: No module named 'encodings'",
+  "child_environment": {
+    "PYTHONHOME": null,
+    "PYTHONPATH": null
+  },
+  "command": "python -m unittest -v test_reliability_grounded_harness_v2.py",
+  "tests_run": 4,
+  "failures": 0,
+  "errors": 0,
+  "verdict": "PASS"
+}

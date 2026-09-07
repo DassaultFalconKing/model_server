@@ -1,0 +1,14 @@
+{
+  "git_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "production_sha": "7d00c5fe63c5f81e6c06972a974cd57fd7180326",
+  "binary_path": ".\\bazel-bin\\src\\ovms.exe",
+  "binary_sha256": "38067689f79ae6f6be2d951a7827c84768265f74ff35142a5f847bcc563668d4",
+  "model": "gemma4-26-heretic",
+  "endpoint": "http://127.0.0.1:18000/v3/v3/chat/completions",
+  "parser_name": "gemma4",
+  "chat_template_mode": "JINJA",
+  "model_default_temperature": 1.0,
+  "model_default_top_p": 0.95,
+  "model_default_top_k": 64,
+  "started_utc": "2026-09-07T04:51:05.726818+00:00"
+}

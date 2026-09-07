@@ -1,0 +1,43 @@
+{
+  "method": "POST",
+  "url": "http://127.0.0.1:18000/v3/chat/completions",
+  "body": {
+    "model": "gemma4-26-heretic",
+    "temperature": 0,
+    "seed": 42,
+    "max_tokens": 512,
+    "stream": false,
+    "tool_choice": {
+      "type": "function",
+      "function": {
+        "name": "echo_marker"
+      }
+    },
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "echo_marker",
+          "description": "Echo text back verbatim.",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "text"
+            ]
+          }
+        }
+      }
+    ],
+    "messages": [
+      {
+        "role": "user",
+        "content": "Call echo_marker with text exactly: a <tool_call|> b. The marker text must stay inside the JSON string argument value."
+      }
+    ]
+  }
+}

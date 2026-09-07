@@ -1,0 +1,32 @@
+{
+  "case": "02-streaming-text",
+  "expect": "SSE chunks ending with [DONE], reconstructed content non-empty",
+  "notes": "Streaming wire contract; reconstruct every chunk.",
+  "max_tokens": 256,
+  "stream": true,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "text contract holds",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 6544,
+    "sse_data_line_count": 36,
+    "sse_done": true,
+    "sse_chunks_parsed": 35,
+    "sse_chunk_errors": [],
+    "sse_indices_observed": [],
+    "sse_sparse_gaps": [],
+    "sse_reconstructed_calls": [],
+    "tool_count": 0,
+    "finish_reasons_seen": [
+      "stop"
+    ],
+    "finish_reason": "stop",
+    "content_reconstructed": "A chat template formats raw dialogue into a specific structure. It uses special tokens to distinguish between user and assistant roles. This ensures the model understands the conversation history correctly.",
+    "content_markers": [],
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 1.484
+  }
+}

@@ -1,0 +1,14 @@
+b4
+data: {"choices":[{"index":0,"delta":{"role":"assistant","content":null},"finish_reason":null}],"created":1788766232,"model":"gemma4-26-heretic","object":"chat.completion.chunk"}
+
+
+4a7
+data: {"choices":[{"index":0,"logprobs":null,"delta":{"tool_calls":[{"id":"2wbDCfygt","type":"function","index":0,"function":{"name":"run_runtime_acceptance","arguments":"{\"binary\":\":/git/model_server-gemma4-fast/bazel-bin/src/ovms.exe\",\"model\":\"gemma4-26-heretic\",\"model_path\":\"C:/llm/models/OpenVINO/Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov\",\"endpoints\":{\"rest_port\":18000,\"grpc_port\":19000,\"health_path\":\"/v2/health/ready\",\"chat_path\":\"/v3/chat/completions\"},\"cases\":[{\"name\":\"health\",\"expect\":\"ready\"},{\"name\":\"unary_chat\",\"expect\":\"non_empty_content\"},{\"name\":\"streaming_chat\",\"expect\":\"sse_done\"},{\"name\":\"forced_nested_tool_call\",\"expect\":\"tool_calls\"},{\"name\":\"tool_round_trip\",\"expect\":\"valid_nested_json\"}],\"tool_policy\":{\"tool_choice\":\"auto\",\"reject_raw_markup\":true}}"}}]},"finish_reason":null}],"created":1788766232,"model":"gemma4-26-heretic","object":"chat.completion.chunk"}
+
+data: {"choices":[{"index":0,"logprobs":null,"delta":{},"finish_reason":"tool_calls"}],"created":1788766232,"model":"gemma4-26-heretic","object":"chat.completion.chunk"}
+
+data: [DONE]
+
+
+0
+

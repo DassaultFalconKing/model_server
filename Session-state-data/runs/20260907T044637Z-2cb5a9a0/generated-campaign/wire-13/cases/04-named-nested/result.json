@@ -1,0 +1,76 @@
+{
+  "case": "04-named-nested",
+  "expect": "exactly the named tool, nested objects/arrays valid JSON",
+  "notes": "Named nested call with four-tool catalog. Do not confuse schema-internal case enums with executed tests.",
+  "max_tokens": 768,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "wire contract holds (uncertain on semantic quality: see MODEL_QUALITY note)",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 1098,
+    "response_json_parse_error": null,
+    "finish_reason": "tool_calls",
+    "content": "",
+    "content_markers": [],
+    "tool_calls": [
+      {
+        "id": "pGstN18iG",
+        "type": "function",
+        "name": "run_runtime_acceptance",
+        "arguments_raw": "{\"binary\":\":/git/model_server-gemma4-fast/bazel-bin/src/ovms.exe\",\"model\":\"gemma4-26-heretic\",\"model_path\":\"C:/llm/models/OpenVINO/Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov\",\"endpoints\":{\"rest_port\":18000,\"grpc_port\":19000,\"health_path\":\"/v2/health/ready\",\"chat_path\":\"/v3/chat/completions\"},\"cases\":[{\"name\":\"health\",\"expect\":\"ready\"},{\"name\":\"unary_chat\",\"expect\":\"non_empty_content\"},{\"name\":\"streaming_chat\",\"expect\":\"sse_done\"},{\"name\":\"forced_nested_tool_call\",\"expect\":\"tool_calls\"},{\"name\":\"tool_round_trip\",\"expect\":\"valid_nested_json\"}],\"tool_policy\":{\"tool_choice\":\"auto\",\"reject_raw_markup\":true}}",
+        "arguments_len": 646,
+        "arguments_parsed": {
+          "binary": ":/git/model_server-gemma4-fast/bazel-bin/src/ovms.exe",
+          "model": "gemma4-26-heretic",
+          "model_path": "C:/llm/models/OpenVINO/Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov",
+          "endpoints": {
+            "rest_port": 18000,
+            "grpc_port": 19000,
+            "health_path": "/v2/health/ready",
+            "chat_path": "/v3/chat/completions"
+          },
+          "cases": [
+            {
+              "name": "health",
+              "expect": "ready"
+            },
+            {
+              "name": "unary_chat",
+              "expect": "non_empty_content"
+            },
+            {
+              "name": "streaming_chat",
+              "expect": "sse_done"
+            },
+            {
+              "name": "forced_nested_tool_call",
+              "expect": "tool_calls"
+            },
+            {
+              "name": "tool_round_trip",
+              "expect": "valid_nested_json"
+            }
+          ],
+          "tool_policy": {
+            "tool_choice": "auto",
+            "reject_raw_markup": true
+          }
+        },
+        "arguments_parse_error": null,
+        "arguments_is_object": true,
+        "name_in_registry": true
+      }
+    ],
+    "tool_count": 1,
+    "tool_ids": [
+      "pGstN18iG"
+    ],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 15.359
+  }
+}

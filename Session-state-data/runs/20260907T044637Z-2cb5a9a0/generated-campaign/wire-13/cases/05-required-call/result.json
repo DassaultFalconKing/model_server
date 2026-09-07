@@ -1,0 +1,58 @@
+{
+  "case": "05-required-call",
+  "expect": "at least one tool call, finish_reason tool_calls",
+  "notes": "Required forces a call from generation position zero.",
+  "max_tokens": 512,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "wire contract holds (uncertain on semantic quality: see MODEL_QUALITY note)",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 722,
+    "response_json_parse_error": null,
+    "finish_reason": "tool_calls",
+    "content": "",
+    "content_markers": [],
+    "tool_calls": [
+      {
+        "id": "I2P0N6L6X",
+        "type": "function",
+        "name": "publish_review_evidence",
+        "arguments_raw": "{\"repository\":\"C:/git/g4-final-review\",\"commit_sha\":\"be410567f2b3f8146eda87087beb59b67199c893\",\"verdict\":\"PARTIAL\",\"artifacts\":[{\"kind\":\"runtime_log\",\"path\":\"C:/logs/runtime_test.log\",\"authority\":\"derived_runtime\"}],\"gates\":[{\"name\":\"Runtime Checks\",\"status\":\"PASS\",\"evidence\":\"Runtime logs analyzed.\"}]}",
+        "arguments_len": 304,
+        "arguments_parsed": {
+          "repository": "C:/git/g4-final-review",
+          "commit_sha": "be410567f2b3f8146eda87087beb59b67199c893",
+          "verdict": "PARTIAL",
+          "artifacts": [
+            {
+              "kind": "runtime_log",
+              "path": "C:/logs/runtime_test.log",
+              "authority": "derived_runtime"
+            }
+          ],
+          "gates": [
+            {
+              "name": "Runtime Checks",
+              "status": "PASS",
+              "evidence": "Runtime logs analyzed."
+            }
+          ]
+        },
+        "arguments_parse_error": null,
+        "arguments_is_object": true,
+        "name_in_registry": true
+      }
+    ],
+    "tool_count": 1,
+    "tool_ids": [
+      "I2P0N6L6X"
+    ],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 10.859
+  }
+}

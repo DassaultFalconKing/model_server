@@ -1,0 +1,51 @@
+{
+  "case": "07-roundtrip-part1",
+  "expect": "one inspect_repository_state call; part2 feeds synthetic tool result",
+  "notes": "Roundtrip part 1. Synthetic response used in part 2; no real tool executed.",
+  "max_tokens": 512,
+  "stream": false,
+  "verdict": "PASS",
+  "failure_class": "GENERATION_CONTRACT",
+  "reason": "wire contract holds (uncertain on semantic quality: see MODEL_QUALITY note)",
+  "uncertainty": "semantic intent (MODEL_QUALITY) recorded as uncertain; wire contract is authoritative",
+  "analysis": {
+    "http_status": 200,
+    "raw_len": 583,
+    "response_json_parse_error": null,
+    "finish_reason": "tool_calls",
+    "content": "",
+    "content_markers": [],
+    "tool_calls": [
+      {
+        "id": "Qnzs7tdtC",
+        "type": "function",
+        "name": "inspect_repository_state",
+        "arguments_raw": "{\"repository\":\"C:/git/g4-final-review\",\"ref\":\"be410567f2b3f8146eda87087beb59b67199c893\",\"include\":[\"status\",\"generated_artifacts\"],\"constraints\":{\"read_only\":true,\"fail_on_dirty\":false}}",
+        "arguments_len": 186,
+        "arguments_parsed": {
+          "repository": "C:/git/g4-final-review",
+          "ref": "be410567f2b3f8146eda87087beb59b67199c893",
+          "include": [
+            "status",
+            "generated_artifacts"
+          ],
+          "constraints": {
+            "read_only": true,
+            "fail_on_dirty": false
+          }
+        },
+        "arguments_parse_error": null,
+        "arguments_is_object": true,
+        "name_in_registry": true
+      }
+    ],
+    "tool_count": 1,
+    "tool_ids": [
+      "Qnzs7tdtC"
+    ],
+    "ids_unique": true,
+    "leak_outside_arguments": false,
+    "raw_marker_hits": [],
+    "elapsed_s": 5.422
+  }
+}

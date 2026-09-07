@@ -1,0 +1,10 @@
+{
+  "backup_type": "junction",
+  "original_path": "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-model_server-gemma4-google-template-session-state",
+  "backup_path": "C:\\git\\Session-state-data\\backups\\bazel-model_server-gemma4-google-template-session-state-junction-backup",
+  "target": "C:\\opt\\cdpbe2vg\\execroot\\ovms",
+  "original_attributes": ["Directory", "ReparsePoint"],
+  "original_link_type": "Junction",
+  "created_utc": "2026-09-07T04:33:00Z",
+  "purpose": "Preserve access to the pre-existing Bazel execroot before removing the untracked repository junction for exact-head acceptance."
+}

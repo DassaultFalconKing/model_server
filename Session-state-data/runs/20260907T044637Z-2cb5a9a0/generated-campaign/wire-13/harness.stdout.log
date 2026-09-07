@@ -1,0 +1,15 @@
+launched pid=968 variant=B session=wire-13-2cb5a9a0
+01-unary-text -> PASS [GENERATION_CONTRACT] 2.5s
+02-streaming-text -> PASS [GENERATION_CONTRACT] 1.5s
+03-auto-tool -> PASS [GENERATION_CONTRACT] 7.3s
+04-named-nested -> PASS [GENERATION_CONTRACT] 15.4s
+05-required-call -> PASS [GENERATION_CONTRACT] 10.9s
+06-none -> PASS [GENERATION_CONTRACT] 4.1s
+07-roundtrip-part1 -> PASS [GENERATION_CONTRACT] 5.4s
+08-streaming-nested -> PASS [GENERATION_CONTRACT] 15.2s
+09-low-token-truncation -> PASS [TRUNCATION] 4.1s
+10-required-without-tools -> PASS [GENERATION_CONTRACT] 0.0s
+11-named-without-tools -> PASS [GENERATION_CONTRACT] 0.0s
+12-parameterless -> PASS [GENERATION_CONTRACT] 0.9s
+13-literal-marker-in-string -> PASS [GENERATION_CONTRACT] 1.3s
+07-roundtrip-part2 -> PASS [GENERATION_CONTRACT] 2.1s

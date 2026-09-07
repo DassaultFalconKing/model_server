@@ -1,0 +1,11 @@
+FAIL: expected exactly one tool call, got []
+Traceback (most recent call last):
+  File "C:\git\model_server-gemma4-google-template-session-state\ab-evidence\live_chain_harness.py", line 443, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\git\model_server-gemma4-google-template-session-state\ab-evidence\live_chain_harness.py", line 378, in main
+    _, _, name2, args2 = first_tool_call(response2)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\git\model_server-gemma4-google-template-session-state\ab-evidence\live_chain_harness.py", line 116, in first_tool_call
+    raise AssertionError("expected exactly one tool call, got %r" % calls)
+AssertionError: expected exactly one tool call, got []

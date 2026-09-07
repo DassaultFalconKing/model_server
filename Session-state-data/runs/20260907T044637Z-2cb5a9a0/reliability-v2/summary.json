@@ -1,0 +1,1688 @@
+{
+  "provenance": {
+    "git_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+    "production_sha": "7d00c5fe63c5f81e6c06972a974cd57fd7180326",
+    "binary_path": ".\\bazel-bin\\src\\ovms.exe",
+    "binary_sha256": "38067689f79ae6f6be2d951a7827c84768265f74ff35142a5f847bcc563668d4",
+    "model": "gemma4-26-heretic",
+    "endpoint": "http://127.0.0.1:18000/v3/v3/chat/completions",
+    "parser_name": "gemma4",
+    "chat_template_mode": "JINJA",
+    "model_default_temperature": 1.0,
+    "model_default_top_p": 0.95,
+    "model_default_top_k": 64,
+    "started_utc": "2026-09-07T04:51:05.726818+00:00"
+  },
+  "generated_utc": "2026-09-07T04:51:08.643423+00:00",
+  "cells": {
+    "B_ambiguous": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_distractor_prose": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_overwrite": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_renamed": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_same_name": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_sec_conflict_two_tools": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_sec_fake_sha_prose": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_sec_json_array": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_sec_json_scalar": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_sec_malformed_json": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "outcomes": {
+        "PASS": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "low": 0.43849391955098227,
+        "high": 1.0
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_sec_prompt_injection": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B_ungrounded_extra_fields": {
+      "n": 3,
+      "pass": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 3
+      },
+      "tool_action_attempt_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "structured_tool_call_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 3,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.5615060804490177
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "auto_A1": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 30
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "auto_A2": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 20
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "auto_A3": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 20
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "auto_A4": {
+      "n": 15,
+      "pass": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 15
+      },
+      "tool_action_attempt_rate": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "structured_tool_call_rate": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "auto_A5": {
+      "n": 15,
+      "pass": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 15
+      },
+      "tool_action_attempt_rate": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "structured_tool_call_rate": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 15,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.20388926630434784
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "named_t0_s42": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 30
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "required_t0_s42": {
+      "n": 50,
+      "pass": {
+        "n": 50,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.07135003417431873
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 50
+      },
+      "tool_action_attempt_rate": {
+        "n": 50,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.07135003417431873
+      },
+      "structured_tool_call_rate": {
+        "n": 50,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.07135003417431873
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 50,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.07135003417431873
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 50,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.07135003417431873
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "thinking_off_t09_seed_omitted": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "outcomes": {
+        "NOT_RUN": 20
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "thinking_off_t0_s42": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "outcomes": {
+        "NOT_RUN": 30
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "thinking_on_t09_seed_omitted": {
+      "n": 20,
+      "pass": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "outcomes": {
+        "NOT_RUN": 20
+      },
+      "tool_action_attempt_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "structured_tool_call_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 20,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.1611301254949332
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "thinking_on_t0_s42": {
+      "n": 30,
+      "pass": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "outcomes": {
+        "NOT_RUN": 30
+      },
+      "tool_action_attempt_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "structured_tool_call_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 30,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.113517091390478
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    }
+  },
+  "campaigns": {
+    "A": {
+      "n": 180,
+      "pass": {
+        "n": 180,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.02089624981505818
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 180
+      },
+      "tool_action_attempt_rate": {
+        "n": 180,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.02089624981505818
+      },
+      "structured_tool_call_rate": {
+        "n": 180,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.02089624981505818
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 180,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.02089624981505818
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 180,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.02089624981505818
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "thinking": {
+      "n": 100,
+      "pass": {
+        "n": 100,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.03699480747600191
+      },
+      "outcomes": {
+        "NOT_RUN": 100
+      },
+      "tool_action_attempt_rate": {
+        "n": 100,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.03699480747600191
+      },
+      "structured_tool_call_rate": {
+        "n": 100,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.03699480747600191
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 100,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.03699480747600191
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 100,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.03699480747600191
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    },
+    "B": {
+      "n": 36,
+      "pass": {
+        "n": 36,
+        "k": 9,
+        "rate": 0.25,
+        "low": 0.13750323839225387,
+        "high": 0.41070767683203424
+      },
+      "outcomes": {
+        "HARNESS_ERROR": 27,
+        "PASS": 9
+      },
+      "tool_action_attempt_rate": {
+        "n": 36,
+        "k": 9,
+        "rate": 0.25,
+        "low": 0.13750323839225387,
+        "high": 0.41070767683203424
+      },
+      "structured_tool_call_rate": {
+        "n": 36,
+        "k": 9,
+        "rate": 0.25,
+        "low": 0.13750323839225387,
+        "high": 0.41070767683203424
+      },
+      "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+        "n": 9,
+        "k": 9,
+        "rate": 1.0,
+        "low": 0.7008472464490407,
+        "high": 1.0
+      },
+      "grounded_value_fidelity_conditional_on_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      },
+      "ungrounded_hallucination_rate": {
+        "n": 36,
+        "k": 0,
+        "rate": 0.0,
+        "low": 0.0,
+        "high": 0.09642183044857634
+      },
+      "P_full_correct_chained_tool_call": {
+        "n": 36,
+        "k": 9,
+        "rate": 0.25,
+        "low": 0.13750323839225387,
+        "high": 0.41070767683203424
+      },
+      "P_correct_exact_fact_given_intended_parsed_call": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "low": null,
+        "high": null
+      }
+    }
+  },
+  "key_rates": {
+    "named_success": {
+      "n": 30,
+      "k": 0,
+      "rate": 0.0,
+      "low": 0.0,
+      "high": 0.113517091390478
+    },
+    "required_success": {
+      "n": 50,
+      "k": 0,
+      "rate": 0.0,
+      "low": 0.0,
+      "high": 0.07135003417431873
+    },
+    "auto_success": {
+      "n": 100,
+      "k": 0,
+      "rate": 0.0,
+      "low": 0.0,
+      "high": 0.03699480747600191
+    },
+    "api_visible_parser_recognition_conditional_on_api_visible_attempted_call": {
+      "n": 9,
+      "k": 9,
+      "rate": 1.0,
+      "low": 0.7008472464490407,
+      "high": 1.0
+    },
+    "grounded_exact_value_fidelity_conditional_on_intended_parsed_call": {
+      "n": 0,
+      "k": 0,
+      "rate": null,
+      "low": null,
+      "high": null
+    },
+    "ungrounded_hallucination_rate": {
+      "n": 316,
+      "k": 0,
+      "rate": 0.0,
+      "low": 0.0,
+      "high": 0.012010945417981901
+    }
+  },
+  "n_total": 316,
+  "measurement_contract": {
+    "schema_version": 2,
+    "parser_attempt_observability": "api_visible_only",
+    "parser_metric_name": "api_visible_parser_recognition_conditional_on_api_visible_attempted_call",
+    "sampled_thinking_contract": "temperature=0.9, seed omitted",
+    "allow_no_tool_contract": "no structured tool call may be emitted",
+    "tool_call_multiplicity_contract": "campaign A requires exactly one structured call once a call is emitted",
+    "frozen_v1_evidence_rewritten": false
+  }
+}

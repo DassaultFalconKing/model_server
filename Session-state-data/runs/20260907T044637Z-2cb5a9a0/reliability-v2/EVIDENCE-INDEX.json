@@ -1,0 +1,7 @@
+{
+  "trials_jsonl": "trials.jsonl",
+  "summary": "summary.json",
+  "provenance": "provenance.json",
+  "raw_failures": "raw/",
+  "n_trials": 316
+}

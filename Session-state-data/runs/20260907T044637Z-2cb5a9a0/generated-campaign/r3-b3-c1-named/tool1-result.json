@@ -1,0 +1,27 @@
+{
+  "repository": "C:\\git\\model_server-gemma4-google-template-session-state",
+  "head_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "requested_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "resolved_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "head_matches_requested": true,
+  "dirty": true,
+  "status_porcelain": [
+    "?? bazel-model_server-gemma4-google-template-session-state/"
+  ],
+  "changed_files": [
+    "ab-evidence/reliability_grounded_harness_v2.py",
+    "ab-evidence/test_reliability_grounded_harness_v2.py"
+  ],
+  "generated_artifacts": [
+    "bazel-bin",
+    "bazel-out",
+    "bazel-testlogs",
+    "ab-evidence"
+  ],
+  "origin": "https://github.com/DassaultFalconKing/model_server.git",
+  "executor": {
+    "read_only": true,
+    "allow_network": false,
+    "source_mutation_observed": false
+  }
+}
