@@ -55,6 +55,7 @@ public:
         cfg.preambleStartTags = {"call:"};
         cfg.endTag = "<tool_call|>";
         cfg.needsSpecialTokens = true;
+        cfg.ownsToolCallBoundaries = true;
         return cfg;
     }
 
@@ -99,7 +100,7 @@ public:
 
 private:
     static std::optional<std::string> parseNativeArgumentsBody(const std::string& argumentsBody);
-    static std::optional<size_t> findMatchingContainerEnd(const std::string& text, size_t openPos, char openChar, char closeChar);
+    static std::optional<size_t> findMatchingContainerEnd(const std::string& text, size_t openPos, char openChar, char closeChar, size_t& malformedEndTag);
     static std::string normalizeToolName(std::string rawName);
 
     bool toolNameAllowed(const std::string& name) const {

@@ -341,16 +341,15 @@ std::optional<std::string> Gemma4ToolParser::parseNativeArgumentsBody(const std:
     return std::string(buffer.GetString(), buffer.GetSize());
 }
 
-std::optional<size_t> Gemma4ToolParser::findMatchingContainerEnd(const std::string& text, size_t openPos, char openChar, char closeChar) {
+std::optional<size_t> Gemma4ToolParser::findMatchingContainerEnd(const std::string& text, size_t openPos, char openChar, char closeChar, size_t& malformedEndTag) {
+    malformedEndTag = std::string::npos;
     if (openPos >= text.size() || text[openPos] != openChar)
         return std::nullopt;
 
     std::vector<char> expectedClosers{closeChar};
+    bool malformed = false;
     size_t i = openPos + 1;
     while (i < text.size()) {
-        if (text.compare(i, TOOL_CALL_END_TAG.size(), TOOL_CALL_END_TAG) == 0)
-            return std::nullopt;
-
         if (text.compare(i, TOOL_ARGS_STRING_INDICATOR.size(), TOOL_ARGS_STRING_INDICATOR) == 0) {
             const size_t valueStart = i + TOOL_ARGS_STRING_INDICATOR.size();
             const size_t valueEnd = text.find(TOOL_ARGS_STRING_INDICATOR, valueStart);
@@ -379,6 +378,11 @@ std::optional<size_t> Gemma4ToolParser::findMatchingContainerEnd(const std::stri
             continue;
         }
 
+        if (text.compare(i, TOOL_CALL_END_TAG.size(), TOOL_CALL_END_TAG) == 0) {
+            malformedEndTag = i;
+            return std::nullopt;
+        }
+
         switch (text[i]) {
         case '{': expectedClosers.push_back('}'); break;
         case '[': expectedClosers.push_back(']'); break;
@@ -386,10 +390,12 @@ std::optional<size_t> Gemma4ToolParser::findMatchingContainerEnd(const std::stri
         case '}':
         case ']':
         case ')':
-            if (expectedClosers.empty() || expectedClosers.back() != text[i])
-                return std::nullopt;
+            if (expectedClosers.empty() || expectedClosers.back() != text[i]) {
+                malformed = true;
+                break;
+            }
             expectedClosers.pop_back();
-            if (expectedClosers.empty())
+            if (expectedClosers.empty() && !malformed)
                 return i;
             break;
         default: break;
@@ -479,7 +485,6 @@ bool Gemma4ToolParser::parseInToolCallState() {
 
     if (currentCallValid) {
         toolCall = ToolCall{generateRandomId(), toolName, ""};
-        ++toolCallIndex;
     } else {
         toolCall = {};
     }
@@ -490,9 +495,9 @@ bool Gemma4ToolParser::parseToolCallParametersState() {
     if (streamingPosition == 0)
         return false;
     const size_t openPos = streamingPosition - 1;
-    auto closePos = findMatchingContainerEnd(streamingContent, openPos, currentArgsOpen, currentArgsClose);
+    size_t endTagPos = std::string::npos;
+    auto closePos = findMatchingContainerEnd(streamingContent, openPos, currentArgsOpen, currentArgsClose, endTagPos);
     if (!closePos.has_value()) {
-        const size_t endTagPos = streamingContent.find(TOOL_CALL_END_TAG, streamingPosition);
         if (endTagPos != std::string::npos) {
             SPDLOG_LOGGER_WARN(llm_calculator_logger, "Gemma4 malformed tool arguments bounded by <tool_call|>; dropping current call");
             streamingPosition = endTagPos + TOOL_CALL_END_TAG.size();
@@ -565,11 +570,11 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
         streamingContent += chunk;
 
     if (parseNewContent()) {
-        if (currentState == State::ToolCallParameters && currentCallValid)
-            return ToolCallDelta{toolCallIndex, toolCall.id, toolCall.name, ""};
         if (currentState == State::ToolCallEnded) {
             if (currentCallValid && !toolCall.arguments.empty()) {
-                auto delta = wrapDeltaArgs(toolCall.arguments, toolCallIndex);
+                // An emitted header cannot be retracted from SSE or the unary
+                // accumulator. Publish the complete call only after validation.
+                auto delta = ToolCallDelta{++toolCallIndex, toolCall.id, toolCall.name, toolCall.arguments};
                 toolCall = {};
                 return delta;
             }
@@ -599,7 +604,7 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
         if (currentState == State::ToolCallParameters)
             parseToolCallParametersState();
         if (currentState == State::ToolCallEnded && currentCallValid && !toolCall.arguments.empty()) {
-            auto delta = wrapDeltaArgs(toolCall.arguments, toolCallIndex);
+            auto delta = ToolCallDelta{++toolCallIndex, toolCall.id, toolCall.name, toolCall.arguments};
             toolCall = {};
             return delta;
         }
