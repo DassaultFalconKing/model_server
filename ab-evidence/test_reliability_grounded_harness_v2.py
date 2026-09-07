@@ -84,8 +84,42 @@ class HarnessV2ContractTests(unittest.TestCase):
         self.assertEqual(outcome, "D_WRONG_TOOL")
         self.assertIn("forbidden", reason)
 
+    def test_provenance_fields_separate_runtime_source_from_grounding_fixture(self):
+        record = {
+            "git_sha": "2cb5a9a0actual",
+            "production_sha": "908bc8b7fixture",
+            "binary_sha256": "38067689binary",
+        }
+        v2.normalize_provenance_record(record)
+        self.assertEqual(record["source_sha"], "2cb5a9a0actual")
+        self.assertEqual(record["grounding_fixture_sha"], "908bc8b7fixture")
+        self.assertEqual(record["binary_sha256"], "38067689binary")
+        self.assertNotEqual(record["source_sha"], record["grounding_fixture_sha"])
+        self.assertEqual(record["production_sha_deprecated_alias_for"], "grounding_fixture_sha")
+
+    def test_v2_cli_accepts_unambiguous_provenance_names(self):
+        argv = [
+            "harness",
+            "--source-sha",
+            "actual-sha",
+            "--grounding-fixture-sha",
+            "fixture-sha",
+            "--out-dir",
+            "out",
+        ]
+        rewritten = v2.rewrite_provenance_cli_aliases(argv)
+        self.assertNotIn("--source-sha", rewritten)
+        self.assertNotIn("--grounding-fixture-sha", rewritten)
+        self.assertEqual(rewritten[rewritten.index("--git-sha") + 1], "actual-sha")
+        self.assertEqual(rewritten[rewritten.index("--production-sha") + 1], "fixture-sha")
+
     def test_summary_renames_parser_metric_and_marks_scope(self):
         source = {
+            "provenance": {
+                "git_sha": "actual-source",
+                "production_sha": "fixture-source",
+                "binary_sha256": "actual-binary",
+            },
             "key_rates": {
                 "parser_recognition_conditional_on_attempted_call": {"n": 10, "k": 10}
             },
@@ -106,6 +140,13 @@ class HarnessV2ContractTests(unittest.TestCase):
             data["key_rates"],
         )
         self.assertEqual(data["measurement_contract"]["parser_attempt_observability"], "api_visible_only")
+        self.assertEqual(data["provenance"]["source_sha"], "actual-source")
+        self.assertEqual(data["provenance"]["grounding_fixture_sha"], "fixture-source")
+        self.assertEqual(data["provenance"]["binary_sha256"], "actual-binary")
+        self.assertEqual(
+            data["measurement_contract"]["deprecated_aliases"]["production_sha"],
+            "grounding_fixture_sha",
+        )
 
 
 if __name__ == "__main__":

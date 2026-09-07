@@ -16,6 +16,12 @@ OLD_PARSER_METRIC = "parser_recognition_conditional_on_attempted_call"
 NEW_PARSER_METRIC = "api_visible_parser_recognition_conditional_on_api_visible_attempted_call"
 REFIT_SCHEMA_VERSION = 2
 
+SOURCE_SHA = "source_sha"
+GROUNDING_FIXTURE_SHA = "grounding_fixture_sha"
+LEGACY_SOURCE_SHA = "git_sha"
+LEGACY_FIXTURE_SHA = "production_sha"
+DEPRECATED_ALIAS_KEY = "production_sha_deprecated_alias_for"
+
 
 def strict_thinking_cells(args):
     cells = [
@@ -30,6 +36,54 @@ def strict_thinking_cells(args):
             ("auto", "thinking_on_t09_seed_omitted", 0.9, "omitted", True, args.n_think_sample_on)
         )
     return cells
+
+
+def normalize_provenance_record(record):
+    """Add unambiguous v2 provenance fields without mutating frozen v1 evidence."""
+    if not isinstance(record, dict):
+        return record
+    if SOURCE_SHA not in record and LEGACY_SOURCE_SHA in record:
+        record[SOURCE_SHA] = record.get(LEGACY_SOURCE_SHA)
+    if GROUNDING_FIXTURE_SHA not in record and LEGACY_FIXTURE_SHA in record:
+        record[GROUNDING_FIXTURE_SHA] = record.get(LEGACY_FIXTURE_SHA)
+    if LEGACY_FIXTURE_SHA in record:
+        record[DEPRECATED_ALIAS_KEY] = GROUNDING_FIXTURE_SHA
+    return record
+
+
+def normalize_summary_provenance(data):
+    if not isinstance(data, dict):
+        return data
+    provenance = data.get("provenance")
+    if isinstance(provenance, dict):
+        normalize_provenance_record(provenance)
+    return data
+
+
+def rewrite_provenance_cli_aliases(argv):
+    """Accept v2 names while invoking the unchanged v1 argparse contract."""
+    argv = list(argv)
+    additions = []
+    rewritten = [argv[0]] if argv else []
+    legacy_flags = set(argv)
+    index = 1
+    while index < len(argv):
+        arg = argv[index]
+        if arg in {"--source-sha", "--grounding-fixture-sha"}:
+            if index + 1 >= len(argv):
+                rewritten.append(arg)
+                index += 1
+                continue
+            value = argv[index + 1]
+            target = "--git-sha" if arg == "--source-sha" else "--production-sha"
+            if target not in legacy_flags:
+                additions.extend([target, value])
+                legacy_flags.add(target)
+            index += 2
+            continue
+        rewritten.append(arg)
+        index += 1
+    return rewritten + additions
 
 
 def strict_classify_campaign_a(legacy, original_classifier, trial):
@@ -78,6 +132,7 @@ def augment_summary(path):
     path = Path(path)
     data = json.loads(path.read_text(encoding="utf-8"))
     _rename_metric_keys(data)
+    normalize_summary_provenance(data)
     data["measurement_contract"] = {
         "schema_version": REFIT_SCHEMA_VERSION,
         "parser_attempt_observability": "api_visible_only",
@@ -86,6 +141,8 @@ def augment_summary(path):
         "allow_no_tool_contract": "no structured tool call may be emitted",
         "tool_call_multiplicity_contract": "campaign A requires exactly one structured call once a call is emitted",
         "repository_fidelity_contract": "campaign A copies tool-result repository, allowing slash spelling only",
+        "provenance_contract": "source_sha and binary_sha256 identify the actual runtime; grounding_fixture_sha identifies the historical expected fact",
+        "deprecated_aliases": {LEGACY_FIXTURE_SHA: GROUNDING_FIXTURE_SHA},
         "frozen_v1_evidence_rewritten": False,
     }
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -115,13 +172,16 @@ def _argv_value(flag, default):
 def install_refit(legacy):
     original_a = legacy.classify_campaign_a
     original_b = legacy.classify_campaign_b
+    original_compact_trial = legacy.compact_trial
     legacy.thinking_cells = strict_thinking_cells
     legacy.classify_campaign_a = lambda trial: strict_classify_campaign_a(legacy, original_a, trial)
     legacy.classify_campaign_b = lambda trial: strict_classify_campaign_b(legacy, original_b, trial)
+    legacy.compact_trial = lambda trial: normalize_provenance_record(original_compact_trial(trial))
     return legacy
 
 
 def main():
+    sys.argv = rewrite_provenance_cli_aliases(sys.argv)
     legacy = install_refit(_load_legacy())
     out_dir = Path(_argv_value("--out-dir", "ab-evidence/reliability-campaign-v2"))
     rc = legacy.main()
