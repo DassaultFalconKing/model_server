@@ -86,7 +86,8 @@ function Initialize-MsvcForBazel {
 
 function Import-BatchEnvironment([string]$BatchFile) {
     if (-not (Test-Path -LiteralPath $BatchFile -PathType Leaf)) {
-        throw "Environment setup script not found: $BatchFile"
+        Write-Warning "Environment setup script not found (skipping): $BatchFile"
+        return
     }
     $command = "call `"$BatchFile`" >nul && set"
     $lines = & $env:ComSpec /d /s /c $command
@@ -194,7 +195,7 @@ try {
     Initialize-MsvcForBazel
 
     $pythonRoot = "C:\opt\Python312"
-    if ($WithPython -and (Test-Path -LiteralPath $pythonRoot -PathType Container)) {
+    if ($WithPython -and (Test-Path -LiteralPath "$pythonRoot\python.exe" -PathType Leaf)) {
         $env:PYTHONHOME = $pythonRoot
         $env:PATH = "$pythonRoot;$pythonRoot\Scripts;$env:PATH"
     }
