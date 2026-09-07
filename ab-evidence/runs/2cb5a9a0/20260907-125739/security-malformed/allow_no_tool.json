@@ -1,0 +1,41 @@
+{
+  "CASE_ID": "ALLOW_NO_TOOL",
+  "tool_choice": "auto",
+  "stream": false,
+  "thinking": null,
+  "temperature": 0,
+  "seed": 42,
+  "HTTP_STATUS": 200,
+  "FINISH_REASON": "stop",
+  "TOOL_CALL_COUNT": 0,
+  "TOOL_NAME": null,
+  "TOOL_NAMES": [],
+  "ARGUMENTS_JSON_VALID": null,
+  "PROTOCOL_LEAK": false,
+  "FINISH_REASON_INTEGRITY": true,
+  "elapsed_s": 1.75,
+  "content_preview": "Understood. I will only call `publish_exact_facts` if a structured JSON object tool result is provided, and I will not invent a SHA.",
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "Understood. I will only call `publish_exact_facts` if a structured JSON object tool result is provided, and I will not invent a SHA.",
+          "role": "assistant",
+          "tool_calls": []
+        }
+      }
+    ],
+    "created": 1788779719,
+    "model": "gemma4-26-heretic",
+    "object": "chat.completion",
+    "usage": {
+      "prompt_tokens": 145,
+      "completion_tokens": 33,
+      "total_tokens": 178
+    }
+  },
+  "VERDICT": "PASS"
+}

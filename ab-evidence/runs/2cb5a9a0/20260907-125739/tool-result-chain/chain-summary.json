@@ -1,0 +1,61 @@
+{
+  "CASE_ID": "CHAIN_R2",
+  "tool_choice": "named",
+  "stream": false,
+  "thinking": null,
+  "temperature": 0,
+  "seed": 42,
+  "HTTP_STATUS": 200,
+  "FINISH_REASON": "tool_calls",
+  "TOOL_CALL_COUNT": 1,
+  "TOOL_NAME": "publish_exact_facts",
+  "TOOL_NAMES": [
+    "publish_exact_facts"
+  ],
+  "ARGUMENTS_JSON_VALID": true,
+  "PROTOCOL_LEAK": false,
+  "FINISH_REASON_INTEGRITY": true,
+  "elapsed_s": 7.89,
+  "content_preview": "",
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "M5NeyybQs",
+              "type": "function",
+              "function": {
+                "name": "publish_exact_facts",
+                "arguments": "{\"commit_sha\":\"2cb5a9a0e8d22732de2d1c89f52795c2de612a57\",\"binary_sha256\":\"38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4\",\"port\":18000,\"model\":\"gemma4-26-heretic\"}"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1788779711,
+    "model": "gemma4-26-heretic",
+    "object": "chat.completion",
+    "usage": {
+      "prompt_tokens": 447,
+      "completion_tokens": 162,
+      "total_tokens": 609
+    }
+  },
+  "parsed_arguments": {
+    "commit_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+    "binary_sha256": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+    "port": 18000,
+    "model": "gemma4-26-heretic"
+  },
+  "SCHEMA_VALID": true,
+  "GROUNDED_VALUES_VALID": true,
+  "EXACT_ONE_CALL": true,
+  "VERDICT": "PASS"
+}

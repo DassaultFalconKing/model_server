@@ -1,0 +1,3 @@
+NOTE: Full Verify without SkipFastTests failed: bazel reported 0 test targets when invoked via windows_build_fast.ps1 gemma-fast-tests step (exit 4).
+Direct bazel test with proper // target splat analyzes 2 targets but hits pybind11 PYTHON_BIN_PATH executability/check issues under polluted PATH.
+Acceptance continues with -SkipFastTests to produce fresh //src:ovms binary from exact HEAD 2cb5a9a0.

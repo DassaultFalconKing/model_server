@@ -1,0 +1,13 @@
+{
+  "manifest": true,
+  "turn1_raw": true,
+  "turn1_effective": true,
+  "manifest_body": {
+    "schema_version": 1,
+    "session_id": "gemma4-v2-host-acceptance-restart",
+    "seed": 42,
+    "next_turn": 2,
+    "last_access": "2026-09-07T11:15:23Z",
+    "model": "gemma4-26-heretic"
+  }
+}

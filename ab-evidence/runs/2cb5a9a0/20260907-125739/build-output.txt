@@ -1,0 +1,44 @@
+﻿**********************
+Windows PowerShell transcript start
+Start time: 20260907130715
+Username: MSI\Sheoldred
+RunAs User: MSI\Sheoldred
+Configuration Name: 
+Machine: MSI (Microsoft Windows NT 10.0.26200.0)
+Host Application: C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -NonInteractive -File C:\Users\testc\AppData\Local\Temp\ps-script-2411f590-1e10-4193-8c51-f57dc4676bcd.ps1
+Process ID: 26560
+PSVersion: 5.1.26100.9278
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.9278
+BuildVersion: 10.0.26100.9278
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+MSVC: C:\BuildTools
+VC tools: 14.44.35207
+Temporarily stamped src/version.hpp as 2026.4.0.2cb5a9a0; source file will be restored after build.
+
+OVMS Windows fast build
+  mode:              Verify
+  bazel config:      win_mp_on_py_on
+  output user root:  C:\opt
+  disk cache:        C:\opt\bazel-disk-cache\win_mp_on_py_on
+  repository cache:  C:\opt\bazel-repository-cache
+  profiles:          C:\opt\bazel-profiles
+  jobs:              Bazel default
+  OpenVINO_DIR:      C:/opt/openvino/runtime/cmake
+  OpenCV_DIR:        C:/opt/opencv_4.14.0
+
+[ovms-verify] bazel --output_user_root=C:\opt build --config=win_mp_on_py_on --disk_cache=C:\opt\bazel-disk-cache\win_mp_on_py_on --repository_cache=C:\opt\bazel-repository-cache --repo_env=OpenVINO_DIR=C:/opt/openvino/runtime/cmake --repo_env=OpenCV_DIR=C:/opt/opencv_4.14.0 --profile=C:\opt\bazel-profiles\20260907-130715-ovms-verify.json.gz --action_env OpenVINO_DIR=C:/opt/openvino/runtime/cmake --action_env OpenCV_DIR=C:/opt/opencv_4.14.0 --verbose_failures //src:ovms //src:ovms_test //third_party:espeak_ng //third_party:espeak_ng_data
+
+[ovms-verify] exit=0 elapsed=00:00:08.3589281 profile=C:\opt\bazel-profiles\20260907-130715-ovms-verify.json.gz
+
+BUILD PASS mode=Verify elapsed=00:00:08.6222716
+Transcript: C:\opt\bazel-profiles\20260907-130715-windows-build-fast.log
+Restored tracked src/version.hpp after temporary build stamp.
+**********************
+Windows PowerShell transcript end
+End time: 20260907130724
+**********************

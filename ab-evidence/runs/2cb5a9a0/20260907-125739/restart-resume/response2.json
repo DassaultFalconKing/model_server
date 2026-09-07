@@ -1,0 +1,35 @@
+{
+  "status": 200,
+  "elapsed": 8.171999999991385,
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "SMqFpum8u",
+              "type": "function",
+              "function": {
+                "name": "publish_exact_facts",
+                "arguments": "{\"commit_sha\":\"2cb5a9a0e8d22732de2d1c89f52795c2de612a57\",\"binary_sha256\":\"38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4\",\"port\":18000,\"model\":\"gemma4-26-heretic\"}"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1788779792,
+    "model": "gemma4-26-heretic",
+    "object": "chat.completion",
+    "usage": {
+      "prompt_tokens": 364,
+      "completion_tokens": 152,
+      "total_tokens": 516
+    }
+  }
+}

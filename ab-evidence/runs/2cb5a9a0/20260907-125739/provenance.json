@@ -1,0 +1,25 @@
+{
+  "source_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+  "branch": "fix/gemma4-google-template-session-state",
+  "binary_path": "C:\\git\\model_server-gemma4-google-template-session-state\\bazel-bin\\src\\ovms.exe",
+  "binary_sha256": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+  "version_stamp": "2026.4.0.2cb5a9a0",
+  "launcher_sha": "29c30980a2e31b954dc4290c8d78253c53a9fdeb",
+  "model": "gemma4-26-heretic",
+  "model_path": "C:\\llm\\models\\runtime\\gemma4-26-heretic-google-current",
+  "profile": "vlm-stable",
+  "chat_template_mode": "JINJA",
+  "port": 18000,
+  "session_store_dir": "C:\\llm\\ovms-session-store-reliability-v2",
+  "python": "C:\\opt\\Python312\\python.exe",
+  "openvino_dir": "C:/opt/openvino/runtime/cmake",
+  "run_started_utc": "2026-09-07T10:57:39Z",
+  "base_accepted_runtime": "7d00c5fe63c5f81e6c06972a974cd57fd7180326",
+  "evidence_freeze": "f3283dd03f6c990eb5edf0af8bd0635e137510c5",
+  "historical_7d00c5fe_sha256": "C316B93D5451F49BF32E6E7C3D2881259B235F517171B5BAEE18F4A559D46058",
+  "notes": [
+    "Fresh binary materialized this session via windows_build_fast.ps1 -Mode Verify -SkipFastTests after gemma-fast-tests step returned exit 4 (0 targets under polluted PATH / PowerShell // comment hazard).",
+    "Launch required PYTHONPATH to bazel-bin/src/python/binding for pyovms.pyd (unpackaged bazel-bin layout).",
+    "Did not source C:\\llm\\ovms\\setupvars.ps1."
+  ]
+}

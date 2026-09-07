@@ -1,0 +1,259 @@
+{
+  "binary_sha256": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+  "session": "gemma4-v2-host-acceptance",
+  "store": "C:\\llm\\ovms-session-store-reliability-v2",
+  "GATE7": {
+    "SESSION_WRITE": "PASS",
+    "SESSION_ARTIFACT": "C:\\llm\\ovms-session-store-reliability-v2\\gemma4-v2-host-acceptance",
+    "artifacts": {
+      "session_dir": "C:\\llm\\ovms-session-store-reliability-v2\\gemma4-v2-host-acceptance",
+      "manifest_exists": true,
+      "raw_request_exists": true,
+      "effective_request_exists": true,
+      "store_listing": [
+        "gemma4-v2-host-acceptance\\manifest.json",
+        "gemma4-v2-host-acceptance\\turns\\000000000001\\effective-request.json",
+        "gemma4-v2-host-acceptance\\turns\\000000000001\\generation-config.json",
+        "gemma4-v2-host-acceptance\\turns\\000000000001\\raw-request.json"
+      ]
+    },
+    "row": {
+      "CASE_ID": "G7_SESSION",
+      "tool_choice": "named",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "tool_calls",
+      "TOOL_CALL_COUNT": 1,
+      "TOOL_NAME": "inspect_build_state",
+      "TOOL_NAMES": [
+        "inspect_build_state"
+      ],
+      "ARGUMENTS_JSON_VALID": true,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 4.656,
+      "content_preview": "",
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "content": "",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "2bVD3OwlI",
+                  "type": "function",
+                  "function": {
+                    "name": "inspect_build_state",
+                    "arguments": "{\"repo_path\":\"C:/git/model_server-gemma4-google-template-session-state\",\"include_binary_hash\":true}"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "created": 1788779696,
+        "model": "gemma4-26-heretic",
+        "object": "chat.completion",
+        "usage": {
+          "prompt_tokens": 125,
+          "completion_tokens": 49,
+          "total_tokens": 174
+        }
+      }
+    }
+  },
+  "GATE8": [
+    {
+      "CASE_ID": "TC01_NONE",
+      "tool_choice": "none",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "stop",
+      "TOOL_CALL_COUNT": 0,
+      "TOOL_NAME": null,
+      "TOOL_NAMES": [],
+      "ARGUMENTS_JSON_VALID": null,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 0.531,
+      "content_preview": "Hello there!",
+      "VERDICT": "PASS"
+    },
+    {
+      "CASE_ID": "TC02_AUTO",
+      "tool_choice": "auto",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "tool_calls",
+      "TOOL_CALL_COUNT": 1,
+      "TOOL_NAME": "inspect_build_state",
+      "TOOL_NAMES": [
+        "inspect_build_state"
+      ],
+      "ARGUMENTS_JSON_VALID": true,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 2.375,
+      "content_preview": "",
+      "VERDICT": "PASS"
+    },
+    {
+      "CASE_ID": "TC03_NAMED",
+      "tool_choice": "named",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "tool_calls",
+      "TOOL_CALL_COUNT": 1,
+      "TOOL_NAME": "inspect_build_state",
+      "TOOL_NAMES": [
+        "inspect_build_state"
+      ],
+      "ARGUMENTS_JSON_VALID": true,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 2.719,
+      "content_preview": "",
+      "VERDICT": "PASS",
+      "SCHEMA_VALID": true
+    },
+    {
+      "CASE_ID": "TC04_REQUIRED",
+      "tool_choice": "required",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "tool_calls",
+      "TOOL_CALL_COUNT": 1,
+      "TOOL_NAME": "inspect_build_state",
+      "TOOL_NAMES": [
+        "inspect_build_state"
+      ],
+      "ARGUMENTS_JSON_VALID": true,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 2.265,
+      "content_preview": "",
+      "VERDICT": "PASS"
+    }
+  ],
+  "GATE10": {
+    "TOOL_RESULT_CHAIN": "PASS",
+    "GROUNDING_FIDELITY": "PASS",
+    "EXACT_ONE_CALL": "PASS",
+    "row2": {
+      "CASE_ID": "CHAIN_R2",
+      "tool_choice": "named",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "tool_calls",
+      "TOOL_CALL_COUNT": 1,
+      "TOOL_NAME": "publish_exact_facts",
+      "TOOL_NAMES": [
+        "publish_exact_facts"
+      ],
+      "ARGUMENTS_JSON_VALID": true,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 7.89,
+      "content_preview": "",
+      "parsed_arguments": {
+        "commit_sha": "2cb5a9a0e8d22732de2d1c89f52795c2de612a57",
+        "binary_sha256": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+        "port": 18000,
+        "model": "gemma4-26-heretic"
+      },
+      "SCHEMA_VALID": true,
+      "GROUNDED_VALUES_VALID": true,
+      "EXACT_ONE_CALL": true,
+      "VERDICT": "PASS"
+    }
+  },
+  "GATE13": [
+    {
+      "CASE_ID": "ALLOW_NO_TOOL",
+      "tool_choice": "auto",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "stop",
+      "TOOL_CALL_COUNT": 0,
+      "TOOL_NAME": null,
+      "TOOL_NAMES": [],
+      "ARGUMENTS_JSON_VALID": null,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 1.75,
+      "content_preview": "Understood. I will only call `publish_exact_facts` if a structured JSON object tool result is provided, and I will not invent a SHA.",
+      "VERDICT": "PASS"
+    },
+    {
+      "CASE_ID": "PROSE_NOT_TOOL",
+      "tool_choice": "none",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "stop",
+      "TOOL_CALL_COUNT": 0,
+      "TOOL_NAME": null,
+      "TOOL_NAMES": [],
+      "ARGUMENTS_JSON_VALID": null,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 1.985,
+      "content_preview": "A function call is an instruction for a model to execute a specific predefined operation, while a JSON tool is a structured data format used to define the parameters and schema required for that operation to run.",
+      "VERDICT": "PASS"
+    }
+  ],
+  "GATE11": {
+    "RESTART_RESUME": "PASS",
+    "RESTART_BINARY_SHA_MATCH": "PASS",
+    "turn2_exists": true,
+    "seed_in_manifest": 42,
+    "new_pid": 9128,
+    "row2": {
+      "CASE_ID": "RESTART_R2",
+      "tool_choice": "named",
+      "stream": false,
+      "thinking": null,
+      "temperature": 0,
+      "seed": 42,
+      "HTTP_STATUS": 200,
+      "FINISH_REASON": "tool_calls",
+      "TOOL_CALL_COUNT": 1,
+      "TOOL_NAME": "publish_exact_facts",
+      "TOOL_NAMES": [
+        "publish_exact_facts"
+      ],
+      "ARGUMENTS_JSON_VALID": true,
+      "PROTOCOL_LEAK": false,
+      "FINISH_REASON_INTEGRITY": true,
+      "elapsed_s": 8.172,
+      "content_preview": ""
+    }
+  }
+}

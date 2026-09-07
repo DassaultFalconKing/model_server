@@ -1,0 +1,12 @@
+{
+  "session_dir": "C:\\llm\\ovms-session-store-reliability-v2\\gemma4-v2-host-acceptance",
+  "manifest_exists": true,
+  "raw_request_exists": true,
+  "effective_request_exists": true,
+  "store_listing": [
+    "gemma4-v2-host-acceptance\\manifest.json",
+    "gemma4-v2-host-acceptance\\turns\\000000000001\\effective-request.json",
+    "gemma4-v2-host-acceptance\\turns\\000000000001\\generation-config.json",
+    "gemma4-v2-host-acceptance\\turns\\000000000001\\raw-request.json"
+  ]
+}

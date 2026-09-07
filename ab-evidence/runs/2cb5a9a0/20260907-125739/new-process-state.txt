@@ -1,0 +1,20 @@
+
+
+ProcessId      : 27528
+ExecutablePath : C:\git\model_server-gemma4-google-template-session-state\bazel-bin\src\ovms.exe
+CommandLine    : "C:\git\model_server-gemma4-google-template-session-state\bazel-bin\src\ovms.exe" --config_path C:\git
+                 \gemmamonster-acceptance\ovms\gemma4-diagnostic-pack\runtime\gemma4-26-heretic\vlm-stable\config.json 
+                 --rest_port 18000 --rest_workers 1
+
+
+
+
+
+
+LocalAddress  : 0.0.0.0
+LocalPort     : 18000
+OwningProcess : 27528
+
+
+
+

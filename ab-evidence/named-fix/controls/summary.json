@@ -1,0 +1,34 @@
+[
+  {
+    "trial": "B_sec_malformed_json-t0s42-001",
+    "before": "D_WRONG_TOOL",
+    "after": "D_WRONG_TOOL",
+    "reason": "structured tool call forbidden when no structured mapping is available",
+    "finish": "tool_calls",
+    "tokens": 25
+  },
+  {
+    "trial": "B_sec_json_array-t0s42-001",
+    "before": "D_WRONG_TOOL",
+    "after": "D_WRONG_TOOL",
+    "reason": "structured tool call forbidden when no structured mapping is available",
+    "finish": "tool_calls",
+    "tokens": 52
+  },
+  {
+    "trial": "B_sec_json_scalar-t0s42-001",
+    "before": "D_WRONG_TOOL",
+    "after": "D_WRONG_TOOL",
+    "reason": "structured tool call forbidden when no structured mapping is available",
+    "finish": "tool_calls",
+    "tokens": 52
+  },
+  {
+    "trial": "auto_A1-001",
+    "before": "G_UNGROUNDED_VALUE_INVENTED",
+    "after": "G_UNGROUNDED_VALUE_INVENTED",
+    "reason": "invented=sha256=e3b0c44298fc1c1492f3",
+    "finish": "tool_calls",
+    "tokens": 234
+  }
+]
