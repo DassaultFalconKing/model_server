@@ -82,6 +82,7 @@ public:
     void resetState() override {
         streamingContent.clear();
         streamingPosition = 0;
+        currentCallStart = 0;
         currentState = State::Content;
         toolCall = {};
         toolCallIndex = -1;
@@ -119,6 +120,7 @@ private:
 
     std::string streamingContent;
     size_t streamingPosition{0};
+    size_t currentCallStart{0};
     State currentState{State::Content};
     ToolCall toolCall;
     int toolCallIndex{-1};
