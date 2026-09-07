@@ -26,6 +26,7 @@ cc_test(
         "@com_github_tencent_rapidjson//:rapidjson",
         "//src:test_platform_utils",
         "//src/llm:openai_completions_api_handler",
+        "//src/llm:openai_responses_handler",
         "//third_party:genai",
         "//third_party:openvino",
     ],
