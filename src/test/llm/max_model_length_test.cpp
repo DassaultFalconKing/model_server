@@ -249,7 +249,6 @@ TEST_F(SessionStateStoreTest, V3ChatCompletionsLowercaseSessionHeaderWritesJourn
         HttpPayload payload;
         payload.uri = "/v3/chat/completions";
         payload.headers.emplace("x-ovms-session-id", "gemma4-live-test");
-        payload.headers.emplace("x-ovms-session-store", directoryPath);
         payload.body = R"({"model":"gemma4","messages":[],"seed":42})";
         payload.parsedJson = std::make_shared<rapidjson::Document>();
         payload.parsedJson->Parse(payload.body.c_str());
