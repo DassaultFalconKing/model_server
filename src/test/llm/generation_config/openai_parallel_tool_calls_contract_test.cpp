@@ -5,11 +5,13 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 #include <openvino/genai/tokenizer.hpp>
 
 #include "src/llm/apis/openai_completions.hpp"
+#include "src/llm/apis/openai_responses.hpp"
 #include "src/test/platform_utils.hpp"
 
 using namespace ovms;
@@ -82,4 +84,44 @@ TEST(OpenAIParallelToolCallsContractTest, RejectsNonBooleanValues) {
         EXPECT_FALSE(result.status.ok());
         EXPECT_EQ(result.status.code(), absl::StatusCode::kInvalidArgument);
     }
+}
+
+TEST(OpenAIParallelToolCallsContractTest, ResponsesPreservesPolicyInRequestAndResponseObject) {
+    rapidjson::Document doc;
+    const std::string json = R"({
+        "model": "gemma4",
+        "input": "Use tools if needed",
+        "parallel_tool_calls": false,
+        "tools": [{
+            "type": "function",
+            "name": "first",
+            "parameters": {"type": "object", "properties": {}, "additionalProperties": false}
+        }]
+    })";
+    doc.Parse(json.c_str());
+    ASSERT_FALSE(doc.HasParseError());
+
+    ov::genai::Tokenizer tokenizer(getGenericFullPathForSrcTest(
+        "/ovms/src/test/llm_testing/facebook/opt-125m"));
+    OpenAIResponsesHandler handler(
+        doc,
+        Endpoint::RESPONSES,
+        std::chrono::system_clock::now(),
+        tokenizer);
+
+    ASSERT_TRUE(handler.parseRequest(
+        /*maxTokensLimit=*/std::nullopt,
+        /*bestOfLimit=*/0,
+        /*maxModelLength=*/std::nullopt).ok());
+    EXPECT_FALSE(handler.getRequest().parallelToolCalls);
+
+    const std::vector<Delta> deltas;
+    const std::string response = handler.serializeUnaryResponse(
+        deltas, ov::genai::GenerationFinishReason::STOP);
+    rapidjson::Document responseDoc;
+    responseDoc.Parse(response.c_str());
+    ASSERT_FALSE(responseDoc.HasParseError()) << response;
+    ASSERT_TRUE(responseDoc.HasMember("parallel_tool_calls"));
+    ASSERT_TRUE(responseDoc["parallel_tool_calls"].IsBool());
+    EXPECT_FALSE(responseDoc["parallel_tool_calls"].GetBool());
 }
