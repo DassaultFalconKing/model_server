@@ -27,6 +27,12 @@ Select a diagnostic profile explicitly:
 .\tools\gemmamonster-ovms\Start-GemmaMonsterOvms.ps1 -Profile B
 ```
 
+Run the automatic B-versus-D speed/correctness selection:
+
+```powershell
+.\tools\gemmamonster-ovms\Optimize-GemmaMonsterOvms.ps1
+```
+
 Start it in the background on REST port 8888 and gRPC port 9000:
 
 ```powershell
