@@ -15,7 +15,11 @@ foreach ($Candidate in $Candidates) {
     $Runtime = Join-Path $Root $Candidate.Name
     try {
         & $Start -RepoRoot $RepoRoot -ModelPath $ModelPath -RuntimeRoot $Runtime -RestPort $Candidate.Port -GrpcPort ($Candidate.Port + 100) -Profile $Candidate.Name | Out-Null
-        Start-Sleep -Seconds 20
+        $Ready = $false
+        for ($Attempt = 0; $Attempt -lt 60; $Attempt++) {
+            try { Invoke-RestMethod -Method Get -Uri "http://127.0.0.1:$($Candidate.Port)/v3/models" -TimeoutSec 2 | Out-Null; $Ready = $true; break } catch { Start-Sleep -Seconds 2 }
+        }
+        if (-not $Ready) { throw "OVMS did not become ready within 120 seconds." }
         $ProbeResult = & $Probe -BaseUrl "http://127.0.0.1:$($Candidate.Port)/v3" -Count $ProbeCount -RequireToolCall
         $Results += [pscustomobject]@{ Profile=$Candidate.Name; Passed=$ProbeResult.Passed; Failed=$ProbeResult.Failed; AverageSeconds=$ProbeResult.AverageSeconds; Status="PASS" }
     } catch {
