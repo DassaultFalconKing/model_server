@@ -36,6 +36,7 @@ out
 *.errors.txt
 tmp/
 runtime/gemmamonster-ovms/
+runtime/gemmamonster-acceptance/
 *.zip
 *.tar.gz
 models

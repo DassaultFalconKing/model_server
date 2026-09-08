@@ -5,6 +5,7 @@ param(
     [string]$ModelName = "gemma4",
     [int]$RestPort = 8888,
     [int]$GrpcPort = 9000,
+    [ValidateSet("A", "B", "C")][string]$Profile = "B",
     [ValidateRange(0, 1024)][int]$QueueSize = 0,
     [ValidateRange(1, 1048576)][int]$MaxTokensLimit = 65536,
     [switch]$Foreground,
@@ -22,6 +23,9 @@ $ConfigPath = Join-Path $RuntimeRoot "config.json"
 $PidPath = Join-Path $RuntimeRoot "ovms.pid"
 $OutLog = Join-Path $RuntimeRoot "ovms.stdout.log"
 $ErrLog = Join-Path $RuntimeRoot "ovms.stderr.log"
+$Pipeline = if ($Profile -eq "A") { "VLM" } else { "VLM_CB" }
+$PrefixCaching = ($Profile -eq "C")
+$PrefixCachingText = $PrefixCaching.ToString().ToLowerInvariant()
 
 if ($ModelName -notmatch '^[A-Za-z0-9._-]+$') {
     throw "ModelName contains unsupported characters: $ModelName"
@@ -57,7 +61,7 @@ $ModelPathForGraph = $ModelPath.Replace("\", "/")
 $GraphPathForConfig = $GraphPath.Replace("\", "/")
 
 $Graph = @"
-# GEMMAMONSTER-OVMS known-good VLM_CB profile.
+# GEMMAMONSTER-OVMS diagnostic profile $Profile.
 # Source baseline: $KnownGoodCommit
 # OVMS_GRAPH_QUEUE_MAX_SIZE: $QueueSize
 input_stream: "HTTP_REQUEST_PAYLOAD:input"
@@ -80,10 +84,11 @@ node: {
     [type.googleapis.com / mediapipe.LLMCalculatorOptions]: {
       models_path: "$ModelPathForGraph"
       device: "GPU"
-      plugin_config: '{"PERFORMANCE_HINT":"LATENCY"}'
-      enable_prefix_caching: true
+      plugin_config: '{"DYNAMIC_QUANTIZATION_GROUP_SIZE":"0","PERFORMANCE_HINT":"LATENCY"}'
+      max_num_seqs: 1
+      enable_prefix_caching: $PrefixCachingText
       cache_size: 0
-      pipeline_type: VLM_CB
+      pipeline_type: $Pipeline
       chat_template_mode: MINJA
       max_tokens_limit: $MaxTokensLimit
     }
@@ -120,7 +125,9 @@ $Result = [pscustomobject]@{
     OvmsPath = $OvmsPath
     ModelPath = $ModelPath
     ModelName = $ModelName
-    Pipeline = "VLM_CB"
+    Profile = $Profile
+    Pipeline = $Pipeline
+    PrefixCaching = $PrefixCaching
     QueueSize = $QueueSize
     RestBaseUrl = "http://127.0.0.1:$RestPort/v3"
     GrpcPort = $GrpcPort
@@ -154,7 +161,8 @@ $Arguments = @("--rest_port", "$RestPort", "--port", "$GrpcPort", "--config_path
 
 Write-Host "GEMMAMONSTER-OVMS source: $Head"
 Write-Host "Known-good baseline:       $KnownGoodCommit"
-Write-Host "Pipeline:                  VLM_CB (queue=$QueueSize)"
+Write-Host "Diagnostic profile:        $Profile"
+Write-Host "Pipeline:                  $Pipeline (queue=$QueueSize, prefix_caching=$PrefixCachingText)"
 Write-Host "OpenAI base URL:           http://127.0.0.1:$RestPort/v3"
 Write-Host "Model:                     $ModelPath"
 
