@@ -1,0 +1,9 @@
+{
+  "model_config_list": [],
+  "mediapipe_config_list": [
+    {
+      "name": "gemma4",
+      "graph_path": "C:/git/model_server-gemma4-fast/runtime/gemmamonster-ovms-A/graph.pbtxt"
+    }
+  ]
+}
