@@ -1,0 +1,22 @@
+{
+  "observed_at": "2026-09-08T18:14:55.8276806+02:00",
+  "source_commit": "fea1a5f1c2640aa60fe6a840d3f62b38fb7b7767",
+  "launcher_commit": "024416b1",
+  "binary_sha256": "0683A62C602AE83EF70D13EF175663EE772843C7924B5C63D93287198CBB8E9B",
+  "pipeline": "VLM_CB",
+  "queue_size": 0,
+  "base_url": "http://127.0.0.1:8888/v3",
+  "model": "gemma4",
+  "models_curl": {
+    "status": "PASS",
+    "returned_model": "gemma4"
+  },
+  "strict_named_tool_calls": {
+    "status": "PASS",
+    "total": 100,
+    "passed": 100,
+    "failed": 0,
+    "average_seconds": 1.037,
+    "required_tool": "question"
+  }
+}
