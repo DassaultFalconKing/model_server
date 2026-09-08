@@ -26,6 +26,7 @@ try {
         A = @{ Pipeline = "VLM"; PrefixCaching = $false }
         B = @{ Pipeline = "VLM_CB"; PrefixCaching = $false }
         C = @{ Pipeline = "VLM_CB"; PrefixCaching = $true }
+        D = @{ Pipeline = "VLM_CB"; PrefixCaching = $false }
     }
     foreach ($ProfileName in $Profiles.Keys) {
         $ProfileRuntime = Join-Path $RuntimeRoot $ProfileName
@@ -43,6 +44,7 @@ try {
         Assert-Equal $Result.QueueSize 0 "Graph queue size"
         Assert-Equal $Result.Pipeline $Profiles[$ProfileName].Pipeline "Pipeline for profile $ProfileName"
         Assert-Equal $Result.PrefixCaching $Profiles[$ProfileName].PrefixCaching "Prefix caching for profile $ProfileName"
+        if ($ProfileName -eq "D") { Assert-Equal $Result.PerformanceHint "THROUGHPUT" "Performance hint for profile D" }
 
         $Config = Get-Content -LiteralPath $Result.ConfigPath -Raw | ConvertFrom-Json
         Assert-Equal $Config.mediapipe_config_list[0].name "gemma4" "Servable name"

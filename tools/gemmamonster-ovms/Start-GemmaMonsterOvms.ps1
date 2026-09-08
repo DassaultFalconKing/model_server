@@ -5,7 +5,7 @@ param(
     [string]$ModelName = "gemma4",
     [int]$RestPort = 8888,
     [int]$GrpcPort = 9000,
-    [ValidateSet("A", "B", "C")][string]$Profile = "B",
+    [ValidateSet("A", "B", "C", "D")][string]$Profile = "B",
     [ValidateRange(0, 1024)][int]$QueueSize = 0,
     [ValidateRange(1, 1048576)][int]$MaxTokensLimit = 65536,
     [switch]$Foreground,
@@ -25,6 +25,7 @@ $OutLog = Join-Path $RuntimeRoot "ovms.stdout.log"
 $ErrLog = Join-Path $RuntimeRoot "ovms.stderr.log"
 $Pipeline = if ($Profile -eq "A") { "VLM" } else { "VLM_CB" }
 $PrefixCaching = ($Profile -eq "C")
+$PerformanceHint = if ($Profile -eq "D") { "THROUGHPUT" } else { "LATENCY" }
 $PrefixCachingText = $PrefixCaching.ToString().ToLowerInvariant()
 
 if ($ModelName -notmatch '^[A-Za-z0-9._-]+$') {
@@ -84,7 +85,7 @@ node: {
     [type.googleapis.com / mediapipe.LLMCalculatorOptions]: {
       models_path: "$ModelPathForGraph"
       device: "GPU"
-      plugin_config: '{"DYNAMIC_QUANTIZATION_GROUP_SIZE":"0","PERFORMANCE_HINT":"LATENCY"}'
+      plugin_config: '{"DYNAMIC_QUANTIZATION_GROUP_SIZE":"0","PERFORMANCE_HINT":"$PerformanceHint"}'
       max_num_seqs: 1
       enable_prefix_caching: $PrefixCachingText
       cache_size: 0
@@ -128,6 +129,7 @@ $Result = [pscustomobject]@{
     Profile = $Profile
     Pipeline = $Pipeline
     PrefixCaching = $PrefixCaching
+    PerformanceHint = $PerformanceHint
     QueueSize = $QueueSize
     RestBaseUrl = "http://127.0.0.1:$RestPort/v3"
     GrpcPort = $GrpcPort
@@ -162,7 +164,7 @@ $Arguments = @("--rest_port", "$RestPort", "--port", "$GrpcPort", "--config_path
 Write-Host "GEMMAMONSTER-OVMS source: $Head"
 Write-Host "Known-good baseline:       $KnownGoodCommit"
 Write-Host "Diagnostic profile:        $Profile"
-Write-Host "Pipeline:                  $Pipeline (queue=$QueueSize, prefix_caching=$PrefixCachingText)"
+Write-Host "Pipeline:                  $Pipeline (queue=$QueueSize, prefix_caching=$PrefixCachingText, hint=$PerformanceHint)"
 Write-Host "OpenAI base URL:           http://127.0.0.1:$RestPort/v3"
 Write-Host "Model:                     $ModelPath"
 

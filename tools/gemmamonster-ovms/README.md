@@ -9,6 +9,7 @@ Profiles are intentionally small experiments:
 - `A`: legacy `VLM`, no prefix caching, one sequence.
 - `B`: `VLM_CB`, no prefix caching, DQ group size 0, one sequence.
 - `C`: `VLM_CB`, prefix caching enabled; otherwise identical to B.
+- `D`: `VLM_CB`, no prefix caching, with `PERFORMANCE_HINT=THROUGHPUT` for a controlled speed trial.
 
 Start with profile B for the correctness-isolation run. Use A to separate a
 general VLM/long-context problem from CB, and C only to test the incremental
