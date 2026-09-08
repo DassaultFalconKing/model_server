@@ -91,6 +91,9 @@ node: {
       cache_size: 0
       pipeline_type: $Pipeline
       chat_template_mode: MINJA
+      tool_parser: gemma4
+      reasoning_parser: gemma4
+      enable_tool_guided_generation: true
       max_tokens_limit: $MaxTokensLimit
     }
   }
