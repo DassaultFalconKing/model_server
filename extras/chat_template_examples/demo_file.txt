@@ -1,2 +1,0 @@
-# Sample content for demo
-This is a new file created to demonstrate the git workflow.
