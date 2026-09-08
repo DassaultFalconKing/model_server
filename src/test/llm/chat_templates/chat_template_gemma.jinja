@@ -339,6 +339,12 @@
 {%- endfor -%}
 
 {%- if add_generation_prompt -%}
+    {#- GEMMA4_RECENT_TOOL_ATTRACTOR: repeat capabilities next to generation. -#}
+    {%- if tools is defined and tools and ns.prev_message_type != 'tool_response' and ns.prev_message_type != 'tool_call' -%}
+        {{- '<|turn>system\nUse the available tools for external operations. Never print a command as chat text when a matching tool is available.\n' -}}
+        {%- for tool in tools -%}{{- '<|tool>' -}}{{- format_function_declaration(tool) | trim -}}{{- '<tool|>' -}}{%- endfor -%}
+        {{- '<turn|>\n' -}}
+    {%- endif -%}
     {%- if ns.prev_message_type != 'tool_response' and ns.prev_message_type != 'tool_call' -%}
         {{- '<|turn>model\n' -}}
         {%- if not enable_thinking | default(false) -%}

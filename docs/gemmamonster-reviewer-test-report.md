@@ -58,3 +58,15 @@ tool result.
 прогоне. `PERFORMANCE_HINT=THROUGHPUT` пока `UNVERIFIED`; менять рабочий профиль
 на D без исправленного benchmark-probe нельзя. Полный внешний OpenCode agent loop
 и независимое измерение tokens/sec этим отчётом не утверждаются.
+
+## Finding: recency of the tool capability matrix
+
+OpenCode session `ses_f7dc5d830ffeMpo3a077FumN87` stopped producing structured
+tool parts at approximately 17k input tokens and emitted `Get-ChildItem` as a
+Markdown code block with `finish=stop`. Earlier turns in the same session did
+contain durable `type=tool` parts. The Gemma4 template placed tool declarations
+only in the first system turn, while recent history contained several plain-text
+PowerShell command examples. The working hypothesis is recency/attention
+competition rather than KV capacity exhaustion: runtime cache usage was about
+51% of 2.2 GB. The generator now repeats the current tool declarations and a
+short native-tool instruction immediately before a new model generation turn.
