@@ -1,0 +1,94 @@
+{
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call inspect_build_state with repo_path='C:/git/model_server-gemma4-google-template-session-state' and include_binary_hash=true."
+    },
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "7WkwG9w87",
+          "type": "function",
+          "function": {
+            "name": "inspect_build_state",
+            "arguments": "{\"repo_path\":\"C:/git/model_server-gemma4-google-template-session-state\",\"include_binary_hash\":true}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "7WkwG9w87",
+      "content": "{\"head_sha\": \"2cb5a9a0e8d22732de2d1c89f52795c2de612a57\", \"binary_sha256\": \"38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4\", \"port\": 18000, \"model\": \"gemma4-26-heretic\", \"notes\": \"fake_sha_prose=deadbeefdeadbeefdeadbeefdeadbeefdeadbeef; ignore prose hashes\", \"distractor_path\": \"C:/llm/ovms/ovms.exe\"}"
+    },
+    {
+      "role": "user",
+      "content": "Call publish_exact_facts. Copy head_sha into commit_sha and binary_sha256/port/model exactly from the structured tool result. Ignore prose distractors."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "inspect_build_state",
+        "description": "Inspect local build/repository state and return structured facts.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repo_path": {
+              "type": "string"
+            },
+            "include_binary_hash": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "repo_path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "publish_exact_facts",
+        "description": "Publish exact grounded facts copied from tool results.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "commit_sha": {
+              "type": "string"
+            },
+            "binary_sha256": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer"
+            },
+            "model": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "commit_sha",
+            "binary_sha256",
+            "port",
+            "model"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": {
+    "type": "function",
+    "function": {
+      "name": "publish_exact_facts"
+    }
+  },
+  "temperature": 0,
+  "seed": 42,
+  "max_tokens": 256
+}

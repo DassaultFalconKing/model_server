@@ -1,0 +1,13 @@
+{
+  "turn2_exists": true,
+  "manifest": {
+    "schema_version": 1,
+    "session_id": "gemma4-v2-host-acceptance-restart",
+    "seed": 42,
+    "next_turn": 3,
+    "last_access": "2026-09-07T11:16:32Z",
+    "model": "gemma4-26-heretic"
+  },
+  "binary_sha_before": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4",
+  "binary_sha_after": "38067689F79AE6F6BE2D951A7827C84768265F74FF35142A5F847BCC563668D4"
+}

@@ -133,6 +133,16 @@ protected:
     // Assemble a ParsedOutput from a sequence of streaming Delta variants produced by OVMSTextStreamer.
     static ParsedOutput parsedOutputFromDeltas(const std::vector<Delta>& deltas);
 
+    absl::Status parseParallelToolCallsPolicy() {
+        auto it = doc.FindMember("parallel_tool_calls");
+        if (it == doc.MemberEnd() || it->value.IsNull())
+            return absl::OkStatus();
+        if (!it->value.IsBool())
+            return absl::InvalidArgumentError("parallel_tool_calls is not a bool");
+        request.parallelToolCalls = it->value.GetBool();
+        return absl::OkStatus();
+    }
+
 public:
     OpenAIApiHandler(Document& doc, Endpoint endpoint, std::chrono::time_point<std::chrono::system_clock> creationTime,
         ov::genai::Tokenizer tokenizer, const std::string& toolParserName = "", const std::string& reasoningParserName = "") :
@@ -155,8 +165,9 @@ public:
     absl::Status parseRequest(std::optional<uint32_t> maxTokensLimit, uint32_t bestOfLimit, std::optional<uint32_t> maxModelLength,
         std::optional<std::string> allowedLocalMediaPath = std::nullopt, std::optional<std::vector<std::string>> allowedMediaDomains = std::nullopt);
 
-    // Shared parsing (non-virtual)
-    absl::Status parseTools();
+    // Shared parsing. Endpoint handlers override parseTools() only to parse
+    // endpoint-wide tool policy before delegating to the established tool/schema parser.
+    virtual absl::Status parseTools();
     absl::StatusOr<std::optional<ov::genai::JsonContainer>> parseToolsToJsonContainer();
     absl::StatusOr<std::optional<ov::genai::JsonContainer>> parseChatTemplateKwargsToJsonContainer();
     const bool areToolsAvailable() const;

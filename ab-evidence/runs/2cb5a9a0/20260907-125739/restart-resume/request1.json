@@ -1,0 +1,71 @@
+{
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call inspect_build_state with repo_path='C:/git/model_server-gemma4-google-template-session-state'."
+    }
+  ],
+  "max_tokens": 256,
+  "temperature": 0,
+  "seed": 42,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "inspect_build_state",
+        "description": "Inspect local build/repository state and return structured facts.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repo_path": {
+              "type": "string"
+            },
+            "include_binary_hash": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "repo_path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "publish_exact_facts",
+        "description": "Publish exact grounded facts copied from tool results.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "commit_sha": {
+              "type": "string"
+            },
+            "binary_sha256": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer"
+            },
+            "model": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "commit_sha",
+            "binary_sha256",
+            "port",
+            "model"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": {
+    "type": "function",
+    "function": {
+      "name": "inspect_build_state"
+    }
+  }
+}

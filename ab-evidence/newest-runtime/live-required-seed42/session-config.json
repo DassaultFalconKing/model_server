@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "session_id": "gemma4-9a168d35e56d4893bdda0701dd4fef02",
+  "header": "X-OVMS-Session-ID",
+  "seed_mode": "explicit",
+  "requested_seed": 42,
+  "temperature": 0.0,
+  "top_p": null,
+  "top_k": null,
+  "second_tool_choice": "required",
+  "model": "gemma4-26-heretic",
+  "commit_sha": "8f84ec0aca067f6b06a6eaf33db799037130c57f"
+}

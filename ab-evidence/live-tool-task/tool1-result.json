@@ -1,0 +1,53 @@
+{
+  "ref": "798e99e04d53fba2b1c87bd6b88260f0d6c3ca83",
+  "diff": [
+    "A\tab-evidence/ab_harness.py",
+    "A\tab-evidence/complex-tool-catalog.json",
+    "A\tab-evidence/stage-A/STAGE-A-SUMMARY.json",
+    "A\tab-evidence/stage-A/session.json",
+    "A\tab-evidence/stage-B/STAGE-B-SUMMARY.json",
+    "A\tab-evidence/stage-B/session.json",
+    "A\tdocs/gemma4/final-review-ab-agent.md",
+    "M\tsrc/BUILD",
+    "M\tsrc/llm/apis/openai_api_handler.cpp",
+    "M\tsrc/llm/io_processing/gemma4/gemma4_reasoning_parser.cpp",
+    "M\tsrc/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
+    "M\tsrc/llm/io_processing/gemma4/gemma4_tool_parser.hpp",
+    "M\tsrc/llm/io_processing/generation_config_builder.hpp",
+    "M\tsrc/llm/io_processing/output_parser.cpp",
+    "M\tsrc/llm/io_processing/output_parsing_config.hpp",
+    "M\tsrc/test/llm/gemma4_fast/BUILD",
+    "M\tsrc/test/llm/gemma4_fast/gemma4_parser_contract_test.cpp",
+    "M\tsrc/test/llm/generation_config/BUILD",
+    "M\tsrc/test/llm/generation_config/gemma4_generation_contract_test.cpp",
+    "M\twindows_build_fast.ps1"
+  ],
+  "repository": "C:\\git\\g4-final-review",
+  "status": [
+    "?? ab-evidence/live-tool-task/",
+    "?? ab-evidence/stage-A-dryrun-04f46b55/",
+    "?? ab-evidence/stage-A/cases/",
+    "?? ab-evidence/stage-A/manifest.json",
+    "?? ab-evidence/stage-A/server_cmd.json",
+    "?? ab-evidence/stage-B/cases/",
+    "?? ab-evidence/stage-B/manifest.json",
+    "?? ab-evidence/stage-B/server_cmd.json",
+    "?? bazel-g4-final-review/"
+  ],
+  "generated_artifacts": [
+    "C:\\git\\g4-final-review\\ab-evidence",
+    "C:\\git\\g4-final-review\\bazel-bin",
+    "C:\\git\\g4-final-review\\bazel-g4-final-review",
+    "C:\\git\\g4-final-review\\bazel-out",
+    "C:\\git\\g4-final-review\\bazel-testlogs"
+  ],
+  "remote_provenance": [
+    "origin\thttps://github.com/DassaultFalconKing/model_server.git (fetch)",
+    "origin\thttps://github.com/DassaultFalconKing/model_server.git (push)"
+  ],
+  "constraints": {
+    "fail_on_dirty": false,
+    "read_only": true,
+    "allow_network": false
+  }
+}

@@ -399,6 +399,23 @@ TEST_F(HttpRestApiHandlerWithMediapipePassthrough, inferRequestBYTES) {
 #pragma GCC diagnostic pop
 #endif
 
+TEST_F(HttpRestApiHandlerTest, V3ChatCompletionsPropagatesSessionHeadersIntoRequestComponents) {
+    std::unordered_map<std::string, std::string> inbound{
+        {"content-type", "application/json"},
+        {"X-OVMS-Session-ID", "gemma4-live-test"},
+        {"X-OVMS-Session-Store", "C:\\tmp\\gemma4-session-store"},
+    };
+    ovms::HttpRequestComponents components;
+    ASSERT_EQ(handler->parseRequestComponents(components, "POST", "/v3/chat/completions", inbound), ovms::StatusCode::OK);
+    ASSERT_EQ(components.type, ovms::V3);
+    auto sessionId = components.headers.find("X-OVMS-Session-ID");
+    ASSERT_NE(sessionId, components.headers.end());
+    EXPECT_EQ(sessionId->second, "gemma4-live-test");
+    auto sessionStore = components.headers.find("X-OVMS-Session-Store");
+    ASSERT_NE(sessionStore, components.headers.end());
+    EXPECT_EQ(sessionStore->second, "C:\\tmp\\gemma4-session-store");
+}
+
 TEST_F(HttpRestApiHandlerTest, MetricsParameters) {
     std::string request = "/metrics?test=test";
     ovms::HttpRequestComponents comp;

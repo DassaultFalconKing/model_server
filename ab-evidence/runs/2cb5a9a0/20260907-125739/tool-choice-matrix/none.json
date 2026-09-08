@@ -1,0 +1,41 @@
+{
+  "CASE_ID": "TC01_NONE",
+  "tool_choice": "none",
+  "stream": false,
+  "thinking": null,
+  "temperature": 0,
+  "seed": 42,
+  "HTTP_STATUS": 200,
+  "FINISH_REASON": "stop",
+  "TOOL_CALL_COUNT": 0,
+  "TOOL_NAME": null,
+  "TOOL_NAMES": [],
+  "ARGUMENTS_JSON_VALID": null,
+  "PROTOCOL_LEAK": false,
+  "FINISH_REASON_INTEGRITY": true,
+  "elapsed_s": 0.531,
+  "content_preview": "Hello there!",
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "Hello there!",
+          "role": "assistant",
+          "tool_calls": []
+        }
+      }
+    ],
+    "created": 1788779701,
+    "model": "gemma4-26-heretic",
+    "object": "chat.completion",
+    "usage": {
+      "prompt_tokens": 20,
+      "completion_tokens": 4,
+      "total_tokens": 24
+    }
+  },
+  "VERDICT": "PASS"
+}

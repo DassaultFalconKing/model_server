@@ -1,0 +1,36 @@
+{
+  "verdict": "PASS",
+  "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+  "model": "gemma4-26-heretic",
+  "commit_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+  "second_tool_choice": "auto",
+  "request1": {
+    "http": 200,
+    "elapsed_s": 4.438,
+    "tool": "inspect_repository_state",
+    "requested_ref_exact": true
+  },
+  "executor": {
+    "head_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "resolved_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "read_only": true,
+    "allow_network": false
+  },
+  "request2": {
+    "http": 200,
+    "elapsed_s": 21.562,
+    "tool": "publish_review_evidence",
+    "commit_sha": "908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703",
+    "exact_sha_pass": true
+  },
+  "evidence_files": [
+    "request1-input.json",
+    "request1-response.json",
+    "request1-response.raw",
+    "tool1-result.json",
+    "request2-input.json",
+    "request2-response.json",
+    "request2-response.raw",
+    "summary.json"
+  ]
+}

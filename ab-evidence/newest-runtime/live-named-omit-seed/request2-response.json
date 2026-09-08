@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "f46YmH4Oz",
+            "type": "function",
+            "function": {
+              "name": "publish_review_evidence",
+              "arguments": "{\"repository\":\"C:\\\\git\\\\model_server-gemma4-google-template-session-state\",\"commit_sha\":\"8f84ec0aca067f6b06a6eaf33db799037130c57f\",\"verdict\":\"PARTIAL\",\"artifacts\":[{\"kind\":\"build_log\",\"path\":\"ab-evidence/status.json\",\"authority\":\"local_exact_head\"}],\"gates\":[{\"name\":\"Repository State Check\",\"status\":\"FAIL\",\"evidence\":\"Repository is dirty (contains uncommitted changes and un-tracked files). Contains 8 uncommitted changes and 8 un-tracked files. Contains 1 changed file in the working directory. changed_files: ['src/test/llm/max_model_length_test.cpp']\"},{\"name\":\"Commit SHA Match\",\"status\":\"PASS\",\"evidence\":\"The requested SHA 8f84ec0aca067f6b06a6eaf33db799037130c57f matches the resolved SHA 8f84ec0aca067f6b06a6eaf33db799037130c57f.\"}]}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788711474,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 1890,
+    "completion_tokens": 387,
+    "total_tokens": 2277
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "lvSYSaTkD",
+            "type": "function",
+            "function": {
+              "name": "inspect_repository_state",
+              "arguments": "{\"repository\":\"C:\\\\git\\\\g4-final-review\",\"ref\":\"908bc8b7e3bdd24ddd5eb9b27bbe15bcffb00703\",\"include\":[\"status\",\"diff\",\"submodules\",\"generated_artifacts\",\"remote_provenance\"],\"constraints\":{\"read_only\":true,\"fail_on_dirty\":true}}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788690786,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 324,
+    "completion_tokens": 116,
+    "total_tokens": 440
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "status": 200,
+  "elapsed": 2.2179999999934807,
+  "body": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "vp99dQYKT",
+              "type": "function",
+              "function": {
+                "name": "inspect_build_state",
+                "arguments": "{\"repo_path\":\"C:/git/model_server-gemma4-google-template-session-state\"}"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1788779723,
+    "model": "gemma4-26-heretic",
+    "object": "chat.completion",
+    "usage": {
+      "prompt_tokens": 116,
+      "completion_tokens": 41,
+      "total_tokens": 157
+    }
+  }
+}

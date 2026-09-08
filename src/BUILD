@@ -2424,6 +2424,10 @@ cc_library( # DO NOT ADD BIG DEPENDENCIES HERE
 
 cc_library(
     name = "test_platform_utils",
+    visibility = [
+        "//src/test/llm/gemma4_fast:__pkg__",
+        "//src/test/llm/generation_config:__pkg__",
+    ],
     hdrs = ["test/platform_utils.hpp",],
     srcs = ["test/platform_utils.cpp",],
     deps = [

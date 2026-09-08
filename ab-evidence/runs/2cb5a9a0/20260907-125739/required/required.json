@@ -1,0 +1,52 @@
+{
+  "CASE_ID": "TC04_REQUIRED",
+  "tool_choice": "required",
+  "stream": false,
+  "thinking": null,
+  "temperature": 0,
+  "seed": 42,
+  "HTTP_STATUS": 200,
+  "FINISH_REASON": "tool_calls",
+  "TOOL_CALL_COUNT": 1,
+  "TOOL_NAME": "inspect_build_state",
+  "TOOL_NAMES": [
+    "inspect_build_state"
+  ],
+  "ARGUMENTS_JSON_VALID": true,
+  "PROTOCOL_LEAK": false,
+  "FINISH_REASON_INTEGRITY": true,
+  "elapsed_s": 2.265,
+  "content_preview": "",
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "AVPixfQi2",
+              "type": "function",
+              "function": {
+                "name": "inspect_build_state",
+                "arguments": "{\"repo_path\":\"C:/git/model_server-gemma4-google-template-session-state\"}"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1788779706,
+    "model": "gemma4-26-heretic",
+    "object": "chat.completion",
+    "usage": {
+      "prompt_tokens": 218,
+      "completion_tokens": 40,
+      "total_tokens": 258
+    }
+  },
+  "VERDICT": "PASS"
+}

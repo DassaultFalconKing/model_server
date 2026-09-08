@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "GN0avDmGk",
+            "type": "function",
+            "function": {
+              "name": "inspect_repository_state",
+              "arguments": "{\"repository\":\"C:\\\\git\\\\model_server-gemma4-google-template-session-state\",\"ref\":\"8f84ec0aca067f6b06a6eaf33db799037130c57f\",\"include\":[\"status\",\"diff\",\"submodules\",\"generated_artifacts\",\"remote_provenance\"],\"constraints\":{\"read_only\":true,\"fail_on_dirty\":true}}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788711692,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 338,
+    "completion_tokens": 147,
+    "total_tokens": 485
+  }
+}

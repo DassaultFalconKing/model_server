@@ -50,6 +50,14 @@ ChatTemplateAnalysisResult ChatTemplateAnalyzer::analyze(const std::string& temp
         result.detectedToolParser = "gemma4";
         result.detectedReasoningParser = "gemma4";  // gemma is always tied to its own parser for reasoning
         result.caps.supportsToolCalls = true;
+        // format_tool_response_block has "response is mapping", but that is not safe on
+        // its own. Jinja2 treats dicts as sequences, so converting role:tool content to
+        // an object makes the OpenAI forward-scan iterate dict keys and call part.get()
+        // on strings ('str object' has no attribute 'get'). Keep JSON content as a
+        // string unless the template has a mapping test without that parts scan.
+        const bool mapsResponse = contains(templateSource, "response is mapping");
+        const bool iteratesPartsWithGet = contains(templateSource, "part.get('type')");
+        result.caps.parseToolResponseJsonContent = mapsResponse && !iteratesPartsWithGet;
         return result;
     }
 

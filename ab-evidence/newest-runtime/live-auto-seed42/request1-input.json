@@ -1,0 +1,180 @@
+{
+  "model": "gemma4-26-heretic",
+  "max_tokens": 768,
+  "stream": false,
+  "tool_choice": {
+    "type": "function",
+    "function": {
+      "name": "inspect_repository_state"
+    }
+  },
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "inspect_repository_state",
+        "description": "Inspect an exact repository ref and report git status, changed scopes, generated artifacts, and provenance without modifying files.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "description": "Absolute repository path."
+            },
+            "ref": {
+              "type": "string",
+              "description": "Exact commit SHA or ref to inspect."
+            },
+            "include": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "status",
+                  "diff",
+                  "submodules",
+                  "generated_artifacts",
+                  "remote_provenance"
+                ]
+              }
+            },
+            "constraints": {
+              "type": "object",
+              "properties": {
+                "read_only": {
+                  "type": "boolean"
+                },
+                "allow_network": {
+                  "type": "boolean"
+                },
+                "fail_on_dirty": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "read_only",
+                "fail_on_dirty"
+              ]
+            }
+          },
+          "required": [
+            "repository",
+            "ref",
+            "include",
+            "constraints"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "publish_review_evidence",
+        "description": "Create a compact immutable review evidence record from exact SHA, logs, responses, and explicit PASS/FAIL/NOT_RUN gates.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string"
+            },
+            "commit_sha": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "verdict": {
+              "type": "string",
+              "enum": [
+                "PASS",
+                "FAIL",
+                "PARTIAL",
+                "NOT_RUN",
+                "BLOCKED"
+              ]
+            },
+            "artifacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "build_log",
+                      "runtime_log",
+                      "curl_response",
+                      "binary",
+                      "diff"
+                    ]
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "sha256": {
+                    "type": "string"
+                  },
+                  "authority": {
+                    "type": "string",
+                    "enum": [
+                      "local_exact_head",
+                      "hosted_exact_head",
+                      "derived_runtime",
+                      "unverified"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "path",
+                  "authority"
+                ]
+              }
+            },
+            "gates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "PASS",
+                      "FAIL",
+                      "NOT_RUN",
+                      "BLOCKED"
+                    ]
+                  },
+                  "evidence": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "status",
+                  "evidence"
+                ]
+              }
+            }
+          },
+          "required": [
+            "repository",
+            "commit_sha",
+            "verdict",
+            "artifacts",
+            "gates"
+          ]
+        }
+      }
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Inspect repository C:\\git\\model_server-gemma4-google-template-session-state at exact commit 8f84ec0aca067f6b06a6eaf33db799037130c57f using inspect_repository_state. Use read-only local inspection with allow_network false. After the tool result is returned, publish a review evidence record using publish_review_evidence and copy the exact commit SHA from the tool result without changing any character."
+    }
+  ],
+  "temperature": 0.0,
+  "seed": 42
+}

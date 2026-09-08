@@ -1,0 +1,47 @@
+{
+  "verdict": "PASS",
+  "endpoint": "http://127.0.0.1:18000/v3/chat/completions",
+  "model": "gemma4-26-heretic",
+  "commit_sha": "81ff2f2cae8b79cc22f7103cf4c29eb1953f9789",
+  "session_id": "gemma4-live-session-20260906a",
+  "session_header": "X-OVMS-Session-ID",
+  "seed_mode": "explicit",
+  "requested_seed": 42,
+  "sampling": {
+    "temperature": 0.0,
+    "top_p": null,
+    "top_k": null
+  },
+  "resumed_after_restart_checkpoint": true,
+  "second_tool_choice": "required",
+  "request1": {
+    "http": 200,
+    "elapsed_s": null,
+    "tool": "inspect_repository_state",
+    "requested_ref_exact": true
+  },
+  "executor": {
+    "head_sha": "81ff2f2cae8b79cc22f7103cf4c29eb1953f9789",
+    "resolved_sha": "81ff2f2cae8b79cc22f7103cf4c29eb1953f9789",
+    "read_only": true,
+    "allow_network": false
+  },
+  "request2": {
+    "http": 200,
+    "elapsed_s": 10.671,
+    "tool": "publish_review_evidence",
+    "commit_sha": "81ff2f2cae8b79cc22f7103cf4c29eb1953f9789",
+    "exact_sha_pass": true
+  },
+  "evidence_files": [
+    "session-config.json",
+    "request1-input.json",
+    "request1-response.json",
+    "request1-response.raw",
+    "tool1-result.json",
+    "request2-input.json",
+    "request2-response.json",
+    "request2-response.raw",
+    "summary.json"
+  ]
+}

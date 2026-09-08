@@ -70,7 +70,7 @@ bool PyJinjaTemplateProcessor::applyChatTemplate(PyJinjaTemplateProcessor& templ
                 else:
                     output = tool_chat_template.render(messages=messages, tools=tools, bos_token=bos_token, eos_token=eos_token, add_generation_prompt=add_generation_prompt, **chat_template_kwargs)
             except Exception as e:
-                error = str(e) 
+                error = str(e)
         )",
             py::globals(), locals);
 
