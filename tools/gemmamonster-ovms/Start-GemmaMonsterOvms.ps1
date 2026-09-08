@@ -5,7 +5,7 @@ param(
     [string]$ModelName = "gemma4",
     [int]$RestPort = 8888,
     [int]$GrpcPort = 9000,
-    [ValidateSet("A", "B", "C", "D")][string]$Profile = "B",
+    [ValidateSet("A", "B", "C", "D", "E")][string]$Profile = "B",
     [ValidateRange(0, 1024)][int]$QueueSize = 0,
     [ValidateRange(1, 1048576)][int]$MaxTokensLimit = 65536,
     [switch]$Foreground,
@@ -24,8 +24,9 @@ $PidPath = Join-Path $RuntimeRoot "ovms.pid"
 $OutLog = Join-Path $RuntimeRoot "ovms.stdout.log"
 $ErrLog = Join-Path $RuntimeRoot "ovms.stderr.log"
 $Pipeline = if ($Profile -eq "A") { "VLM" } else { "VLM_CB" }
-$PrefixCaching = ($Profile -eq "C")
+$PrefixCaching = ($Profile -eq "C" -or $Profile -eq "E")
 $PerformanceHint = if ($Profile -eq "D") { "THROUGHPUT" } else { "LATENCY" }
+$KvCacheConfig = if ($Profile -eq "E") { ',"KV_CACHE_PRECISION":"u8"' } else { "" }
 $PrefixCachingText = $PrefixCaching.ToString().ToLowerInvariant()
 
 if ($ModelName -notmatch '^[A-Za-z0-9._-]+$') {
@@ -85,7 +86,7 @@ node: {
     [type.googleapis.com / mediapipe.LLMCalculatorOptions]: {
       models_path: "$ModelPathForGraph"
       device: "GPU"
-      plugin_config: '{"DYNAMIC_QUANTIZATION_GROUP_SIZE":"0","PERFORMANCE_HINT":"$PerformanceHint"}'
+      plugin_config: '{"DYNAMIC_QUANTIZATION_GROUP_SIZE":"0","PERFORMANCE_HINT":"$PerformanceHint"$KvCacheConfig}'
       max_num_seqs: 1
       enable_prefix_caching: $PrefixCachingText
       cache_size: 0

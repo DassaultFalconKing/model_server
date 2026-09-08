@@ -27,6 +27,7 @@ try {
         B = @{ Pipeline = "VLM_CB"; PrefixCaching = $false }
         C = @{ Pipeline = "VLM_CB"; PrefixCaching = $true }
         D = @{ Pipeline = "VLM_CB"; PrefixCaching = $false }
+        E = @{ Pipeline = "VLM_CB"; PrefixCaching = $true }
     }
     foreach ($ProfileName in $Profiles.Keys) {
         $ProfileRuntime = Join-Path $RuntimeRoot $ProfileName
@@ -62,6 +63,9 @@ try {
         }
         if ($Graph -notmatch 'DYNAMIC_QUANTIZATION_GROUP_SIZE\\?"\s*:\s*\\?"0') {
             throw "Generated graph does not disable dynamic quantization."
+        }
+        if ($ProfileName -eq "E" -and $Graph -notmatch 'KV_CACHE_PRECISION\\?"\s*:\s*\\?"u8') {
+            throw "Generated graph does not select u8 KV cache for profile E."
         }
         if ($Graph -notmatch [regex]::Escape(($ModelPath -replace "\\", "/"))) {
             throw "Generated graph does not contain the requested model path."

@@ -17,9 +17,9 @@
         "gemma4": {
           "name": "Gemma 4 26B Heretic (OVMS)",
           "limit": {
-            "context": 16384,
-            "input": 14336,
-            "output": 2048
+            "context": 49152,
+            "input": 45056,
+            "output": 4096
           }
         }
       }
