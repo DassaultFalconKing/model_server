@@ -4,6 +4,10 @@ These scripts run the locally built custom OVMS from this repository with
 diagnostic Gemma 4 profiles. The source HEAD must contain commit
 `fea1a5f1c2640aa60fe6a840d3f62b38fb7b7767`.
 
+For OpenCode, use `opencode.gemma4-safe.json` as the provider/compaction
+baseline. It advertises the verified 16k operating window and triggers
+compaction before long-session tool calls degrade into plain chat text.
+
 Profiles are intentionally small experiments:
 
 - `A`: legacy `VLM`, no prefix caching, one sequence.
