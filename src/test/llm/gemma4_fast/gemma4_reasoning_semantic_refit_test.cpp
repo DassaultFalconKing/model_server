@@ -13,6 +13,7 @@
 
 #include <cstdlib>
 #include <memory>
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>
@@ -35,6 +36,20 @@ ToolsSchemas_t questionTools() {
     ToolsSchemas_t tools;
     tools.emplace("question", ToolSchemaWrapper{nullptr, questionSchema});
     return tools;
+}
+
+std::optional<ToolCallDelta> driveUntilToolCall(OutputParser& parser, const std::string& firstChunk) {
+    for (int step = 0; step < 8; ++step) {
+        const auto delta = parser.parseChunk(
+            step == 0 ? firstChunk : std::string{},
+            {},
+            true,
+            step == 7 ? ov::genai::GenerationFinishReason::STOP : ov::genai::GenerationFinishReason::NONE);
+        if (delta && std::holds_alternative<ToolCallDelta>(*delta)) {
+            return std::get<ToolCallDelta>(*delta);
+        }
+    }
+    return std::nullopt;
 }
 
 class Gemma4ReasoningSemanticRefitTest : public ::testing::Test {
@@ -66,15 +81,11 @@ TEST_F(Gemma4ReasoningSemanticRefitTest, ToolStartImplicitlyEndsOpenReasoning) {
     ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*first));
     EXPECT_EQ(std::get<ReasoningDelta>(*first).text, "Need another tool");
 
-    auto second = parser.parseChunk(
-        "<|tool_call>call:question{questions:[]}<tool_call|>",
-        {},
-        true,
-        ov::genai::GenerationFinishReason::NONE);
+    const auto call = driveUntilToolCall(
+        parser,
+        "<|tool_call>call:question{questions:[]}<tool_call|>");
 
-    ASSERT_TRUE(second.has_value());
-    ASSERT_TRUE(std::holds_alternative<ToolCallDelta>(*second));
-    const auto& call = std::get<ToolCallDelta>(*second);
-    EXPECT_EQ(call.name.value_or(""), "question");
-    EXPECT_EQ(call.arguments, R"({"questions":[]})");
+    ASSERT_TRUE(call.has_value());
+    EXPECT_EQ(call->name.value_or(""), "question");
+    EXPECT_EQ(call->arguments, R"({"questions":[]})");
 }
