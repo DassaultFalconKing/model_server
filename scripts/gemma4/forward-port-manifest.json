@@ -1,0 +1,138 @@
+{
+  "schema_version": 2,
+  "name": "GEMMAMONSTER Gemma4 reliability overlay",
+  "known_good_2026_4": "c48366fee1f10cdf6b5fe3c181522ed0c58fc9fd",
+  "upstream_2026_5_base": "b935fe8b96a0445f3746297f872b55ed202fa6e5",
+  "candidate_branch": "integration/ovms-2026.5-forward-port",
+  "current_working_runtime_profile": {
+    "name": "E",
+    "status": "WORKING_ON_TARGET_MACHINE",
+    "device": "GPU",
+    "pipeline_type": "VLM_CB",
+    "max_num_seqs": 1,
+    "plugin_config": {
+      "DYNAMIC_QUANTIZATION_GROUP_SIZE": "0",
+      "KV_CACHE_PRECISION": "u8"
+    },
+    "enable_prefix_caching": true,
+    "cache_size": null,
+    "cache_size_policy": "not pinned because the working E value is not evidenced in the repository freeze; launcher intentionally omits cache_size for E instead of inheriting B2/C",
+    "chat_template_mode_default": "JINJA",
+    "max_tokens_limit": 65536
+  },
+  "diagnostic_profiles": {
+    "Stable": "B2-style correctness isolation: prefix caching disabled, cache_size 0, no u8 KV override",
+    "PrefixCache": "C-style comparison: prefix caching enabled, cache_size 8, no u8 KV override"
+  },
+  "dependency_contract": {
+    "versions.mk": [
+      "OV_SOURCE_BRANCH ?= 9b1d5c9494e838d42b5ed90d662c8ce84e5742f8",
+      "OV_TOKENIZERS_BRANCH ?= 4813f2b8dac54c4946ed76d91709f949dfad5455",
+      "OV_GENAI_BRANCH ?= 2e3b291a30e84fa067b042e35b8826d18d273882",
+      "2026.5.0.0.dev20260903"
+    ]
+  },
+  "required_anchors": [
+    {
+      "path": "src/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
+      "policy": "KEEP_OVERLAY",
+      "anchors": ["class NativeValueParser", "kParseNumbersAsStringsFlag", "findRecoverableBareCall", "TOOL_RESPONSE_START_TAG"]
+    },
+    {
+      "path": "src/llm/io_processing/generation_config_builder.hpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["Gemma4GenerationConfigBuilder", "ToolConstraintMode", "shouldPreserveStructuredOutputOnValidationFailure", "hardToolChoice", "toolParserName == \"gemma4\""]
+    },
+    {
+      "path": "src/llm/apis/openai_request.hpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["bool parallelToolCalls = true;"]
+    },
+    {
+      "path": "src/llm/apis/openai_api_handler.hpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["parseParallelToolCallsPolicy", "validateHardToolChoiceHasTools", "virtual absl::Status parseTools()", "applyReasoningEffort"]
+    },
+    {
+      "path": "src/llm/apis/openai_completions.hpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["parseTools() override", "parseParallelToolCallsPolicy", "validateHardToolChoiceHasTools"]
+    },
+    {
+      "path": "src/llm/io_processing/chat_template/caps.hpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["parseToolResponseJsonContent", "supportsResponseFieldInToolDefinition"]
+    },
+    {
+      "path": "src/llm/io_processing/chat_template/analyzer.cpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["detectedToolParser = \"gemma4\"", "parseToolResponseJsonContent", "supportsResponseFieldInToolDefinition", "part.get('type')"]
+    },
+    {
+      "path": "src/llm/io_processing/input_processors/chat_template_adapter.cpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["toolResponseJsonContentToObjectHistory", "removeResponseFromToolDefinition", "caps.parseToolResponseJsonContent", "caps.supportsResponseFieldInToolDefinition"]
+    },
+    {
+      "path": "src/llm/servable.hpp",
+      "policy": "MANUAL_COMPOSE",
+      "anchors": ["struct SessionTurnContext", "class SessionStateStore", "SessionTurnContext sessionTurn", "DFLASH", "MTP"]
+    },
+    {
+      "path": "ab-evidence/live_chain_harness.py",
+      "policy": "TEST_ONLY",
+      "anchors": ["X-OVMS-Session-ID", "SECOND_TOOL_CHOICES", "--resume"]
+    },
+    {
+      "path": "scripts/gemma4/collect-runtime-provenance.ps1",
+      "policy": "TEST_ONLY",
+      "anchors": ["Runtime provenance written", "git_head", "sha256"]
+    },
+    {
+      "path": "scripts/gemma4/prepare-google-template-overlay.ps1",
+      "policy": "DEPLOY_TOOL",
+      "anchors": ["gemma4-template-provenance.json", "GoogleRevision", "source_template_used = $false"]
+    }
+  ],
+  "safe_copy_on_future_forward_port": [
+    "src/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
+    "src/llm/io_processing/gemma4/gemma4_tool_parser.hpp",
+    "ab-evidence/complex-tool-catalog.json",
+    "ab-evidence/grounded-facts-catalog.json",
+    "ab-evidence/grounded-facts-fixtures.json",
+    "ab-evidence/live_chain_harness.py",
+    "ab-evidence/reliability_grounded_harness.py",
+    "ab-evidence/reliability_grounded_harness_v2.py",
+    "ab-evidence/replay_reliability_failures.py",
+    "scripts/gemma4/collect-runtime-provenance.ps1",
+    "scripts/gemma4/prepare-google-template-overlay.ps1"
+  ],
+  "manual_compose_on_future_forward_port": [
+    "src/llm/io_processing/generation_config_builder.hpp",
+    "src/llm/apis/openai_request.hpp",
+    "src/llm/apis/openai_api_handler.hpp",
+    "src/llm/apis/openai_completions.hpp",
+    "src/llm/io_processing/chat_template/caps.hpp",
+    "src/llm/io_processing/chat_template/analyzer.cpp",
+    "src/llm/io_processing/input_processors/chat_template_adapter.cpp",
+    "src/llm/io_processing/input_processors/chat_template_adapter.hpp",
+    "src/llm/servable.cpp",
+    "src/llm/servable.hpp",
+    "src/BUILD"
+  ],
+  "upstream_owned": [
+    "versions.mk",
+    "windows_build.bat",
+    "windows_install_build_dependencies.bat",
+    "src/llm/apis/openai_responses.cpp",
+    "generic OVMS lifecycle and packaging",
+    "generic reasoning-effort support"
+  ],
+  "known_pending_local_patches": [
+    {
+      "path": "src/llm/apis/openai_responses.cpp",
+      "severity": "WARN",
+      "description": "Responses serialization still emits parallel_tool_calls=true as a constant. Local agent should replace the constant with the parsed request.parallelToolCalls value using the exact current 2026.5 surrounding code. Do not overwrite the file with the 2026.4 version."
+    }
+  ]
+}

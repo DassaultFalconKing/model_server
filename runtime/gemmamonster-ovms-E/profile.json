@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "profile": "E",
+  "status": "CURRENT_WORKING_TARGET_PROFILE",
+  "purpose": "Primary Gemma4 OVMS runtime profile for the Windows Intel Arc target during the 2026.5 forward-port.",
+  "device": "GPU",
+  "pipeline_type": "VLM_CB",
+  "max_num_seqs": 1,
+  "plugin_config": {
+    "DYNAMIC_QUANTIZATION_GROUP_SIZE": "0",
+    "KV_CACHE_PRECISION": "u8"
+  },
+  "enable_prefix_caching": true,
+  "cache_size": null,
+  "cache_size_policy": "UNPINNED: the currently working E cache_size value is not present in the frozen repository evidence. The launcher omits cache_size rather than borrowing B2/C values.",
+  "chat_template_mode_default": "JINJA",
+  "max_tokens_limit": 65536,
+  "launcher": "scripts/gemma4/launch-gemma4-candidate.ps1",
+  "launcher_argument": "-Profile E",
+  "diagnostic_comparators": ["Stable", "PrefixCache"],
+  "do_not_substitute": [
+    "runtime/gemmamonster-ovms-B2",
+    "runtime/gemmamonster-ovms-B3",
+    "runtime/gemmamonster-ovms-C"
+  ]
+}
