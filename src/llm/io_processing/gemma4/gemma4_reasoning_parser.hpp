@@ -39,9 +39,12 @@ public:
         cfg.tokenIdStartTags = {"<|channel>"};
         cfg.endTag = "<channel|>";
         cfg.needsSpecialTokens = true;
-        // Gemma4 permits a tool call to begin directly from an open thought channel.
-        // vLLM, llama.cpp and SGLang all model the tool opener as an implicit
-        // reasoning boundary instead of requiring <channel|> first.
+        // Google's canonical Gemma4 tool sequence explicitly closes the thought
+        // channel with <channel|> before <|tool_call>. Keep tool-start takeover as
+        // a tolerant recovery boundary only: if malformed/edge output or streaming
+        // state presents a complete native tool opener while reasoning still owns
+        // the stream, preserve the reasoning prefix and hand the opener intact to
+        // the tool parser instead of swallowing it as reasoning.
         cfg.toolStartTerminatesReasoning = true;
         return cfg;
     }
