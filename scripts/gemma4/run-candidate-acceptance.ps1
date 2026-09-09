@@ -123,6 +123,20 @@ if ($Reliability -ne 'None') {
     Write-Host "Running reliability campaign: $Reliability"
     & $PythonExe @args
     if ($LASTEXITCODE -ne 0) { throw "Reliability campaign failed. Evidence: $reliabilityOut" }
+    $trialsPath = Join-Path $reliabilityOut 'trials.jsonl'
+    if (-not (Test-Path -LiteralPath $trialsPath -PathType Leaf)) {
+        throw "Reliability campaign produced no trials.jsonl. Evidence: $reliabilityOut"
+    }
+    $failedTrials = @(
+        Get-Content -LiteralPath $trialsPath -Encoding UTF8 |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+            ForEach-Object { $_ | ConvertFrom-Json } |
+            Where-Object { $_.primary_outcome -ne 'PASS' }
+    )
+    if ($failedTrials.Count -gt 0) {
+        $failedIds = @($failedTrials | ForEach-Object { $_.trial_id }) -join ', '
+        throw "Reliability campaign NOT_ACCEPTED: $($failedTrials.Count) failed trial(s): $failedIds. Evidence: $reliabilityOut"
+    }
 }
 
 $record = [ordered]@{
@@ -136,7 +150,10 @@ $record = [ordered]@{
     ovms_sha256 = (Get-FileHash -LiteralPath $ovms -Algorithm SHA256).Hash.ToLowerInvariant()
     model = $ModelName
     base_url = $BaseUrl
-    chained_tool_modes = @($chainResults)
+    # Windows PowerShell/PowerShell 7 can throw "Argument types do not match"
+    # when @() materializes a generic List whose entries are ordered dictionaries.
+    # Enumerate explicitly so the evidence summary always receives a plain array.
+    chained_tool_modes = @($chainResults | ForEach-Object { $_ })
     reliability = $Reliability
     reliability_out = $reliabilityOut
     static_audit = $auditOut

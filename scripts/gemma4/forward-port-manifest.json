@@ -41,7 +41,12 @@
     {
       "path": "src/llm/io_processing/gemma4/gemma4_reasoning_parser.cpp",
       "policy": "KEEP_OVERLAY",
-      "anchors": ["return Qwen3ReasoningParser::parseChunk(chunk, tokens, finishReason);"]
+      "anchors": ["phaseEntryTagConsumed", "parsingConfig.endTag", "return ReasoningDelta{text};"]
+    },
+    {
+      "path": "src/llm/io_processing/gemma4/gemma4_reasoning_parser.hpp",
+      "policy": "KEEP_OVERLAY",
+      "anchors": ["class Gemma4ReasoningParser : public BaseOutputParser", "cfg.toolStartTerminatesReasoning = true", "cfg.startTags = {\"<|channel>thought\\n\"}"]
     },
     {
       "path": "src/llm/io_processing/generation_config_builder.hpp",
@@ -107,6 +112,8 @@
   "safe_copy_on_future_forward_port": [
     "src/llm/io_processing/gemma4/gemma4_tool_parser.cpp",
     "src/llm/io_processing/gemma4/gemma4_tool_parser.hpp",
+    "src/llm/io_processing/gemma4/gemma4_reasoning_parser.cpp",
+    "src/llm/io_processing/gemma4/gemma4_reasoning_parser.hpp",
     "ab-evidence/complex-tool-catalog.json",
     "ab-evidence/grounded-facts-catalog.json",
     "ab-evidence/grounded-facts-fixtures.json",
