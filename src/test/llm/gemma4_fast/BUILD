@@ -6,6 +6,7 @@ cc_test(
     srcs = [
         "gemma4_parser_contract_test.cpp",
         "gemma4_reasoning_semantic_refit_test.cpp",
+        "gemma4_recovery_contract_test.cpp",
     ],
     deps = [
         "@com_google_googletest//:gtest_main",

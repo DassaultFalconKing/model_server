@@ -48,10 +48,11 @@ public:
         OutputParsingConfig cfg;
         cfg.startTags = {"<|tool_call>"};
         cfg.tokenIdStartTags = {"<|tool_call>"};
-        // Real Gemma4 traces occasionally omit the repeated tool marker after a
-        // reasoning channel and continue directly with call:name{...}. The generic
-        // OutputParser returns to UNKNOWN after reasoning; preambleStartTags is the
-        // deliberately narrow hook for this variant and is not matched mid-content.
+        // Bare `call:` is a tolerance/recovery form, not the canonical Google
+        // Gemma4 protocol. Canonical tool calls use <|tool_call>call:name{...}.
+        // The syntax-only constructor retains this broad preamble for compatibility;
+        // the registry-aware production constructor narrows it to the request's
+        // allowed tool names plus their immediate argument opener.
         cfg.preambleStartTags = {"call:"};
         cfg.endTag = "<tool_call|>";
         cfg.needsSpecialTokens = true;
@@ -64,9 +65,12 @@ public:
         BaseOutputParser(tokenizer,
             configOverride.has_value() ? std::move(*configOverride) : defaultParsingConfig()) {}
 
-    // Registry-aware overload. Empty registry deliberately means "syntax-only" for
-    // backwards compatibility; OutputParser wiring can pass request tool names to
-    // enable executable-call validation without changing parser grammar.
+    // Registry-aware production form. Besides executable-call validation, the
+    // request registry lets the generic OutputParser distinguish a recoverable
+    // bare native call from ordinary prose before entering tool phase. Exact
+    // preambles include the argument opener so `call:question prose` stays
+    // content, while a streaming prefix such as `call:quest` is held until a
+    // possible `ion{...}` continuation arrives.
     Gemma4ToolParser(ov::genai::Tokenizer& tokenizer,
         const ToolsSchemas_t& toolsSchemas,
         std::optional<OutputParsingConfig> configOverride = std::nullopt) :
@@ -77,6 +81,14 @@ public:
             allowedToolNames.insert(name);
         }
         enforceToolRegistry = !allowedToolNames.empty();
+        if (enforceToolRegistry && !configOverride.has_value()) {
+            parsingConfig.preambleStartTags.clear();
+            parsingConfig.preambleStartTags.reserve(allowedToolNames.size() * 2);
+            for (const auto& name : allowedToolNames) {
+                parsingConfig.preambleStartTags.push_back(TOOL_CALL_NAME_PREFIX + name + "{");
+                parsingConfig.preambleStartTags.push_back(TOOL_CALL_NAME_PREFIX + name + "(");
+            }
+        }
     }
 
     void resetState() override {
