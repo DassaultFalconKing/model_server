@@ -73,6 +73,32 @@ void OVMSTextStreamer::apply_decode_params(bool decode_special_tokens) {
 }
 
 std::optional<ov::genai::StreamingStatus> OVMSTextStreamer::handle_decoding_params_change(int64_t token) {
+    // Reconcile the decode mode for the phase that was established by the
+    // previously flushed chunk before inspecting the current token. This matters
+    // at a reasoning/tool handoff: the previous phase may require visible special
+    // tokens while UNKNOWN/content returns to the user's skip_special_tokens=true
+    // baseline. The current token itself may already be the next phase opener.
+    if (m_output_parser) {
+        bool decode_with_special_tokens = m_output_parser->needSpecialTokensForCurrentDecode(m_user_wants_special);
+        if (decode_with_special_tokens != m_decode_special_tokens) {
+            if (!m_tokens_cache.empty()) {
+                const std::string text = m_tokenizer.decode(m_tokens_cache, m_additional_detokenization_params);
+                if (text.size() > m_printed_len) {
+                    const auto s = flush_chunk(text, text.size(), ov::genai::GenerationFinishReason::NONE);
+                    if (s != ov::genai::StreamingStatus::RUNNING)
+                        return s;
+                }
+            }
+            m_tokens_cache.clear();
+            m_decoded_lengths.clear();
+            m_printed_len = 0;
+            // Flushing can itself complete a parser phase. Re-read the desired
+            // mode so the setting reflects the phase that will consume `token`.
+            decode_with_special_tokens = m_output_parser->needSpecialTokensForCurrentDecode(m_user_wants_special);
+            apply_decode_params(decode_with_special_tokens);
+        }
+    }
+
     if (m_output_parser && !m_decode_special_tokens) {
         const std::string startTag = m_output_parser->getPhaseStartTagForToken(token, m_tools_available);
         if (!startTag.empty()) {
@@ -99,24 +125,6 @@ std::optional<ov::genai::StreamingStatus> OVMSTextStreamer::handle_decoding_para
             if (s != ov::genai::StreamingStatus::RUNNING)
                 return s;
             return ov::genai::StreamingStatus::RUNNING;
-        }
-    }
-
-    if (m_output_parser) {
-        const bool decode_with_special_tokens = m_output_parser->needSpecialTokensForCurrentDecode(m_user_wants_special);
-        if (decode_with_special_tokens != m_decode_special_tokens) {
-            if (!m_tokens_cache.empty()) {
-                const std::string text = m_tokenizer.decode(m_tokens_cache, m_additional_detokenization_params);
-                if (text.size() > m_printed_len) {
-                    const auto s = flush_chunk(text, text.size(), ov::genai::GenerationFinishReason::NONE);
-                    if (s != ov::genai::StreamingStatus::RUNNING)
-                        return s;
-                }
-            }
-            m_tokens_cache.clear();
-            m_decoded_lengths.clear();
-            m_printed_len = 0;
-            apply_decode_params(decode_with_special_tokens);
         }
     }
 

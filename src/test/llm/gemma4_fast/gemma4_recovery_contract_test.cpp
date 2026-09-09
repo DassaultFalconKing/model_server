@@ -21,10 +21,12 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 #include <variant>
 #include <vector>
 
 #include "../../../llm/io_processing/output_parser.hpp"
+#include "../../../llm/ovms_text_streamer.hpp"
 #include "../../platform_utils.hpp"
 
 using namespace ovms;
@@ -55,6 +57,43 @@ protected:
         ToolsSchemas_t tools;
         tools.emplace("question", ToolSchemaWrapper{nullptr, questionSchema});
         return tools;
+    }
+
+    ParsedOutput parseWithSpecialTokensSkipped(const std::string& input) {
+        auto parser = std::make_shared<OutputParser>(*tokenizer, "gemma4", "gemma4", questionTools());
+        ParsedOutput result;
+        std::vector<ToolCall> toolCalls;
+
+        auto callback = [&](Delta delta, bool /*isLast*/) {
+            if (const auto* content = std::get_if<ContentDelta>(&delta)) {
+                result.content.append(content->text);
+            } else if (const auto* reasoning = std::get_if<ReasoningDelta>(&delta)) {
+                result.reasoning.append(reasoning->text);
+            } else if (const auto* call = std::get_if<ToolCallDelta>(&delta)) {
+                if (call->index >= 0) {
+                    const auto index = static_cast<size_t>(call->index);
+                    if (index >= toolCalls.size())
+                        toolCalls.resize(index + 1);
+                    auto& accumulated = toolCalls[index];
+                    if (call->id)
+                        accumulated.id = *call->id;
+                    if (call->name)
+                        accumulated.name = *call->name;
+                    accumulated.arguments.append(call->arguments);
+                }
+            }
+            return ov::genai::StreamingStatus::RUNNING;
+        };
+
+        const ov::AnyMap decodeParams{{ov::genai::skip_special_tokens.name(), true}};
+        OVMSTextStreamer streamer(*tokenizer, parser, true, std::move(callback), decodeParams);
+        auto tensor = tokenizer->encode(input, ov::genai::add_special_tokens(false)).input_ids;
+        for (size_t i = 0; i < tensor.get_size(); ++i)
+            streamer.write(tensor.data<int64_t>()[i]);
+        streamer.end();
+
+        result.toolCalls = std::move(toolCalls);
+        return result;
     }
 };
 
@@ -96,4 +135,16 @@ TEST_F(Gemma4BareRecoveryContractTest, BareCallRecoverySurvivesToolNameChunkSpli
     EXPECT_EQ(call.index, 0);
     EXPECT_EQ(call.name.value_or(""), "question");
     EXPECT_EQ(call.arguments, R"({"questions":[]})");
+}
+
+TEST_F(Gemma4BareRecoveryContractTest, SkipSpecialTokensStillPreservesCanonicalReasoningToToolHandoff) {
+    const auto parsed = parseWithSpecialTokensSkipped(
+        "<|channel>thought\nNeed user input<channel|>"
+        "<|tool_call>call:question{questions:[]}<tool_call|>");
+
+    EXPECT_EQ(parsed.reasoning, "Need user input");
+    EXPECT_TRUE(parsed.content.empty());
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].name, "question");
+    EXPECT_EQ(parsed.toolCalls[0].arguments, R"({"questions":[]})");
 }
