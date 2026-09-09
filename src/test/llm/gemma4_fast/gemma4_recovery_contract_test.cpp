@@ -111,6 +111,18 @@ TEST_F(Gemma4BareRecoveryContractTest, AllowedToolNameFollowedByProseStaysConten
     EXPECT_EQ(std::get<ContentDelta>(*delta).text, "call:question prose");
 }
 
+TEST_F(Gemma4BareRecoveryContractTest, LiteralCanonicalToolMarkerInProseStaysContent) {
+    OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
+    const std::string input = "Documentation marker <|tool_call> is literal, not a call.";
+
+    auto delta = parser.parseChunk(
+        input, {}, true, ov::genai::GenerationFinishReason::STOP);
+
+    ASSERT_TRUE(delta.has_value());
+    ASSERT_TRUE(std::holds_alternative<ContentDelta>(*delta));
+    EXPECT_EQ(std::get<ContentDelta>(*delta).text, input);
+}
+
 TEST_F(Gemma4BareRecoveryContractTest, RegistryAwareParserReleasesImpossibleBarePrefixAsContent) {
     Gemma4ToolParser parser(*tokenizer, questionTools());
 
