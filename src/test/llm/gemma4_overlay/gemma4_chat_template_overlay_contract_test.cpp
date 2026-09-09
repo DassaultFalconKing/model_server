@@ -38,6 +38,58 @@ TEST(Gemma4ChatTemplateOverlayContractTest, ComposesUpstreamResponseFieldAndMapp
     EXPECT_TRUE(result.caps.parseToolResponseJsonContent);
 }
 
+TEST(Gemma4ChatTemplateOverlayContractTest, CurrentGoogleTemplateRequiresObjectToolArguments) {
+    const std::string templateSource = R"(
+        {{ '<|tool_call>call:' }}
+        {% if function['arguments'] is mapping %}
+            {{ function['arguments'] }}
+        {% elif function['arguments'] is none %}
+        {% else %}
+            {{ raise_exception('tool_calls[].function.arguments must be a JSON object (mapping), not a string') }}
+        {% endif %}
+    )";
+
+    const auto result = ChatTemplateAnalyzer::analyze(templateSource);
+    ASSERT_TRUE(result.detectedToolParser.has_value());
+    EXPECT_EQ(result.detectedToolParser.value(), "gemma4");
+    EXPECT_TRUE(result.caps.requiresObjectArguments);
+}
+
+TEST(Gemma4ChatTemplateOverlayContractTest, CompatibleGemmaTemplateThatAcceptsStringArgumentsDoesNotForceConversion) {
+    const std::string templateSource = R"(
+        {{ '<|tool_call>call:' }}
+        {% if function['arguments'] is mapping %}
+            {{ function['arguments'] }}
+        {% elif function['arguments'] is string %}
+            {{ function['arguments'] }}
+        {% endif %}
+    )";
+
+    const auto result = ChatTemplateAnalyzer::analyze(templateSource);
+    ASSERT_TRUE(result.detectedToolParser.has_value());
+    EXPECT_EQ(result.detectedToolParser.value(), "gemma4");
+    EXPECT_FALSE(result.caps.requiresObjectArguments);
+}
+
+TEST(Gemma4ChatTemplateOverlayContractTest, ObjectArgumentAdaptationPreservesNestedOpenAIArguments) {
+    auto history = buildHistory(R"([
+        {"role":"assistant","content":"","tool_calls":[
+            {"id":"call_repo","type":"function","function":{
+                "name":"publish_review_evidence",
+                "arguments":"{\"head_sha\":\"798e99e04d53fba2b1c87bd6b88260f0d6c3ca83\",\"nested\":{\"dirty\":true},\"items\":[1,2]}"
+            }}
+        ]}
+    ])");
+
+    chat_template_adapter::funcArgsToObjectHistory(history);
+
+    ASSERT_TRUE(history[0]["tool_calls"][0]["function"]["arguments"].is_object());
+    const auto args = history[0]["tool_calls"][0]["function"]["arguments"];
+    EXPECT_EQ(args["head_sha"].get_string(), "798e99e04d53fba2b1c87bd6b88260f0d6c3ca83");
+    EXPECT_EQ(args["nested"].to_json_string(), R"({"dirty":true})");
+    EXPECT_EQ(args["items"].to_json_string(), R"([1,2])");
+}
+
 TEST(Gemma4ChatTemplateOverlayContractTest, GooglePartsIterationKeepsToolContentString) {
     const std::string templateSource = R"(
         {{ '<|tool_call>call:' }}
