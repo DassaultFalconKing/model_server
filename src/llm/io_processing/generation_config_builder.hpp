@@ -174,13 +174,8 @@ public:
         return hardToolChoice;
     }
 
-    // The current Google Gemma4 template can leave a post-tool prompt inside an
-    // already-open thought channel. In that state the generated suffix starts with
-    // reasoning text, not a fresh <|channel>thought opener. Switch hard required/
-    // named constraints to a required TriggeredTags grammar: the free prefix belongs
-    // to the prompt-open reasoning phase, while at_least_one still guarantees that
-    // generation eventually enters one of the native Gemma4 tool tags.
-    // Returns true only when the config was rewritten for this prompt state.
+    // Explicit request-aware form used by focused builder tests and callers that
+    // still have the OpenAI request available.
     static bool adaptConfigForRenderedPrompt(
         ov::genai::GenerationConfig& config,
         const OpenAIRequest& request,
@@ -196,6 +191,61 @@ public:
         }
         config.structured_output_config->structural_tags_config =
             buildTriggeredToolGrammar(std::move(toolTags), request.parallelToolCalls, true);
+        return true;
+    }
+
+    // Prompt-pipeline form. It recognizes only the exact hard Gemma4 grammar
+    // emitted by this builder, so it can run after chat-template rendering without
+    // carrying OpenAI request state into InputProcessor. The first Union arm is the
+    // mandatory native tool set; the second is canonical thought-then-tools.
+    static bool adaptConfigForRenderedPrompt(
+        ov::genai::GenerationConfig& config,
+        const std::string& renderedPrompt) {
+        using Structured = ov::genai::StructuredOutputConfig;
+        if (!config.structured_output_config.has_value() || !promptEndsInOpenReasoning(renderedPrompt)) {
+            return false;
+        }
+        auto& structuralConfig = config.structured_output_config->structural_tags_config;
+        if (!structuralConfig.has_value()) {
+            return false;
+        }
+        auto* root = std::get_if<Structured::StructuralTag>(&structuralConfig.value());
+        if (root == nullptr) {
+            return false;
+        }
+        auto* alternativesHolder = std::get_if<std::shared_ptr<Structured::Union>>(root);
+        if (alternativesHolder == nullptr || !*alternativesHolder || (*alternativesHolder)->elements.size() != 2) {
+            return false;
+        }
+        auto& alternatives = **alternativesHolder;
+        auto* requiredHolder = std::get_if<std::shared_ptr<Structured::TagsWithSeparator>>(&alternatives.elements[0]);
+        auto* thoughtSequenceHolder = std::get_if<std::shared_ptr<Structured::Concat>>(&alternatives.elements[1]);
+        if (requiredHolder == nullptr || !*requiredHolder || thoughtSequenceHolder == nullptr || !*thoughtSequenceHolder) {
+            return false;
+        }
+        const auto& requiredTags = **requiredHolder;
+        const auto& thoughtSequence = **thoughtSequenceHolder;
+        if (!requiredTags.at_least_one || requiredTags.tags.empty() || thoughtSequence.elements.size() != 2) {
+            return false;
+        }
+        auto* thoughtHolder = std::get_if<std::shared_ptr<Structured::Tag>>(&thoughtSequence.elements[0]);
+        auto* repeatedRequiredHolder = std::get_if<std::shared_ptr<Structured::TagsWithSeparator>>(&thoughtSequence.elements[1]);
+        if (thoughtHolder == nullptr || !*thoughtHolder || repeatedRequiredHolder == nullptr || !*repeatedRequiredHolder) {
+            return false;
+        }
+        const auto& thought = **thoughtHolder;
+        if (thought.begin != "<|channel>thought\n" || thought.end != "<channel|>") {
+            return false;
+        }
+        for (const auto& tag : requiredTags.tags) {
+            if (tag.begin.rfind("<|tool_call>call:", 0) != 0 || tag.end != "<tool_call|>") {
+                return false;
+            }
+        }
+
+        const bool parallelToolCalls = !requiredTags.stop_after_first;
+        auto toolTags = requiredTags.tags;
+        structuralConfig = buildTriggeredToolGrammar(std::move(toolTags), parallelToolCalls, true);
         return true;
     }
 
