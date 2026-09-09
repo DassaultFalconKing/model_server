@@ -327,8 +327,17 @@ void OutputParser::detectAndSetImplicitReasoningStart(const std::string& rendere
     std::string trimmed = renderedPrompt;
     rtrim(trimmed);
     const auto& startTags = reasoningParser->getParsingConfig().startTags;
-    bool detected = std::any_of(startTags.begin(), startTags.end(),
-        [&](const std::string& tag) { return !tag.empty() && endsWith(trimmed, tag); });
+    // Tags may end with whitespace (e.g. Gemma4 "<|channel>thought\n").
+    // Since the prompt is rtrimmed, compare against an rtrimmed tag copy so
+    // a prompt ending inside the thought channel is still detected.
+    bool detected = std::any_of(startTags.begin(), startTags.end(), [&](const std::string& tag) {
+        if (tag.empty()) {
+            return false;
+        }
+        std::string trimmedTag = tag;
+        rtrim(trimmedTag);
+        return !trimmedTag.empty() && endsWith(trimmed, trimmedTag);
+    });
     setImplicitReasoningStart(detected);
     return;
 }
@@ -393,7 +402,55 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
         }
         return std::nullopt;
     } else if (processingPhase == REASONING) {
-        TagLookupStatus endTagStatus = streamOutputCache.lookupTag(reasoningParser->getParsingConfig().endTag);
+        const auto& reasoningConfig = reasoningParser->getParsingConfig();
+        TagLookupStatus endTagStatus = streamOutputCache.lookupTag(reasoningConfig.endTag);
+
+        if (reasoningConfig.toolStartTerminatesReasoning && applyToolParser) {
+            const auto& toolStartTags = toolParser->getParsingConfig().startTags;
+            TagLookupStatus toolStartTagStatus = streamOutputCache.lookupTags(toolStartTags);
+
+            if (toolStartTagStatus == TagLookupStatus::FOUND_COMPLETE) {
+                const std::string& buf = streamOutputCache.getBuffer();
+                size_t toolStartPos = std::string::npos;
+                for (const auto& tag : toolStartTags) {
+                    const size_t pos = buf.find(tag);
+                    if (pos != std::string::npos && (toolStartPos == std::string::npos || pos < toolStartPos)) {
+                        toolStartPos = pos;
+                    }
+                }
+                const size_t reasoningEndPos = reasoningConfig.endTag.empty() ? std::string::npos : buf.find(reasoningConfig.endTag);
+
+                // Gemma4 may jump from thought directly into <|tool_call> without
+                // emitting <channel|>. Only treat the tool opener as the boundary
+                // when it occurs before any explicit reasoning closer.
+                if (toolStartPos != std::string::npos &&
+                    (reasoningEndPos == std::string::npos || toolStartPos < reasoningEndPos)) {
+                    const std::string reasoningPrefix = buf.substr(0, toolStartPos);
+                    const std::string toolRemainder = buf.substr(toolStartPos);
+                    streamOutputCache.clear();
+                    processingPhase = TOOL_CALLS_PROCESSING_TOOL;
+                    streamOutputCache.add(toolRemainder);
+
+                    if (!reasoningPrefix.empty()) {
+                        auto reasoningDelta = reasoningParser->parseChunk(reasoningPrefix, tokens, finishReason);
+                        if (reasoningDelta.has_value()) {
+                            return reasoningDelta;
+                        }
+                    }
+                    return parseToolCallChunk(tokens, finishReason);
+                }
+            }
+
+            // Hold back a partial tool opener at the tail instead of leaking its
+            // bytes into reasoning. This mirrors the boundary holdback used by
+            // the dedicated Gemma4 parsers in other runtimes.
+            if (toolStartTagStatus == TagLookupStatus::FOUND_INCOMPLETE &&
+                endTagStatus != TagLookupStatus::FOUND_COMPLETE &&
+                finishReason == ov::genai::GenerationFinishReason::NONE) {
+                return std::nullopt;
+            }
+        }
+
         if (endTagStatus == TagLookupStatus::FOUND_COMPLETE) {
             return parseReasoningChunk(tokens, finishReason, UNKNOWN);
         } else if (endTagStatus == TagLookupStatus::FOUND_INCOMPLETE && finishReason == ov::genai::GenerationFinishReason::NONE) {

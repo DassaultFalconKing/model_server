@@ -53,12 +53,12 @@ namespace ovms {
 //   Whether the content/unknown phase also needs special tokens is determined at the
 //   OutputParser level via defaultDecodingWithSpecialTokens, not in the per-parser config.
 //
-// Content/unknown phase decode mode:
-//   defaultDecodingWithSpecialTokens — when true, decoding uses skip_special_tokens=false
-//                                      even in the content/unknown phase. Set by parsers
-//                                      whose model format emits structural special tokens
-//                                      before their own active phase begins (e.g. GptOss,
-//                                      devstral, minicpm5).
+// Cross-parser transition:
+//   toolStartTerminatesReasoning — while this reasoning parser is active, a tool parser
+//                                  start tag is also an implicit reasoning end. Some model
+//                                  protocols (notably Gemma4) allow a tool call to begin
+//                                  directly from the thought channel without first emitting
+//                                  the ordinary reasoning end tag.
 struct OutputParsingConfig {
     std::vector<std::string> startTags;
     std::vector<std::string> tokenIdStartTags;
@@ -72,6 +72,8 @@ struct OutputParsingConfig {
     bool ownsToolCallBoundaries = false;
     // See comment block above.
     bool defaultDecodingWithSpecialTokens = false;
+    // See cross-parser transition comment above.
+    bool toolStartTerminatesReasoning = false;
 };
 
 }  // namespace ovms
