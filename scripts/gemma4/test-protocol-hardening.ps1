@@ -42,6 +42,14 @@ $targets = @(
         relative = 'src\test\llm\generation_config\gemma4_generation_contract_test.exe'
     },
     [ordered]@{
+        name = 'gemma4_prompt_state_generation_contract_test'
+        relative = 'src\test\llm\generation_config\gemma4_prompt_state_generation_contract_test.exe'
+    },
+    [ordered]@{
+        name = 'gemma4_chat_template_overlay_contract_test'
+        relative = 'src\test\llm\gemma4_overlay\gemma4_chat_template_overlay_contract_test.exe'
+    },
+    [ordered]@{
         name = 'openai_parallel_tool_calls_contract_test'
         relative = 'src\test\llm\generation_config\openai_parallel_tool_calls_contract_test.exe'
     }
