@@ -327,8 +327,17 @@ void OutputParser::detectAndSetImplicitReasoningStart(const std::string& rendere
     std::string trimmed = renderedPrompt;
     rtrim(trimmed);
     const auto& startTags = reasoningParser->getParsingConfig().startTags;
-    bool detected = std::any_of(startTags.begin(), startTags.end(),
-        [&](const std::string& tag) { return !tag.empty() && endsWith(trimmed, tag); });
+    // Tags may end with whitespace (e.g. Gemma4 "<|channel>thought\n").
+    // Since the prompt is rtrimmed, compare against an rtrimmed tag copy so
+    // a prompt ending inside the thought channel is still detected.
+    bool detected = std::any_of(startTags.begin(), startTags.end(), [&](const std::string& tag) {
+        if (tag.empty()) {
+            return false;
+        }
+        std::string trimmedTag = tag;
+        rtrim(trimmedTag);
+        return !trimmedTag.empty() && endsWith(trimmed, trimmedTag);
+    });
     setImplicitReasoningStart(detected);
     return;
 }

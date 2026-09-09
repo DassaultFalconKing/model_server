@@ -93,14 +93,14 @@ TEST_F(Gemma4ReasoningSemanticRefitTest, ToolStartImplicitlyEndsOpenReasoning) {
 
 TEST_F(Gemma4ReasoningSemanticRefitTest, ImplicitPromptReasoningCanTransitionDirectlyToTool) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
-    parser.setImplicitReasoningStart(true);
+    parser.detectAndSetImplicitReasoningStart("prompt<|channel>thought\n");
 
     expectQuestionCall(driveUntilToolCall(parser, questionCall));
 }
 
 TEST_F(Gemma4ReasoningSemanticRefitTest, SameChunkReasoningPrefixIsPreservedBeforeToolHandoff) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
-    parser.setImplicitReasoningStart(true);
+    parser.detectAndSetImplicitReasoningStart("prompt<|channel>thought\n");
 
     auto reasoning = parser.parseChunk(
         "Need another tool" + questionCall,
@@ -116,7 +116,7 @@ TEST_F(Gemma4ReasoningSemanticRefitTest, SameChunkReasoningPrefixIsPreservedBefo
 
 TEST_F(Gemma4ReasoningSemanticRefitTest, PartialToolMarkerIsHeldBackInsteadOfLeakingIntoReasoning) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
-    parser.setImplicitReasoningStart(true);
+    parser.detectAndSetImplicitReasoningStart("prompt<|channel>thought\n");
 
     auto partial = parser.parseChunk(
         "Need another tool<|tool_",
