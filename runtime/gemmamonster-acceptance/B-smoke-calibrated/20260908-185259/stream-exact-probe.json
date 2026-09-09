@@ -1,0 +1,20 @@
+{
+  "message": {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": {
+      "id": "X8SDDa4BN",
+      "type": "function",
+      "function": {
+        "name": "question",
+        "arguments": "{\"text\":\"probe-20260908-185259-stream\"}"
+      }
+    }
+  },
+  "finish_reason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 82,
+    "completion_tokens": 34,
+    "total_tokens": 116
+  }
+}

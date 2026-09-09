@@ -89,7 +89,7 @@ $record = [ordered]@{
     versions_mk = $versions
     static_audit = $auditOut
     runtime_provenance = $provenancePath
-    known_pending = @('src/llm/apis/openai_responses.cpp parallel_tool_calls response serialization one-line local patch')
+    known_pending = @()
 }
 $candidatePath = Join-Path $work 'candidate.json'
 $record | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $candidatePath -Encoding UTF8

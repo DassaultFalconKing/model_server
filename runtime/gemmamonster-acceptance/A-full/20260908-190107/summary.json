@@ -1,0 +1,266 @@
+{
+  "RunId": "20260908-190107",
+  "BaseUrl": "http://127.0.0.1:8891/v3",
+  "Model": "gemma4",
+  "Passed": 14,
+  "Failed": 0,
+  "Results": [
+    {
+      "Test": "exact_probe",
+      "Mode": "unary",
+      "TargetTokens": null,
+      "PromptTokens": 82,
+      "Pass": true,
+      "Detail": "{\"text\":\"probe-20260908-190107-unary\"}",
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\unary-exact-probe.json"
+    },
+    {
+      "Test": "tool_result_loop",
+      "Mode": "unary",
+      "TargetTokens": null,
+      "PromptTokens": 121,
+      "Pass": true,
+      "Detail": "RESULT=391",
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\unary-loop-final.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "unary",
+      "TargetTokens": 2000,
+      "PromptTokens": 1885,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 447,
+          "CharacterCount": 2659,
+          "WordCount": 362,
+          "UniqueWordRatio": 0.627,
+          "LongestAlphabeticToken": 15
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": true,
+        "FinishReason": "stop"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\unary-context-2000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "unary",
+      "TargetTokens": 4000,
+      "PromptTokens": 4309,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 447,
+          "CharacterCount": 2659,
+          "WordCount": 362,
+          "UniqueWordRatio": 0.627,
+          "LongestAlphabeticToken": 15
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": true,
+        "FinishReason": "stop"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\unary-context-4000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "unary",
+      "TargetTokens": 8000,
+      "PromptTokens": 8278,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 447,
+          "CharacterCount": 2659,
+          "WordCount": 362,
+          "UniqueWordRatio": 0.627,
+          "LongestAlphabeticToken": 15
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": true,
+        "FinishReason": "stop"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\unary-context-8000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "unary",
+      "TargetTokens": 12000,
+      "PromptTokens": 12277,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 449,
+          "CharacterCount": 2661,
+          "WordCount": 362,
+          "UniqueWordRatio": 0.627,
+          "LongestAlphabeticToken": 15
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": true,
+        "FinishReason": "stop"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\unary-context-12000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "unary",
+      "TargetTokens": 16000,
+      "PromptTokens": 16285,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 449,
+          "CharacterCount": 2661,
+          "WordCount": 362,
+          "UniqueWordRatio": 0.627,
+          "LongestAlphabeticToken": 15
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": true,
+        "FinishReason": "stop"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\unary-context-16000.json"
+    },
+    {
+      "Test": "exact_probe",
+      "Mode": "stream",
+      "TargetTokens": null,
+      "PromptTokens": 82,
+      "Pass": true,
+      "Detail": "{\"text\":\"probe-20260908-190107-stream\"}",
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\stream-exact-probe.json"
+    },
+    {
+      "Test": "tool_result_loop",
+      "Mode": "stream",
+      "TargetTokens": null,
+      "PromptTokens": 121,
+      "Pass": true,
+      "Detail": "RESULT=391",
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\stream-loop-final.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "stream",
+      "TargetTokens": 2000,
+      "PromptTokens": 1885,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 450,
+          "CharacterCount": 2683,
+          "WordCount": 372,
+          "UniqueWordRatio": 0.626,
+          "LongestAlphabeticToken": 14
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": false,
+        "FinishReason": "length"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\stream-context-2000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "stream",
+      "TargetTokens": 4000,
+      "PromptTokens": 4313,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 450,
+          "CharacterCount": 2683,
+          "WordCount": 372,
+          "UniqueWordRatio": 0.626,
+          "LongestAlphabeticToken": 14
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": false,
+        "FinishReason": "length"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\stream-context-4000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "stream",
+      "TargetTokens": 8000,
+      "PromptTokens": 8279,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 450,
+          "CharacterCount": 2683,
+          "WordCount": 372,
+          "UniqueWordRatio": 0.626,
+          "LongestAlphabeticToken": 14
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": false,
+        "FinishReason": "length"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\stream-context-8000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "stream",
+      "TargetTokens": 12000,
+      "PromptTokens": 12282,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 450,
+          "CharacterCount": 2683,
+          "WordCount": 372,
+          "UniqueWordRatio": 0.626,
+          "LongestAlphabeticToken": 14
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": false,
+        "FinishReason": "length"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\stream-context-12000.json"
+    },
+    {
+      "Test": "persistent_long_text",
+      "Mode": "stream",
+      "TargetTokens": 16000,
+      "PromptTokens": 16285,
+      "Pass": true,
+      "Detail": {
+        "Quality": {
+          "Clean": true,
+          "Reasons": [],
+          "CompletionTokens": 450,
+          "CharacterCount": 2683,
+          "WordCount": 372,
+          "UniqueWordRatio": 0.626,
+          "LongestAlphabeticToken": 14
+        },
+        "HasStartAnchor": true,
+        "HasEndAnchor": false,
+        "FinishReason": "length"
+      },
+      "Evidence": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107\\stream-context-16000.json"
+    }
+  ],
+  "EvidenceRoot": ".\\runtime\\gemmamonster-acceptance\\A-full\\20260908-190107"
+}

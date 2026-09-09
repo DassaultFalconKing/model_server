@@ -70,6 +70,9 @@ for /f "usebackq eol=# tokens=1,3" %%A in ("%cd%\versions.mk") do (
 
 :: Bazel compilation settings
 set VS_2022_BT="C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
+IF /I EXIST %VS_2022_BT% goto :msvc_bt
+set "VSWHERE=C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe"
+IF /I EXIST "%VSWHERE%" for /f "usebackq tokens=*" %%I in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set VS_2022_BT="%%I"
 IF /I EXIST %VS_2022_BT% goto :msvc_bt ELSE goto :msvc_error
 
 :msvc_error

@@ -1,0 +1,31 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "YCi1wwiLh",
+            "type": "function",
+            "function": {
+              "name": "calculate",
+              "arguments": "{\"expression\":\"17 * 23\"}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1788887601,
+  "model": "gemma4",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 86,
+    "completion_tokens": 18,
+    "total_tokens": 104
+  }
+}

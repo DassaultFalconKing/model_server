@@ -1,0 +1,13 @@
+data: {"choices":[{"index":0,"delta":{"role":"assistant","content":null},"finish_reason":null}],"created":1788887292,"model":"gemma4","object":"chat.completion.chunk"}
+
+data: {"choices":[{"index":0,"logprobs":null,"delta":{"tool_calls":[{"id":"nBNK0a1U9","type":"function","index":0,"function":{"name":"calculate"}}]},"finish_reason":null}],"created":1788887292,"model":"gemma4","object":"chat.completion.chunk","usage":null}
+
+data: {"choices":[{"index":0,"logprobs":null,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"expression\":\"17 * 23\"}"}}]},"finish_reason":null}],"created":1788887292,"model":"gemma4","object":"chat.completion.chunk","usage":null}
+
+data: {"choices":[{"index":0,"logprobs":null,"delta":{},"finish_reason":"tool_calls"}],"created":1788887292,"model":"gemma4","object":"chat.completion.chunk","usage":null}
+
+data: {"choices":[],"created":1788887292,"model":"gemma4","object":"chat.completion.chunk","usage":{"prompt_tokens":86,"completion_tokens":18,"total_tokens":104}}
+
+data: [DONE]
+
+

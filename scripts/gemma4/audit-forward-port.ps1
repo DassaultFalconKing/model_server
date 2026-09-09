@@ -93,7 +93,7 @@ $report = [ordered]@{
     manifest = $manifestFile
     pinned_upstream = $upstream
     summary = [ordered]@{ pass = $passCount; warn = $warnCount; fail = $failCount }
-    results = @($results)
+    results = @($results.ToArray())
 }
 
 if (-not [string]::IsNullOrWhiteSpace($OutputPath)) {

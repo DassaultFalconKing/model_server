@@ -1,0 +1,20 @@
+{
+  "message": {
+    "role": "assistant",
+    "content": "",
+    "tool_calls": {
+      "id": "wXfSnknhk",
+      "type": "function",
+      "function": {
+        "name": "calculate",
+        "arguments": "{\"expression\":\"17 * 23\"}"
+      }
+    }
+  },
+  "finish_reason": "tool_calls",
+  "usage": {
+    "prompt_tokens": 86,
+    "completion_tokens": 18,
+    "total_tokens": 104
+  }
+}

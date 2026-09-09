@@ -39,6 +39,11 @@
       "anchors": ["class NativeValueParser", "kParseNumbersAsStringsFlag", "findRecoverableBareCall", "TOOL_RESPONSE_START_TAG"]
     },
     {
+      "path": "src/llm/io_processing/gemma4/gemma4_reasoning_parser.cpp",
+      "policy": "KEEP_OVERLAY",
+      "anchors": ["return Qwen3ReasoningParser::parseChunk(chunk, tokens, finishReason);"]
+    },
+    {
       "path": "src/llm/io_processing/generation_config_builder.hpp",
       "policy": "MANUAL_COMPOSE",
       "anchors": ["Gemma4GenerationConfigBuilder", "ToolConstraintMode", "shouldPreserveStructuredOutputOnValidationFailure", "hardToolChoice", "toolParserName == \"gemma4\""]
@@ -46,7 +51,7 @@
     {
       "path": "src/llm/apis/openai_request.hpp",
       "policy": "MANUAL_COMPOSE",
-      "anchors": ["bool parallelToolCalls = true;"]
+      "anchors": ["bool parallelToolCalls{true};"]
     },
     {
       "path": "src/llm/apis/openai_api_handler.hpp",
@@ -92,6 +97,11 @@
       "path": "scripts/gemma4/prepare-google-template-overlay.ps1",
       "policy": "DEPLOY_TOOL",
       "anchors": ["gemma4-template-provenance.json", "GoogleRevision", "source_template_used = $false"]
+    },
+    {
+      "path": "src/BUILD",
+      "policy": "TEST_ONLY",
+      "anchors": ["//src/test/llm/gemma4_fast:__pkg__", "//src/test/llm/generation_config:__pkg__"]
     }
   ],
   "safe_copy_on_future_forward_port": [
@@ -128,11 +138,5 @@
     "generic OVMS lifecycle and packaging",
     "generic reasoning-effort support"
   ],
-  "known_pending_local_patches": [
-    {
-      "path": "src/llm/apis/openai_responses.cpp",
-      "severity": "WARN",
-      "description": "Responses serialization still emits parallel_tool_calls=true as a constant. Local agent should replace the constant with the parsed request.parallelToolCalls value using the exact current 2026.5 surrounding code. Do not overwrite the file with the 2026.4 version."
-    }
-  ]
+  "known_pending_local_patches": []
 }

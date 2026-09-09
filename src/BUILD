@@ -2433,6 +2433,10 @@ cc_library(
     name = "test_platform_utils",
     hdrs = ["test/platform_utils.hpp",],
     srcs = ["test/platform_utils.cpp",],
+    visibility = [
+        "//src/test/llm/gemma4_fast:__pkg__",
+        "//src/test/llm/generation_config:__pkg__",
+    ],
     deps = [
         "@com_google_googletest//:gtest",
     ],

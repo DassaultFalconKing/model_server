@@ -23,12 +23,23 @@ if ([string]::IsNullOrWhiteSpace($CommitSha)) {
 }
 if ($CommitSha -notmatch '^[0-9a-f]{40}$') { throw "CommitSha must be a lowercase 40-hex git SHA: $CommitSha" }
 $resolved = (& git -C $root rev-parse "$CommitSha^{commit}").Trim()
-if ($LASTEXITCODE -ne 0 -or $resolved -ne $CommitSha) { throw "CommitSha cannot be resolved exactly in $root: $CommitSha" }
+if ($LASTEXITCODE -ne 0 -or $resolved -ne $CommitSha) { throw "CommitSha cannot be resolved exactly in ${root}: $CommitSha" }
 $head = (& git -C $root rev-parse HEAD).Trim()
 if ($head -ne $CommitSha) { throw "Acceptance requires worktree HEAD to equal CommitSha. HEAD=$head requested=$CommitSha" }
 
 if ([string]::IsNullOrWhiteSpace($PythonExe)) {
     if (Test-Path -LiteralPath 'C:\opt\Python312\python.exe') { $PythonExe = 'C:\opt\Python312\python.exe' } else { $PythonExe = 'python' }
+}
+
+# Do not let an unrelated embedded Python installation poison the harness.
+# This script runs in a child pwsh process, so normalizing its process-level
+# environment does not modify the user's persistent environment.
+Remove-Item Env:PYTHONHOME -ErrorAction SilentlyContinue
+if (Test-Path -LiteralPath $PythonExe -PathType Leaf) {
+    $candidatePythonHome = Split-Path -Parent (Resolve-Path -LiteralPath $PythonExe).Path
+    if (Test-Path -LiteralPath (Join-Path $candidatePythonHome 'Lib\encodings') -PathType Container) {
+        $env:PYTHONHOME = $candidatePythonHome
+    }
 }
 
 try {
@@ -76,7 +87,7 @@ foreach ($mode in @('named', 'required', 'auto')) {
 
 $reliabilityOut = $null
 if ($Reliability -ne 'None') {
-    $reliability = Join-Path $root 'ab-evidence\reliability_grounded_harness_v2.py'
+    $reliabilityScript = Join-Path $root 'ab-evidence\reliability_grounded_harness_v2.py'
     $autoOut = Join-Path $outRoot 'chain-auto'
     $frozenRequest = Join-Path $autoOut 'request2-input.json'
     $frozenToolResult = Join-Path $autoOut 'tool1-result.json'
@@ -85,7 +96,7 @@ if ($Reliability -ne 'None') {
     }
     $reliabilityOut = Join-Path $outRoot 'reliability'
     $args = @(
-        $reliability,
+        $reliabilityScript,
         '--base-url', $BaseUrl,
         '--model', $ModelName,
         '--binary', $ovms,
