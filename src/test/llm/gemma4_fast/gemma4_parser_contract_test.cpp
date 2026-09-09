@@ -151,6 +151,13 @@ TEST_F(Gemma4ParserFastContractTest, PreservesNestedScalarTypes) {
         R"({"questions":[],"meta":{"count":2,"score":22.8,"missing":null,"flags":[true,false,null,3]}})");
 }
 
+TEST_F(Gemma4ParserFastContractTest, NativeDelimitedKeysDoNotLeakProtocolMarkers) {
+    auto parsed = parse(R"(<|tool_call>call:question{<|"|>questions<|"|>:[],<|"|>label<|"|>:<|"|>safe<|"|>}<tool_call|>)");
+    ASSERT_EQ(parsed.toolCalls.size(), 1u);
+    EXPECT_EQ(parsed.toolCalls[0].arguments, R"({"questions":[],"label":"safe"})");
+    EXPECT_EQ(parsed.toolCalls[0].arguments.find("<|\"|>"), std::string::npos);
+}
+
 TEST_F(Gemma4ParserFastContractTest, StringPayloadCannotBreakStructuralScanning) {
     auto parsed = parse(R"(<|tool_call>call:question{questions:[],template:<|"|>Hello {name}, items: [a, b, c], json={"x":1}<|"|>}<tool_call|>)");
     ASSERT_EQ(parsed.toolCalls.size(), 1u);
@@ -194,15 +201,20 @@ TEST_F(Gemma4ParserFastContractTest, TruncatedArgumentsEmitNoToolCall) {
     EXPECT_TRUE(parsed.toolCalls.empty());
 }
 
-TEST_F(Gemma4ParserFastContractTest, ConsecutiveCallsKeepContiguousIndices) {
-    auto parsed = parse(R"(<|tool_call>call:question{questions:[]}<tool_call|><|tool_call>call:question{questions:[]}<tool_call|>)");
-    ASSERT_EQ(parsed.toolCalls.size(), 2u);
+TEST_F(Gemma4ParserFastContractTest, RepeatedSameFunctionCallsKeepCallLocalIdentity) {
+    auto parsed = parse(
+        R"(<|tool_call>call:question{questions:[]}<tool_call|>)"
+        R"(<|tool_call>call:question{questions:[]}<tool_call|>)"
+        R"(<|tool_call>call:question{questions:[]}<tool_call|>)");
+    ASSERT_EQ(parsed.toolCalls.size(), 3u);
     for (const auto& call : parsed.toolCalls) {
         EXPECT_EQ(call.name, "question");
         EXPECT_EQ(call.arguments, R"({"questions":[]})");
         EXPECT_FALSE(call.id.empty());
     }
     EXPECT_NE(parsed.toolCalls[0].id, parsed.toolCalls[1].id);
+    EXPECT_NE(parsed.toolCalls[0].id, parsed.toolCalls[2].id);
+    EXPECT_NE(parsed.toolCalls[1].id, parsed.toolCalls[2].id);
 }
 
 TEST_F(Gemma4ParserFastContractTest, JsonStringEndMarkerIsPayload) {
