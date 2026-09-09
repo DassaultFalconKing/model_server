@@ -42,6 +42,8 @@ try {
         Assert-Equal $Result.Status "VALID" "Validation status"
         Assert-Equal $Result.SourceContainsKnownGood $true "Known-good ancestry"
         Assert-Equal $Result.RestBaseUrl "http://127.0.0.1:18888/v3" "REST base URL"
+        Assert-Equal $Result.ReadinessUrl "http://127.0.0.1:18888/v3/models" "Readiness URL"
+        Assert-Equal $Result.ReadyTimeoutSeconds 180 "Readiness timeout"
         Assert-Equal $Result.QueueSize 0 "Graph queue size"
         Assert-Equal $Result.Pipeline $Profiles[$ProfileName].Pipeline "Pipeline for profile $ProfileName"
         Assert-Equal $Result.PrefixCaching $Profiles[$ProfileName].PrefixCaching "Prefix caching for profile $ProfileName"
@@ -50,6 +52,7 @@ try {
         $Config = Get-Content -LiteralPath $Result.ConfigPath -Raw | ConvertFrom-Json
         Assert-Equal $Config.mediapipe_config_list[0].name "gemma4" "Servable name"
         Assert-Equal $Config.mediapipe_config_list[0].graph_path ($Result.GraphPath -replace "\\", "/") "Graph path"
+        Assert-Equal $Result.CommandPath (Join-Path $ProfileRuntime "ovms.command.json") "Command record path"
 
         $Graph = Get-Content -LiteralPath $Result.GraphPath -Raw
         if ($Graph -notmatch "pipeline_type:\s+$($Profiles[$ProfileName].Pipeline)") {
