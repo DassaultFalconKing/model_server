@@ -472,6 +472,11 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
         // If we are in the CONTENT phase, we check if tool parser start tag is found and if so, switch to TOOL_CALLS phase.
         // TOOL_CALLS is the only phase that can be processed after CONTENT.
         if (applyToolParser) {
+            // Gemma4 (and similar) own framing end-to-end. Keep routing through the
+            // tool parser after ordinary prose so line-start `call:` recovery still
+            // works; the generic content path only sees <|tool_call> startTags.
+            if (toolParser->getParsingConfig().ownsToolCallBoundaries)
+                return parseToolCallChunk(tokens, finishReason);
             TagLookupStatus toolStartTagStatus = streamOutputCache.lookupTags(toolParser->getParsingConfig().startTags);
             if (toolStartTagStatus == TagLookupStatus::FOUND_COMPLETE) {
                 return parseToolCallChunk(tokens, finishReason);

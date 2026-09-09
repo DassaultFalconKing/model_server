@@ -639,7 +639,13 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
     if (!chunk.empty())
         streamingContent += chunk;
 
-    if (parseNewContent()) {
+    // A single chunk can open an argument container and close it (e.g. "{}"),
+    // finish one call and begin the next, or reveal content before a bare call:.
+    // Drain every ready transition; only return when a delta must be emitted.
+    for (;;) {
+        const State stateBefore = currentState;
+        const bool ready = parseNewContent();
+
         if (currentState == State::ToolCallEnded) {
             if (currentCallValid && !toolCall.arguments.empty()) {
                 // An emitted header cannot be retracted from SSE or the unary
@@ -649,9 +655,9 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
                 return delta;
             }
             toolCall = {};
-            return std::nullopt;
+            continue;
         }
-        if (currentState == State::Content) {
+        if (ready && currentState == State::Content) {
             size_t contentEnd = streamingContent.find(TOOL_CALL_START_TAG, streamingPosition);
             const auto bareCallPos = findRecoverableBareCall(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
             if (bareCallPos.has_value() && (contentEnd == std::string::npos || bareCallPos.value() < contentEnd))
@@ -669,13 +675,23 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
             }
             return wrapDeltaContent(content);
         }
-        if (currentState == State::AfterToolCall)
+        if (currentState == State::AfterToolCall) {
             currentState = State::Content;
+            continue;
+        }
+        // State machine advanced without a delta (e.g. Content → ToolCallStarted).
+        if (currentState != stateBefore)
+            continue;
+
+        if (finishReason != ov::genai::GenerationFinishReason::NONE &&
+            currentState == State::ToolCallParameters) {
+            if (parseToolCallParametersState())
+                continue;
+        }
+        break;
     }
 
     if (finishReason != ov::genai::GenerationFinishReason::NONE) {
-        if (currentState == State::ToolCallParameters)
-            parseToolCallParametersState();
         if (currentState == State::ToolCallEnded && currentCallValid && !toolCall.arguments.empty()) {
             auto delta = ToolCallDelta{++toolCallIndex, toolCall.id, toolCall.name, toolCall.arguments};
             toolCall = {};
