@@ -64,13 +64,21 @@ if ($ExpungeDependencies) { $buildArgs += '-ExpungeDependencies' }
 if ($NoPython) { $buildArgs += '-NoPython' }
 if ($WithoutTests) { $buildArgs += '-WithoutTests' }
 if ($Integrity) { $buildArgs += '-Integrity' }
+# Array splatting passes values positionally, which cannot bind to the
+# builder's [CmdletBinding()] named parameters. Splat by name instead.
+$buildSplat = @{ RepoRoot = $root; ShortRoot = $ShortRoot; Label = $Label }
+if ($SkipDependencies) { $buildSplat['SkipDependencies'] = $true }
+if ($ExpungeDependencies) { $buildSplat['ExpungeDependencies'] = $true }
+if ($NoPython) { $buildSplat['NoPython'] = $true }
+if ($WithoutTests) { $buildSplat['WithoutTests'] = $true }
+if ($Integrity) { $buildSplat['Integrity'] = $true }
 
 Write-Host "BUILD_CANDIDATE starting"
 Write-Host "  SOURCE_SHA: $head"
 Write-Host "  BRANCH:     $branch"
 Write-Host "  DIR:        $candidateDir"
 
-& $builder @buildArgs 2>&1 | Tee-Object -FilePath $buildLog
+& $builder @buildSplat 2>&1 | Tee-Object -FilePath $buildLog
 $buildExit = $LASTEXITCODE
 if ($buildExit -ne 0) {
     throw "build-local-candidate.ps1 failed with exit code $buildExit. See $buildLog"
