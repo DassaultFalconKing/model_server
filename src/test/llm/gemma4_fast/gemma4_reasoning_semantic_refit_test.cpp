@@ -32,6 +32,7 @@ const std::string tokenizerPath = "/ovms/src/test/llm_testing/OpenVINO/gemma-4-E
 
 const std::string questionSchema = R"({"type":"object","properties":{"questions":{"type":"array"}}})";
 const std::string questionCall = "<|tool_call>call:question{questions:[]}<tool_call|>";
+const std::string toolStart = "<|tool_call>";
 
 ToolsSchemas_t questionTools() {
     ToolsSchemas_t tools;
@@ -76,7 +77,22 @@ protected:
 std::unique_ptr<ov::genai::Tokenizer> Gemma4ReasoningSemanticRefitTest::tokenizer;
 }  // namespace
 
-TEST_F(Gemma4ReasoningSemanticRefitTest, ToolStartImplicitlyEndsOpenReasoning) {
+TEST_F(Gemma4ReasoningSemanticRefitTest, CanonicalReasoningCloseTransitionsToTool) {
+    OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
+
+    auto reasoning = parser.parseChunk(
+        "<|channel>thought\nNeed another tool<channel|>" + questionCall,
+        {},
+        true,
+        ov::genai::GenerationFinishReason::NONE);
+
+    ASSERT_TRUE(reasoning.has_value());
+    ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*reasoning));
+    EXPECT_EQ(std::get<ReasoningDelta>(*reasoning).text, "Need another tool");
+    expectQuestionCall(driveUntilToolCall(parser, ""));
+}
+
+TEST_F(Gemma4ReasoningSemanticRefitTest, RecoveryToolStartEndsOpenReasoningWithoutCanonicalCloser) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
 
     auto first = parser.parseChunk(
@@ -91,14 +107,14 @@ TEST_F(Gemma4ReasoningSemanticRefitTest, ToolStartImplicitlyEndsOpenReasoning) {
     expectQuestionCall(driveUntilToolCall(parser, questionCall));
 }
 
-TEST_F(Gemma4ReasoningSemanticRefitTest, ImplicitPromptReasoningCanTransitionDirectlyToTool) {
+TEST_F(Gemma4ReasoningSemanticRefitTest, RecoveryImplicitPromptReasoningCanTransitionDirectlyToTool) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
     parser.detectAndSetImplicitReasoningStart("prompt<|channel>thought\n");
 
     expectQuestionCall(driveUntilToolCall(parser, questionCall));
 }
 
-TEST_F(Gemma4ReasoningSemanticRefitTest, SameChunkReasoningPrefixIsPreservedBeforeToolHandoff) {
+TEST_F(Gemma4ReasoningSemanticRefitTest, RecoverySameChunkReasoningPrefixIsPreservedBeforeToolHandoff) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
     parser.detectAndSetImplicitReasoningStart("prompt<|channel>thought\n");
 
@@ -114,7 +130,7 @@ TEST_F(Gemma4ReasoningSemanticRefitTest, SameChunkReasoningPrefixIsPreservedBefo
     expectQuestionCall(driveUntilToolCall(parser, ""));
 }
 
-TEST_F(Gemma4ReasoningSemanticRefitTest, PartialToolMarkerIsHeldBackInsteadOfLeakingIntoReasoning) {
+TEST_F(Gemma4ReasoningSemanticRefitTest, RecoveryPartialToolMarkerIsHeldBackInsteadOfLeakingIntoReasoning) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
     parser.detectAndSetImplicitReasoningStart("prompt<|channel>thought\n");
 
@@ -135,4 +151,36 @@ TEST_F(Gemma4ReasoningSemanticRefitTest, PartialToolMarkerIsHeldBackInsteadOfLea
     EXPECT_EQ(std::get<ReasoningDelta>(*reasoning).text, "Need another tool");
 
     expectQuestionCall(driveUntilToolCall(parser, ""));
+}
+
+TEST_F(Gemma4ReasoningSemanticRefitTest, RecoveryToolOpenerSurvivesEveryByteSplitWhileReasoningOwnsStream) {
+    const std::string suffix = "call:question{questions:[]}<tool_call|>";
+
+    for (size_t split = 0; split <= toolStart.size(); ++split) {
+        SCOPED_TRACE(split);
+        OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
+        parser.detectAndSetImplicitReasoningStart("prompt<|channel>thought\n");
+
+        std::string reasoningText;
+        std::optional<ToolCallDelta> toolCall;
+
+        auto consume = [&](const std::string& chunk, ov::genai::GenerationFinishReason finishReason) {
+            auto delta = parser.parseChunk(chunk, {}, true, finishReason);
+            if (!delta.has_value())
+                return;
+            if (std::holds_alternative<ReasoningDelta>(*delta))
+                reasoningText += std::get<ReasoningDelta>(*delta).text;
+            else if (std::holds_alternative<ToolCallDelta>(*delta))
+                toolCall = std::get<ToolCallDelta>(*delta);
+        };
+
+        consume("Need another tool" + toolStart.substr(0, split), ov::genai::GenerationFinishReason::NONE);
+        consume(toolStart.substr(split) + suffix, ov::genai::GenerationFinishReason::NONE);
+        for (int step = 0; step < 8 && !toolCall.has_value(); ++step) {
+            consume("", step == 7 ? ov::genai::GenerationFinishReason::STOP : ov::genai::GenerationFinishReason::NONE);
+        }
+
+        EXPECT_EQ(reasoningText, "Need another tool");
+        expectQuestionCall(toolCall);
+    }
 }
