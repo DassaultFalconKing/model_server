@@ -196,6 +196,30 @@ size_t startTagHoldStart(const std::string& content, size_t from) {
     return std::string::npos;
 }
 
+bool anchoredToolCallMayStartAt(const std::string& content, size_t pos) {
+    const std::string& tag = Gemma4ToolParser::TOOL_CALL_START_TAG;
+    const std::string& prefix = Gemma4ToolParser::TOOL_CALL_NAME_PREFIX;
+    if (pos + tag.size() > content.size() || content.compare(pos, tag.size(), tag) != 0)
+        return false;
+    const size_t afterTag = pos + tag.size();
+    const size_t suffixSize = content.size() - afterTag;
+    if (suffixSize == 0)
+        return true;  // full tag at tail; next chunk decides whether it is a call
+    if (suffixSize < prefix.size())
+        return prefix.compare(0, suffixSize, content, afterTag, suffixSize) == 0;
+    return content.compare(afterTag, prefix.size(), prefix) == 0;
+}
+
+std::optional<size_t> findAnchoredToolCallStart(const std::string& content, size_t from) {
+    size_t pos = content.find(Gemma4ToolParser::TOOL_CALL_START_TAG, from);
+    while (pos != std::string::npos) {
+        if (anchoredToolCallMayStartAt(content, pos))
+            return pos;
+        pos = content.find(Gemma4ToolParser::TOOL_CALL_START_TAG, pos + Gemma4ToolParser::TOOL_CALL_START_TAG.size());
+    }
+    return std::nullopt;
+}
+
 class NativeValueParser {
     const std::string& input;
     size_t pos{0};
@@ -572,13 +596,20 @@ std::string Gemma4ToolParser::parseObjectParameter(const std::string& argumentSt
 }
 
 bool Gemma4ToolParser::parseInContentState() {
-    const size_t toolCallStartTagPos = streamingContent.find(TOOL_CALL_START_TAG, streamingPosition);
-    if (toolCallStartTagPos != std::string::npos) {
-        if (toolCallStartTagPos > streamingPosition)
+    const auto toolCallStartTagPos = findAnchoredToolCallStart(streamingContent, streamingPosition);
+    if (toolCallStartTagPos.has_value()) {
+        if (toolCallStartTagPos.value() > streamingPosition)
             return true;
-        currentCallStartPos = toolCallStartTagPos;
+        const size_t namePrefixPos = toolCallStartTagPos.value() + TOOL_CALL_START_TAG.length();
+        const size_t suffixSize = streamingContent.size() - namePrefixPos;
+        if (suffixSize < TOOL_CALL_NAME_PREFIX.size() &&
+            TOOL_CALL_NAME_PREFIX.compare(0, suffixSize, streamingContent, namePrefixPos, suffixSize) == 0)
+            return false;
+        if (streamingContent.compare(namePrefixPos, TOOL_CALL_NAME_PREFIX.size(), TOOL_CALL_NAME_PREFIX) != 0)
+            return true;
+        currentCallStartPos = toolCallStartTagPos.value();
         currentCallBare = false;
-        streamingPosition = toolCallStartTagPos + TOOL_CALL_START_TAG.length();
+        streamingPosition = namePrefixPos + TOOL_CALL_NAME_PREFIX.size();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
         return false;
@@ -795,7 +826,8 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
         }
 
         if (ready && currentState == State::Content) {
-            size_t contentEnd = streamingContent.find(TOOL_CALL_START_TAG, streamingPosition);
+            const auto anchoredStart = findAnchoredToolCallStart(streamingContent, streamingPosition);
+            size_t contentEnd = anchoredStart.value_or(std::string::npos);
             const auto bareCallPos = findRecoverableBareCall(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
             if (bareCallPos.has_value() && (contentEnd == std::string::npos || bareCallPos.value() < contentEnd))
                 contentEnd = bareCallPos.value();
