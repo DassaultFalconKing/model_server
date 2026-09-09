@@ -70,15 +70,6 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         return ToolConstraintMode::Hard;
     }
 
-    static bool promptEndsInOpenReasoning(const std::string& renderedPrompt) {
-        static const std::string marker = "<|channel>thought";
-        const size_t end = renderedPrompt.find_last_not_of(" \t\r\n");
-        if (end == std::string::npos || end + 1 < marker.size()) {
-            return false;
-        }
-        return renderedPrompt.compare(end + 1 - marker.size(), marker.size(), marker) == 0;
-    }
-
     static ov::genai::StructuredOutputConfig::Tag buildToolTag(const std::string& toolName, const ToolSchemaWrapper& toolSchemaWrapper) {
         if (toolSchemaWrapper.stringRepr.empty()) {
             throw std::invalid_argument("Gemma4 guided tool schema for '" + toolName + "' is empty");
@@ -172,81 +163,6 @@ public:
 
     bool shouldPreserveStructuredOutputOnValidationFailure() const override {
         return hardToolChoice;
-    }
-
-    // Explicit request-aware form used by focused builder tests and callers that
-    // still have the OpenAI request available.
-    static bool adaptConfigForRenderedPrompt(
-        ov::genai::GenerationConfig& config,
-        const OpenAIRequest& request,
-        const std::string& renderedPrompt) {
-        if (!isHardToolChoiceImpl(request.toolChoice) || request.toolNameSchemaMap.empty() ||
-            !config.structured_output_config.has_value() || !promptEndsInOpenReasoning(renderedPrompt)) {
-            return false;
-        }
-
-        auto toolTags = buildToolTags(request);
-        if (toolTags.empty()) {
-            throw std::invalid_argument("Gemma4 prompt-open hard tool_choice did not produce an enforceable tool tag");
-        }
-        config.structured_output_config->structural_tags_config =
-            buildTriggeredToolGrammar(std::move(toolTags), request.parallelToolCalls, true);
-        return true;
-    }
-
-    // Prompt-pipeline form. It recognizes only the exact hard Gemma4 grammar
-    // emitted by this builder, so it can run after chat-template rendering without
-    // carrying OpenAI request state into InputProcessor. The first Union arm is the
-    // mandatory native tool set; the second is canonical thought-then-tools.
-    static bool adaptConfigForRenderedPrompt(
-        ov::genai::GenerationConfig& config,
-        const std::string& renderedPrompt) {
-        using Structured = ov::genai::StructuredOutputConfig;
-        if (!config.structured_output_config.has_value() || !promptEndsInOpenReasoning(renderedPrompt)) {
-            return false;
-        }
-        auto& structuralConfig = config.structured_output_config->structural_tags_config;
-        if (!structuralConfig.has_value()) {
-            return false;
-        }
-        auto* root = std::get_if<Structured::StructuralTag>(&structuralConfig.value());
-        if (root == nullptr) {
-            return false;
-        }
-        auto* alternativesHolder = std::get_if<std::shared_ptr<Structured::Union>>(root);
-        if (alternativesHolder == nullptr || !*alternativesHolder || (*alternativesHolder)->elements.size() != 2) {
-            return false;
-        }
-        auto& alternatives = **alternativesHolder;
-        auto* requiredHolder = std::get_if<std::shared_ptr<Structured::TagsWithSeparator>>(&alternatives.elements[0]);
-        auto* thoughtSequenceHolder = std::get_if<std::shared_ptr<Structured::Concat>>(&alternatives.elements[1]);
-        if (requiredHolder == nullptr || !*requiredHolder || thoughtSequenceHolder == nullptr || !*thoughtSequenceHolder) {
-            return false;
-        }
-        const auto& requiredTags = **requiredHolder;
-        const auto& thoughtSequence = **thoughtSequenceHolder;
-        if (!requiredTags.at_least_one || requiredTags.tags.empty() || thoughtSequence.elements.size() != 2) {
-            return false;
-        }
-        auto* thoughtHolder = std::get_if<std::shared_ptr<Structured::Tag>>(&thoughtSequence.elements[0]);
-        auto* repeatedRequiredHolder = std::get_if<std::shared_ptr<Structured::TagsWithSeparator>>(&thoughtSequence.elements[1]);
-        if (thoughtHolder == nullptr || !*thoughtHolder || repeatedRequiredHolder == nullptr || !*repeatedRequiredHolder) {
-            return false;
-        }
-        const auto& thought = **thoughtHolder;
-        if (thought.begin != "<|channel>thought\n" || thought.end != "<channel|>") {
-            return false;
-        }
-        for (const auto& tag : requiredTags.tags) {
-            if (tag.begin.rfind("<|tool_call>call:", 0) != 0 || tag.end != "<tool_call|>") {
-                return false;
-            }
-        }
-
-        const bool parallelToolCalls = !requiredTags.stop_after_first;
-        auto toolTags = requiredTags.tags;
-        structuralConfig = buildTriggeredToolGrammar(std::move(toolTags), parallelToolCalls, true);
-        return true;
     }
 
     void parseConfigFromRequest(const OpenAIRequest& request) override {

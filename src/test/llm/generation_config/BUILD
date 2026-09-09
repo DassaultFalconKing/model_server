@@ -24,6 +24,7 @@ cc_test(
     deps = [
         "@com_google_googletest//:gtest_main",
         "//src/llm:generation_config_builders",
+        "//src/llm:io_processing_input_processors",
         "//third_party:genai",
         "//third_party:openvino",
     ],

@@ -9,6 +9,7 @@
 #include <variant>
 
 #include "src/llm/io_processing/generation_config_builder.hpp"
+#include "src/llm/io_processing/input_processors/chat_template_processor.hpp"
 
 using namespace ovms;
 using Structured = ov::genai::StructuredOutputConfig;
@@ -39,7 +40,7 @@ TEST(Gemma4PromptStateGenerationContractTest, OpenPromptReasoningUsesRequiredTri
 
         ASSERT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Union>>(rootGrammar(builder.getConfig())));
 
-        const bool changed = Gemma4GenerationConfigBuilder::adaptConfigForRenderedPrompt(
+        const bool changed = adaptGemma4HardToolGrammarForRenderedPrompt(
             builder.getConfig(), "<|turn>model\n<|channel>thought\n");
         EXPECT_TRUE(changed);
 
@@ -61,7 +62,7 @@ TEST(Gemma4PromptStateGenerationContractTest, OrdinaryPromptKeepsImmediateHardGr
     GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
     builder.parseConfigFromRequest(request);
 
-    const bool changed = Gemma4GenerationConfigBuilder::adaptConfigForRenderedPrompt(
+    const bool changed = adaptGemma4HardToolGrammarForRenderedPrompt(
         builder.getConfig(), "<|turn>user\nUse a tool<turn|>\n<|turn>model\n");
     EXPECT_FALSE(changed);
     EXPECT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Union>>(rootGrammar(builder.getConfig())));
@@ -73,7 +74,7 @@ TEST(Gemma4PromptStateGenerationContractTest, OpenPromptReasoningPreservesSingle
     GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
     builder.parseConfigFromRequest(request);
 
-    ASSERT_TRUE(Gemma4GenerationConfigBuilder::adaptConfigForRenderedPrompt(
+    ASSERT_TRUE(adaptGemma4HardToolGrammarForRenderedPrompt(
         builder.getConfig(), "prefix<|channel>thought\n"));
     const auto& triggered = *std::get<std::shared_ptr<Structured::TriggeredTags>>(rootGrammar(builder.getConfig()));
     EXPECT_TRUE(triggered.at_least_one);
