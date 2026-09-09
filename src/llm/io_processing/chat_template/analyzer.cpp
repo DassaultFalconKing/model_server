@@ -45,12 +45,18 @@ ChatTemplateAnalysisResult ChatTemplateAnalyzer::analyze(const std::string& temp
         return result;
     }
 
-    // Gemma4 detection
+    // Gemma4 detection. Compose upstream 2026.5 response-field handling with the
+    // Gemmamonster tool-response mapping workaround. Jinja2 treats mappings as
+    // sequences when a template iterates message.content; in that case part is a
+    // string key and part.get(...) fails, so mapping conversion must stay disabled.
     if (contains(templateSource, "'<|tool_call>call:'") || contains(templateSource, "<|tool_call>call:")) {
         result.detectedToolParser = "gemma4";
         result.detectedReasoningParser = "gemma4";  // gemma is always tied to its own parser for reasoning
         result.caps.supportsToolCalls = true;
         result.caps.supportsResponseFieldInToolDefinition = true;
+        const bool mapsResponse = contains(templateSource, "response is mapping");
+        const bool iteratesPartsWithGet = contains(templateSource, "part.get('type')") || contains(templateSource, "part.get(\"type\")");
+        result.caps.parseToolResponseJsonContent = mapsResponse && !iteratesPartsWithGet;
         return result;
     }
 
@@ -71,7 +77,6 @@ ChatTemplateAnalysisResult ChatTemplateAnalyzer::analyze(const std::string& temp
         result.detectedToolParser = "minicpm5";
         result.caps.supportsToolCalls = true;
         result.detectedReasoningParser = "minicpm5";
-
         return result;
     }
 
