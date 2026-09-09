@@ -111,6 +111,17 @@ TEST_F(Gemma4BareRecoveryContractTest, AllowedToolNameFollowedByProseStaysConten
     EXPECT_EQ(std::get<ContentDelta>(*delta).text, "call:question prose");
 }
 
+TEST_F(Gemma4BareRecoveryContractTest, RegistryAwareParserReleasesImpossibleBarePrefixAsContent) {
+    Gemma4ToolParser parser(*tokenizer, questionTools());
+
+    auto delta = parser.parseChunk(
+        "call:question prose", {}, ov::genai::GenerationFinishReason::STOP);
+
+    ASSERT_TRUE(delta.has_value());
+    ASSERT_TRUE(std::holds_alternative<ContentDelta>(*delta));
+    EXPECT_EQ(std::get<ContentDelta>(*delta).text, "call:question prose");
+}
+
 TEST_F(Gemma4BareRecoveryContractTest, BareCallRecoverySurvivesToolNameChunkSplit) {
     OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
 
