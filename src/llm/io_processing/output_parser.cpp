@@ -420,9 +420,10 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
                 }
                 const size_t reasoningEndPos = reasoningConfig.endTag.empty() ? std::string::npos : buf.find(reasoningConfig.endTag);
 
-                // Gemma4 may jump from thought directly into <|tool_call> without
-                // emitting <channel|>. Only treat the tool opener as the boundary
-                // when it occurs before any explicit reasoning closer.
+                // Canonical Google Gemma4 closes the thought channel with <channel|>
+                // before <|tool_call>. A parser may opt into toolStartTerminatesReasoning
+                // only as a tolerance/recovery boundary for malformed or edge output.
+                // Take over only when that recovery opener precedes an explicit closer.
                 if (toolStartPos != std::string::npos &&
                     (reasoningEndPos == std::string::npos || toolStartPos < reasoningEndPos)) {
                     const std::string reasoningPrefix = buf.substr(0, toolStartPos);
