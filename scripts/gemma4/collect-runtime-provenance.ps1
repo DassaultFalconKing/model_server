@@ -52,6 +52,10 @@ try {
 } catch {
     $versionOutput = "<failed: $($_.Exception.Message)>"
 }
+# Best-effort probe only: the outcome is recorded in version_output above.
+# A failed probe must not leak a nonzero $LASTEXITCODE into callers that
+# gate the build on it; launch/healthcheck remain the runtime authority.
+$global:LASTEXITCODE = 0
 
 $templateProvenance = $null
 if (-not [string]::IsNullOrWhiteSpace($TemplateProvenancePath) -and (Test-Path -LiteralPath $TemplateProvenancePath)) {
