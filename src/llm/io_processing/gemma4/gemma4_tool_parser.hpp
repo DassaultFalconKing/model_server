@@ -106,6 +106,8 @@ public:
         currentArgsOpen = '{';
         currentArgsClose = '}';
         currentCallValid = true;
+        currentCallBare = false;
+        currentCallStartPos = 0;
     }
 
     std::optional<Delta> parseChunk(const std::string& chunk, const std::vector<int64_t>& tokens, ov::genai::GenerationFinishReason finishReason) override;
@@ -143,6 +145,12 @@ private:
     char currentArgsOpen{'{'};
     char currentArgsClose{'}'};
     bool currentCallValid{true};
+    // Whether the in-flight call started from a bare line-start `call:`
+    // (no "<|tool_call>" anchor) and where that start sits in
+    // streamingContent. An unknown tool name on a bare call must be rewound
+    // and re-emitted as ordinary content; an anchored unknown call stays dropped.
+    bool currentCallBare{false};
+    size_t currentCallStartPos{0};
     bool enforceToolRegistry{false};
     std::unordered_set<std::string> allowedToolNames;
 };
