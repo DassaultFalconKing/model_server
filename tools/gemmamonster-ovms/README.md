@@ -44,6 +44,20 @@ Start it in the background on REST port 8888 and gRPC port 9000:
 .\tools\gemmamonster-ovms\Start-GemmaMonsterOvms.ps1
 ```
 
+The launcher waits until `GET /v3/models` exposes `gemma4`; it returns only
+after the model is ready. It records the current process command in
+`runtime/gemmamonster-ovms/ovms.command.json` and writes the current process
+output to `ovms.stdout.log` and `ovms.stderr.log` in the same directory.
+Follow the live logs with:
+
+```powershell
+Get-Content .\runtime\gemmamonster-ovms\ovms.stderr.log -Wait
+```
+
+The launcher clears `PYTHONHOME` and `PYTHONPATH` only for the OVMS child
+process. Do not set either variable globally: that breaks unrelated Python
+virtual environments.
+
 Run one strict OpenAI-compatible named-tool request:
 
 ```powershell

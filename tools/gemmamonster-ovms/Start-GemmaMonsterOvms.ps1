@@ -8,6 +8,7 @@ param(
     [ValidateSet("A", "B", "C", "D", "E")][string]$Profile = "B",
     [ValidateRange(0, 1024)][int]$QueueSize = 0,
     [ValidateRange(1, 1048576)][int]$MaxTokensLimit = 65536,
+    [ValidateRange(1, 1800)][int]$ReadyTimeoutSeconds = 180,
     [switch]$Foreground,
     [switch]$ValidateOnly
 )
@@ -23,6 +24,7 @@ $ConfigPath = Join-Path $RuntimeRoot "config.json"
 $PidPath = Join-Path $RuntimeRoot "ovms.pid"
 $OutLog = Join-Path $RuntimeRoot "ovms.stdout.log"
 $ErrLog = Join-Path $RuntimeRoot "ovms.stderr.log"
+$CommandPath = Join-Path $RuntimeRoot "ovms.command.json"
 $Pipeline = if ($Profile -eq "A") { "VLM" } else { "VLM_CB" }
 $PrefixCaching = ($Profile -eq "C" -or $Profile -eq "E")
 $PerformanceHint = if ($Profile -eq "D") { "THROUGHPUT" } else { "LATENCY" }
@@ -136,6 +138,8 @@ $Result = [pscustomobject]@{
     PerformanceHint = $PerformanceHint
     QueueSize = $QueueSize
     RestBaseUrl = "http://127.0.0.1:$RestPort/v3"
+    ReadinessUrl = "http://127.0.0.1:$RestPort/v3/models"
+    ReadyTimeoutSeconds = $ReadyTimeoutSeconds
     GrpcPort = $GrpcPort
     RuntimeRoot = $RuntimeRoot
     GraphPath = $GraphPath
@@ -143,6 +147,7 @@ $Result = [pscustomobject]@{
     PidPath = $PidPath
     StdoutLog = $OutLog
     StderrLog = $ErrLog
+    CommandPath = $CommandPath
 }
 
 if ($ValidateOnly) {
@@ -158,12 +163,14 @@ if (Test-Path -LiteralPath $PidPath) {
     throw "PID file already exists: $PidPath. Run Stop-GemmaMonsterOvms.ps1 first or inspect it manually."
 }
 
-Remove-Item Env:PYTHONHOME -ErrorAction SilentlyContinue
-Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
-$env:GEMMA4_TOKENIZER_PATH = $ModelPath
-$env:OVMS_GRAPH_QUEUE_MAX_SIZE = "$QueueSize"
-$env:PATH = "$(Split-Path -Parent $OvmsPath);$RepoRoot;$env:PATH"
 $Arguments = @("--rest_port", "$RestPort", "--port", "$GrpcPort", "--config_path", $ConfigPath)
+$ChildEnvironment = @{
+    PYTHONHOME = $null
+    PYTHONPATH = $null
+    GEMMA4_TOKENIZER_PATH = $ModelPath
+    OVMS_GRAPH_QUEUE_MAX_SIZE = "$QueueSize"
+    PATH = "$(Split-Path -Parent $OvmsPath);$RepoRoot;$env:PATH"
+}
 
 Write-Host "GEMMAMONSTER-OVMS source: $Head"
 Write-Host "Known-good baseline:       $KnownGoodCommit"
@@ -180,9 +187,50 @@ if ($Foreground) {
     return
 }
 
-Remove-Item -LiteralPath $OutLog, $ErrLog -ErrorAction SilentlyContinue
-$Process = Start-Process -FilePath $OvmsPath -ArgumentList $Arguments -WorkingDirectory $RepoRoot -WindowStyle Hidden -RedirectStandardOutput $OutLog -RedirectStandardError $ErrLog -PassThru
+Remove-Item -LiteralPath $OutLog, $ErrLog, $CommandPath -ErrorAction SilentlyContinue
+$Process = Start-Process -FilePath $OvmsPath -ArgumentList $Arguments -WorkingDirectory $RepoRoot -WindowStyle Hidden -RedirectStandardOutput $OutLog -RedirectStandardError $ErrLog -Environment $ChildEnvironment -PassThru
 $Process.Id | Set-Content -LiteralPath $PidPath -Encoding ascii -NoNewline
-$Result.Status = "STARTED"
+$Command = [ordered]@{
+    process_id = $Process.Id
+    executable = $OvmsPath
+    arguments = $Arguments
+    working_directory = $RepoRoot
+    readiness_url = $Result.ReadinessUrl
+    stdout_log = $OutLog
+    stderr_log = $ErrLog
+}
+$Command | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $CommandPath -Encoding utf8NoBOM
+
+$Deadline = (Get-Date).AddSeconds($ReadyTimeoutSeconds)
+$Ready = $false
+while ((Get-Date) -lt $Deadline) {
+    $RunningProcess = Get-Process -Id $Process.Id -ErrorAction SilentlyContinue
+    if (-not $RunningProcess) {
+        break
+    }
+    try {
+        $Models = Invoke-RestMethod -Method Get -Uri $Result.ReadinessUrl -TimeoutSec 2
+        if (@($Models.data | Where-Object { $_.id -eq $ModelName }).Count -gt 0) {
+            $Ready = $true
+            break
+        }
+    }
+    catch {
+        # The server is expected to refuse connections while the VLM loads.
+    }
+    Start-Sleep -Seconds 1
+}
+
+if (-not $Ready) {
+    $RunningProcess = Get-Process -Id $Process.Id -ErrorAction SilentlyContinue
+    if ($RunningProcess) {
+        Stop-Process -Id $Process.Id -Force
+    }
+    Remove-Item -LiteralPath $PidPath -ErrorAction SilentlyContinue
+    $StderrTail = if (Test-Path -LiteralPath $ErrLog) { (Get-Content -LiteralPath $ErrLog -Tail 40) -join [Environment]::NewLine } else { "<no stderr log>" }
+    throw "GEMMAMONSTER-OVMS did not become ready at $($Result.ReadinessUrl) within $ReadyTimeoutSeconds seconds. Stderr tail:$([Environment]::NewLine)$StderrTail"
+}
+
+$Result.Status = "READY"
 $Result | Add-Member -NotePropertyName ProcessId -NotePropertyValue $Process.Id
 return $Result
