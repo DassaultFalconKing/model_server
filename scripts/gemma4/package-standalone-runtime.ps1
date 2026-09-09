@@ -28,6 +28,7 @@ $profile = Join-Path $gemma 'profile-E'
 New-Item -ItemType Directory -Path $profile -Force | Out-Null
 Copy-Item -LiteralPath (Join-Path $root 'runtime\gemmamonster-ovms-E\profile.json') -Destination $profile
 Copy-Item -LiteralPath (Join-Path $root 'runtime\gemmamonster-ovms-E\README.md') -Destination $profile
+Copy-Item -LiteralPath (Join-Path $root 'scripts\gemma4\README.md') -Destination $gemma
 Copy-Item -LiteralPath (Join-Path $root 'scripts\gemma4\Start-Gemma4.ps1') -Destination $gemma
 
 $gitSha = (& git -C $root rev-parse HEAD).Trim()
