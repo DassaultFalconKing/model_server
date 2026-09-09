@@ -13,7 +13,7 @@ Set-StrictMode -Version Latest
 
 function Require-File([string]$Path, [string]$Label) {
     if (-not $Path -or -not (Test-Path -LiteralPath $Path -PathType Leaf)) {
-        throw "Missing $Label: $Path"
+        throw "Missing ${Label}: $Path"
     }
     return (Resolve-Path -LiteralPath $Path).Path
 }
