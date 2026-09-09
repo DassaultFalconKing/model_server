@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "../../../llm/io_processing/output_parser.hpp"
+#include "../../../llm/io_processing/gemma4/gemma4_tool_parser.hpp"
 #include "../../../llm/ovms_text_streamer.hpp"
 #include "../../platform_utils.hpp"
 
