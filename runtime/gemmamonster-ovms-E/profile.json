@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "profile": "E",
+  "status": "FROZEN_CURRENT_WORKING_PROFILE",
+  "observed_at": "2026-09-09",
+  "device": "GPU",
+  "pipeline_type": "VLM_CB",
+  "max_num_seqs": 1,
+  "plugin_config": {
+    "DYNAMIC_QUANTIZATION_GROUP_SIZE": "0",
+    "PERFORMANCE_HINT": "LATENCY",
+    "KV_CACHE_PRECISION": "u8"
+  },
+  "enable_prefix_caching": true,
+  "cache_size": 0,
+  "chat_template_mode": "MINJA",
+  "max_tokens_limit": 65536,
+  "model_name": "gemma4",
+  "model_path": "C:/llm/models/OpenVINO/Wondernutts/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-int4-ov"
+}

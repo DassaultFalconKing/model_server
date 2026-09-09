@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-09-09",
+  "repository_freeze_base": "3a1c53a0004a0a59d57a74b70b9db17bb0159ab9",
+  "runtime_observation_is_repository_authority": false,
+  "runtime_binary": {
+    "path": "C:/git/model_server-gemma4-fast/bazel-bin/src/ovms.exe",
+    "sha256": "0683a62c602ae83ef70d13ef175663ee772843c7924b5c63d93287198cbb8e9b",
+    "reported_version": "OpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4",
+    "source_sha": "UNKNOWN: executable reports REPLACE_PROJECT_VERSION"
+  },
+  "runtime_files": {
+    "graph_sha256": "184b21570610cefadb509fe224f7acf6d5bac984fd3079ced6081a8ad2844318",
+    "config_sha256": "d2a8b5a6414746117170b7ce6606834f8a611860392f58f976494c3e925f676e",
+    "model_config_sha256": "a62ff7eb0a97a7c6e83ba42edff8dc4118c109a7ededcd6d83cc08ffda6a7361"
+  },
+  "live_checks": {
+    "models_endpoint": "PASS: gemma4 returned from http://127.0.0.1:8888/v3/models",
+    "named_tool_call": "PASS: 1/1 in 1.638 seconds"
+  }
+}
