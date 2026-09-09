@@ -153,14 +153,17 @@ class NativeValueParser {
     }
 
     bool writeJsonToken(const std::string& token) {
-        if (!token.empty() && (std::isdigit(static_cast<unsigned char>(token.front())) || token.front() == '-')) {
-            // The native grammar already delimits this scalar. Keep its lexical
-            // spelling; parsing it through a DOM would round large values.
-            return writer.RawValue(token.data(), static_cast<rapidjson::SizeType>(token.size()), rapidjson::kNumberType);
-        }
         auto normalized = normalizeJsonLosslessly(token);
         if (!normalized)
             return false;
+        if (!token.empty() && (std::isdigit(static_cast<unsigned char>(token.front())) || token.front() == '-')) {
+            // Validate numeric syntax through RapidJSON while preserving the original
+            // lexical token. This keeps large/high-precision values lossless without
+            // allowing malformed forms such as `1.` or `1e` into OpenAI JSON.
+            if (*normalized != token)
+                return false;
+            return writer.RawValue(token.data(), static_cast<rapidjson::SizeType>(token.size()), rapidjson::kNumberType);
+        }
         // This path accepts a quoted string or a bare scalar only.
         const auto type = normalized->front() == '"' ? rapidjson::kStringType :
             normalized->front() == 't' ? rapidjson::kTrueType :
@@ -328,8 +331,11 @@ class NativeValueParser {
         trimLocal(token);
         if (token.empty())
             return false;
+        const bool numericCandidate = std::isdigit(static_cast<unsigned char>(token.front())) || token.front() == '-';
         if (writeJsonToken(token))
             return true;
+        if (numericCandidate)
+            return false;  // never silently retype malformed numeric output as a string
         writer.String(token.c_str(), static_cast<rapidjson::SizeType>(token.size()));
         return true;
     }
