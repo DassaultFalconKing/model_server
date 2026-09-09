@@ -32,6 +32,17 @@ const std::string tokenizerPath = "/ovms/src/test/llm_testing/OpenVINO/gemma-4-E
 
 const std::string emptySchema = R"({"type":"object","properties":{},"additionalProperties":false})";
 
+// Port contract for fix/gemma4-content-owns-boundaries-routing:
+// keep the target-branch parser and add only the missing routing semantics.
+// Do not overwrite Gemma4ToolParser from the 2026.4 fix branch: this branch
+// already contains stricter viable-prefix recovery, literal <|tool_call> content
+// protection, lossless numeric validation, and fail-closed complete-call deltas.
+// The GREEN fix should preserve those seams while transferring two behaviors:
+//   1. OutputParser CONTENT routes through parseToolCallChunk() when the tool
+//      parser advertises ownsToolCallBoundaries.
+//   2. Gemma4ToolParser::parseChunk() drains internal state transitions so one
+//      chunk can move Content -> ToolCallStarted -> ToolCallParameters ->
+//      ToolCallEnded without waiting for a fictional extra byte from heaven.
 class Gemma4ContentOwnsRoutingContractTest : public ::testing::Test {
 protected:
     static std::unique_ptr<ov::genai::Tokenizer> tokenizer;
