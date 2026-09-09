@@ -23,9 +23,9 @@ function Sanitize-Name([string]$Value) {
     return $safe
 }
 
-function Get-GitValue([string]$Repo, [string[]]$Args) {
-    $out = (& git -C $Repo @Args 2>$null)
-    if ($LASTEXITCODE -ne 0) { throw "git $($Args -join ' ') failed" }
+function Get-GitValue([string]$Repo, [string[]]$GitArgs) {
+    $out = (& git -C $Repo @GitArgs 2>$null)
+    if ($LASTEXITCODE -ne 0) { throw "git $($GitArgs -join ' ') failed" }
     return ($out | Out-String).Trim()
 }
 
