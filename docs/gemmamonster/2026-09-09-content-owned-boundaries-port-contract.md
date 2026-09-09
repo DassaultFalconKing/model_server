@@ -5,6 +5,7 @@
 **Target RED commit:** `01307da75241abe36606a5f7474bf14c22817018`  
 **Source branch:** `fix/gemma4-content-owns-boundaries-routing`  
 **Source GREEN tip:** `b949d0837cae8201403592f0524563403d136bcc`  
+**Source dofix tip:** `671f84c255ea41fd3431a02237cb0e3a0da52700`  
 **Source RED commit:** `fbd9cda22466835317bfe1603e942f3269056f1f`  
 **Source reproduction base:** `afbf5073baa02f79c4c385aec61f78ce193f84ee`
 
@@ -67,15 +68,28 @@ The loop must handle at least:
 
 The loop must still emit only one `Delta` per `parseChunk()` invocation. It may continue internally until it either emits a complete validated call/content delta or reaches a stable waiting state.
 
+### 2.3 Dofix from `671f84c25`
+
+The second source fix extended the routing work after tests exposed split bare-call boundaries under streamer chunking (`call` + `:` with `DELAY_N_TOKENS=3`). The semantic transfer is:
+
+- hold trailing fragments that can still become `<|tool_call>` or a line-start `call:` boundary;
+- flush held ordinary bytes on STOP;
+- when a bare line-start `call:` resolves to an unknown tool, rewind to the bare-call start and re-emit as content;
+- keep anchored `<|tool_call>call:unknown{...}` fail-closed / dropped;
+- avoid a drain-loop spin when STOP reaches `ToolCallEnded` with no publishable call.
+
+On the target branch this must additionally preserve the newer full-prefix/literal-marker protection: once `OutputParser` routes CONTENT through `Gemma4ToolParser`, the tool parser itself must not treat ordinary text containing `<|tool_call>` as an anchored tool call unless the marker is at least followed by a `call:` suffix or a still-possible `call:` prefix.
+
 ## 3. What must not be overwritten
 
-The target branch already contains newer hardening work than the source branch. A raw file replacement from `b949d0837...` would regress those changes.
+The target branch already contains newer hardening work than the source branch. A raw file replacement from `b949d0837...` or `671f84c25...` would regress those changes.
 
 Do not overwrite or weaken:
 
 - registry-aware viable-prefix bare-call recovery, including `call:quest` followed by `ion{...}`;
 - rejection of impossible bare prose such as `call:question prose`;
 - full native-prefix text start tags that prevent literal `<|tool_call>` content truncation;
+- internal anchored-boundary validation after CONTENT is routed through `Gemma4ToolParser`;
 - separate `tokenIdStartTags` handling for streamer special-token phase seams;
 - numeric lexeme validation that rejects malformed numbers such as `1.`, `1e`, `-`, and `01`;
 - lexical preservation for valid large/high-precision numbers;
@@ -103,18 +117,25 @@ The core scenarios are:
 - `<turn|>` stripped once in streaming content;
 - empty `{}` arguments completing in one chunk.
 
-## 5. Expected next GREEN commit
+The source dofix also depends on existing `Gemma4V2ContractTest.RecoversObservedBareCallAfterOrdinaryTextBoundary` and `Gemma4V2ContractTest.RecoversWhitespacePrefixedBareKnownCallWithoutEndMarker` staying green.
 
-The next GREEN commit on `integration/gemma4-parser-generator-refit-next` should change only:
+## 5. Target semantic port commits
 
-- `src/llm/io_processing/output_parser.cpp`;
-- `src/llm/io_processing/gemma4/gemma4_tool_parser.cpp`.
+The target branch intentionally split the port into reviewable pieces:
 
-Commit message recommendation:
+1. `7b0b1c8e23411602cf099b2428577343694297dd`  
+   `fix(gemma4): track bare-call ownership during streaming`
 
-`fix(gemma4): route content through owning tool parser`
+2. `d2edab5e75f0a0458c8e81271a9751f4a7befa61`  
+   `fix(gemma4): route content through owning tool parser`
 
-If the incoming "dofix" from the local agent changes the same two seams, reconcile it against this contract rather than stacking both fixes blindly. The winning version is the one that preserves the newer target-branch parser hardening and satisfies the RED routing contracts.
+3. `0949816f0b664dc9c2c05c5f232ed8e83ffc02a2`  
+   `fix(gemma4): hold split bare-call boundaries`
+
+4. `e53cc32d5b5f3db25ee311d3591416285a0f6a4f`  
+   `fix(gemma4): preserve literal tool markers under content-owned routing`
+
+These commits are a semantic port, not a source-file replacement. They preserve the target branch's stricter parser/generator history while transferring the source branch's routing and streamer-boundary findings.
 
 ## 6. Verification gate after GREEN
 
@@ -123,6 +144,16 @@ Minimum targeted command:
 ```bat
 bazel test //src:llm_output_parser_tests --test_filter=Gemma4ContentOwnsRouting*:Gemma4OutputParserTest.Streaming*:Gemma4V2ContractTest.Recovers*
 ```
+
+The source branch reported these local results at `671f84c25`:
+
+- `//src:llm_output_parser_tests` builds cleanly;
+- `//src/test/llm/generation_config:gemma4_generation_contract_test` builds cleanly;
+- 61/61 Gemma4 parser tests green (`V2` 13, `OutputParser` 43, `ContentOwnsRouting` 5);
+- 14/14 generation contracts green;
+- remaining red tests in that binary were 12 `Devstral*` cases failing due missing `openvino_tokenizer.xml`, unrelated to touched files according to the source report.
+
+Those source results do not certify the target branch. The target branch still needs a fresh run because it contains extra hardening and Jinja-contract commits.
 
 This command is not a full release gate. It is only the routing regression gate before returning to the larger program:
 
