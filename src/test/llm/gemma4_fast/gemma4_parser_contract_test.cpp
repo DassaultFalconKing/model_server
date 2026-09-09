@@ -272,6 +272,14 @@ TEST_F(Gemma4ParserFastContractTest, PreservesNumbersBeyondMachinePrecision) {
     EXPECT_EQ(Gemma4ToolParser::normalizeArgStr(numbers), numbers);
 }
 
+TEST_F(Gemma4ParserFastContractTest, MalformedNumericLexemesNeverBecomeExecutableArguments) {
+    for (const std::string value : {"1.", "1e", "-", "01"}) {
+        SCOPED_TRACE(value);
+        auto parsed = parse("<|tool_call>call:question{value:" + value + "}<tool_call|>");
+        EXPECT_TRUE(parsed.toolCalls.empty());
+    }
+}
+
 TEST_F(Gemma4ParserFastContractTest, ManyCallsReleaseConsumedBufferAndKeepOwnedDeltas) {
     Gemma4ToolParser parser(*tokenizer);
     std::vector<ToolCallDelta> calls;
