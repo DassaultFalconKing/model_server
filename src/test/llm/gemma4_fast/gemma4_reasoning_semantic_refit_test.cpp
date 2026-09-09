@@ -31,6 +31,7 @@ const std::string tokenizerPath = "/ovms/src/test/llm_testing/OpenVINO/gemma-4-E
 #endif
 
 const std::string questionSchema = R"({"type":"object","properties":{"questions":{"type":"array"}}})";
+const std::string questionCall = "<|tool_call>call:question{questions:[]}<tool_call|>";
 
 ToolsSchemas_t questionTools() {
     ToolsSchemas_t tools;
@@ -50,6 +51,12 @@ std::optional<ToolCallDelta> driveUntilToolCall(OutputParser& parser, const std:
         }
     }
     return std::nullopt;
+}
+
+void expectQuestionCall(const std::optional<ToolCallDelta>& call) {
+    ASSERT_TRUE(call.has_value());
+    EXPECT_EQ(call->name.value_or(""), "question");
+    EXPECT_EQ(call->arguments, R"({"questions":[]})");
 }
 
 class Gemma4ReasoningSemanticRefitTest : public ::testing::Test {
@@ -81,11 +88,51 @@ TEST_F(Gemma4ReasoningSemanticRefitTest, ToolStartImplicitlyEndsOpenReasoning) {
     ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*first));
     EXPECT_EQ(std::get<ReasoningDelta>(*first).text, "Need another tool");
 
-    const auto call = driveUntilToolCall(
-        parser,
-        "<|tool_call>call:question{questions:[]}<tool_call|>");
+    expectQuestionCall(driveUntilToolCall(parser, questionCall));
+}
 
-    ASSERT_TRUE(call.has_value());
-    EXPECT_EQ(call->name.value_or(""), "question");
-    EXPECT_EQ(call->arguments, R"({"questions":[]})");
+TEST_F(Gemma4ReasoningSemanticRefitTest, ImplicitPromptReasoningCanTransitionDirectlyToTool) {
+    OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
+    parser.setImplicitReasoningStart(true);
+
+    expectQuestionCall(driveUntilToolCall(parser, questionCall));
+}
+
+TEST_F(Gemma4ReasoningSemanticRefitTest, SameChunkReasoningPrefixIsPreservedBeforeToolHandoff) {
+    OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
+    parser.setImplicitReasoningStart(true);
+
+    auto reasoning = parser.parseChunk(
+        "Need another tool" + questionCall,
+        {},
+        true,
+        ov::genai::GenerationFinishReason::NONE);
+
+    ASSERT_TRUE(reasoning.has_value());
+    ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*reasoning));
+    EXPECT_EQ(std::get<ReasoningDelta>(*reasoning).text, "Need another tool");
+    expectQuestionCall(driveUntilToolCall(parser, ""));
+}
+
+TEST_F(Gemma4ReasoningSemanticRefitTest, PartialToolMarkerIsHeldBackInsteadOfLeakingIntoReasoning) {
+    OutputParser parser(*tokenizer, "gemma4", "gemma4", questionTools());
+    parser.setImplicitReasoningStart(true);
+
+    auto partial = parser.parseChunk(
+        "Need another tool<|tool_",
+        {},
+        true,
+        ov::genai::GenerationFinishReason::NONE);
+    EXPECT_FALSE(partial.has_value());
+
+    auto reasoning = parser.parseChunk(
+        "call>call:question{questions:[]}<tool_call|>",
+        {},
+        true,
+        ov::genai::GenerationFinishReason::NONE);
+    ASSERT_TRUE(reasoning.has_value());
+    ASSERT_TRUE(std::holds_alternative<ReasoningDelta>(*reasoning));
+    EXPECT_EQ(std::get<ReasoningDelta>(*reasoning).text, "Need another tool");
+
+    expectQuestionCall(driveUntilToolCall(parser, ""));
 }
