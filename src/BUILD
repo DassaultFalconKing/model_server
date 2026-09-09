@@ -2437,7 +2437,6 @@ cc_library(
     local_defines = COMMON_LOCAL_DEFINES,
     copts = COPTS_TESTS,
     linkopts = COMMON_STATIC_LIBS_LINKOPTS,
-    visibility = ["//visibility:public"],
 )
 
 cc_library(
