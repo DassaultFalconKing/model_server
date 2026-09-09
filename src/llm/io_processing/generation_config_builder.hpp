@@ -70,6 +70,15 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         return ToolConstraintMode::Hard;
     }
 
+    static bool promptEndsInOpenReasoning(const std::string& renderedPrompt) {
+        static const std::string marker = "<|channel>thought";
+        const size_t end = renderedPrompt.find_last_not_of(" \t\r\n");
+        if (end == std::string::npos || end + 1 < marker.size()) {
+            return false;
+        }
+        return renderedPrompt.compare(end + 1 - marker.size(), marker.size(), marker) == 0;
+    }
+
     static ov::genai::StructuredOutputConfig::Tag buildToolTag(const std::string& toolName, const ToolSchemaWrapper& toolSchemaWrapper) {
         if (toolSchemaWrapper.stringRepr.empty()) {
             throw std::invalid_argument("Gemma4 guided tool schema for '" + toolName + "' is empty");
@@ -104,20 +113,27 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         return tags;
     }
 
-    static ov::genai::StructuredOutputConfig::StructuralTag buildAutoToolGrammar(
+    static ov::genai::StructuredOutputConfig::StructuralTag buildTriggeredToolGrammar(
         std::vector<ov::genai::StructuredOutputConfig::Tag> toolTags,
-        bool parallelToolCalls) {
+        bool parallelToolCalls,
+        bool atLeastOne) {
         using Structured = ov::genai::StructuredOutputConfig;
         auto triggeredTags = std::make_shared<Structured::TriggeredTags>();
         triggeredTags->triggers = {"<|tool_call>"};
         triggeredTags->tags = std::move(toolTags);
-        // TriggeredTags itself supplies the free-text prefix. Setting at_least_one
-        // would prohibit ordinary prose and turn OpenAI `auto` into `required`.
-        triggeredTags->at_least_one = false;
+        triggeredTags->at_least_one = atLeastOne;
         // xgrammar's structural-tag contract maps parallel_tool_calls=false to
         // stop_after_first=true. With the default true, later triggers remain legal.
         triggeredTags->stop_after_first = !parallelToolCalls;
         return triggeredTags;
+    }
+
+    static ov::genai::StructuredOutputConfig::StructuralTag buildAutoToolGrammar(
+        std::vector<ov::genai::StructuredOutputConfig::Tag> toolTags,
+        bool parallelToolCalls) {
+        // TriggeredTags supplies the free-text prefix. `auto` deliberately does
+        // not require the trigger, so ordinary prose remains legal.
+        return buildTriggeredToolGrammar(std::move(toolTags), parallelToolCalls, false);
     }
 
     static ov::genai::StructuredOutputConfig::StructuralTag buildMandatoryToolGrammar(
@@ -131,11 +147,11 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         requiredTags->at_least_one = true;
         requiredTags->stop_after_first = !parallelToolCalls;
 
-        // Google Gemma4 may open/close its thought channel before choosing a
-        // tool after a tool response, including for a named choice. Selecting
-        // a name restricts the available tags, not the model's thought phase.
-        // xgrammar rejects empty ConstString, so optional thought is a Union of
-        // tools-only versus thought-then-tools rather than Concat("", thought).
+        // On a normal new model turn, canonical Google Gemma4 can either call a
+        // tool immediately or emit a complete thought channel and then call it.
+        // Selecting a named tool restricts the available tags, not the thought
+        // phase. xgrammar rejects empty ConstString, so optional thought is a
+        // Union of tools-only versus thought-then-tools.
         auto thought = std::make_shared<Structured::Tag>();
         thought->begin = "<|channel>thought\n";
         thought->content = Structured::AnyText();
@@ -156,6 +172,31 @@ public:
 
     bool shouldPreserveStructuredOutputOnValidationFailure() const override {
         return hardToolChoice;
+    }
+
+    // The current Google Gemma4 template can leave a post-tool prompt inside an
+    // already-open thought channel. In that state the generated suffix starts with
+    // reasoning text, not a fresh <|channel>thought opener. Switch hard required/
+    // named constraints to a required TriggeredTags grammar: the free prefix belongs
+    // to the prompt-open reasoning phase, while at_least_one still guarantees that
+    // generation eventually enters one of the native Gemma4 tool tags.
+    // Returns true only when the config was rewritten for this prompt state.
+    static bool adaptConfigForRenderedPrompt(
+        ov::genai::GenerationConfig& config,
+        const OpenAIRequest& request,
+        const std::string& renderedPrompt) {
+        if (!isHardToolChoiceImpl(request.toolChoice) || request.toolNameSchemaMap.empty() ||
+            !config.structured_output_config.has_value() || !promptEndsInOpenReasoning(renderedPrompt)) {
+            return false;
+        }
+
+        auto toolTags = buildToolTags(request);
+        if (toolTags.empty()) {
+            throw std::invalid_argument("Gemma4 prompt-open hard tool_choice did not produce an enforceable tool tag");
+        }
+        config.structured_output_config->structural_tags_config =
+            buildTriggeredToolGrammar(std::move(toolTags), request.parallelToolCalls, true);
+        return true;
     }
 
     void parseConfigFromRequest(const OpenAIRequest& request) override {
