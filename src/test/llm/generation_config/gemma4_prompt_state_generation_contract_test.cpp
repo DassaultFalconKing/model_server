@@ -40,7 +40,7 @@ TEST(Gemma4PromptStateGenerationContractTest, OpenPromptReasoningUsesRequiredTri
         ASSERT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Union>>(rootGrammar(builder.getConfig())));
 
         const bool changed = Gemma4GenerationConfigBuilder::adaptConfigForRenderedPrompt(
-            builder.getConfig(), request, "<|turn>model\n<|channel>thought\n");
+            builder.getConfig(), "<|turn>model\n<|channel>thought\n");
         EXPECT_TRUE(changed);
 
         const auto& root = rootGrammar(builder.getConfig());
@@ -62,7 +62,7 @@ TEST(Gemma4PromptStateGenerationContractTest, OrdinaryPromptKeepsImmediateHardGr
     builder.parseConfigFromRequest(request);
 
     const bool changed = Gemma4GenerationConfigBuilder::adaptConfigForRenderedPrompt(
-        builder.getConfig(), request, "<|turn>user\nUse a tool<turn|>\n<|turn>model\n");
+        builder.getConfig(), "<|turn>user\nUse a tool<turn|>\n<|turn>model\n");
     EXPECT_FALSE(changed);
     EXPECT_TRUE(std::holds_alternative<std::shared_ptr<Structured::Union>>(rootGrammar(builder.getConfig())));
 }
@@ -74,7 +74,7 @@ TEST(Gemma4PromptStateGenerationContractTest, OpenPromptReasoningPreservesSingle
     builder.parseConfigFromRequest(request);
 
     ASSERT_TRUE(Gemma4GenerationConfigBuilder::adaptConfigForRenderedPrompt(
-        builder.getConfig(), request, "prefix<|channel>thought\n"));
+        builder.getConfig(), "prefix<|channel>thought\n"));
     const auto& triggered = *std::get<std::shared_ptr<Structured::TriggeredTags>>(rootGrammar(builder.getConfig()));
     EXPECT_TRUE(triggered.at_least_one);
     EXPECT_TRUE(triggered.stop_after_first);
