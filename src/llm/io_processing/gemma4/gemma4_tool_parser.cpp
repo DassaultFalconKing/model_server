@@ -121,6 +121,64 @@ std::optional<size_t> findRecoverableBareCall(
     return std::nullopt;
 }
 
+// Whether a trailing line fragment could still become a recoverable bare
+// `call:` boundary with more streaming input. Only spaces plus a proper
+// prefix of "call:" (no completed colon) are holdable here; a completed
+// "call:" (with or without a tool name) is handled by
+// findRecoverableBareCall as a complete split point, and anything else on
+// the line already rules out a line-start bare call.
+bool isHoldableBareCallPrefix(const std::string& lineText) {
+    if (lineText.empty())
+        return false;
+    size_t i = 0;
+    while (i < lineText.size() && (lineText[i] == ' ' || lineText[i] == '\t' || lineText[i] == '\r'))
+        ++i;
+    const std::string rest = lineText.substr(i);
+    if (rest.empty())
+        return true;  // spaces only after a newline: may become "  call:" next chunk
+    if (rest.size() >= Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size())
+        return false;  // completed "call:" or longer: split logic owns it, do not hold here
+    return Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.compare(0, rest.size(), rest) == 0;
+}
+
+// Earliest position from which trailing bytes must be held because they may
+// still grow into a line-start bare `call:` boundary. Returns npos when the
+// buffered suffix is safe to emit as ordinary content.
+size_t bareCallHoldStart(const std::string& content, size_t from) {
+    if (content.size() <= from)
+        return std::string::npos;
+    const size_t nl = content.rfind('\n');
+    size_t lineStartFull = (nl == std::string::npos) ? 0 : nl + 1;
+    if (lineStartFull < from) {
+        for (size_t i = lineStartFull; i < from; ++i) {
+            const char c = content[i];
+            if (c != ' ' && c != '\t' && c != '\r')
+                return std::string::npos;  // line already has prose: no bare call possible
+        }
+        if (isHoldableBareCallPrefix(content.substr(from)))
+            return from;
+        return std::string::npos;
+    }
+    if (isHoldableBareCallPrefix(content.substr(lineStartFull)))
+        return lineStartFull;
+    return std::string::npos;
+}
+
+// Earliest position of a trailing partial "<|tool_call>" start tag that must
+// be held until the next chunk proves or disproves the boundary.
+size_t startTagHoldStart(const std::string& content, size_t from) {
+    const std::string& tag = Gemma4ToolParser::TOOL_CALL_START_TAG;
+    if (content.size() <= from || tag.size() <= 1)
+        return std::string::npos;
+    const size_t avail = content.size() - from;
+    size_t maxLen = std::min(avail, tag.size() - 1);
+    for (size_t len = maxLen; len > 0; --len) {
+        if (content.compare(content.size() - len, len, tag, 0, len) == 0)
+            return content.size() - len;
+    }
+    return std::string::npos;
+}
+
 class NativeValueParser {
     const std::string& input;
     size_t pos{0};
@@ -495,6 +553,8 @@ bool Gemma4ToolParser::parseInContentState() {
     if (toolCallStartTagPos != std::string::npos) {
         if (toolCallStartTagPos > streamingPosition)
             return true;
+        currentCallStartPos = toolCallStartTagPos;
+        currentCallBare = false;
         streamingPosition = toolCallStartTagPos + TOOL_CALL_START_TAG.length();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
@@ -505,6 +565,8 @@ bool Gemma4ToolParser::parseInContentState() {
     if (bareCallPos.has_value()) {
         if (bareCallPos.value() > streamingPosition)
             return true;
+        currentCallStartPos = bareCallPos.value();
+        currentCallBare = true;
         streamingPosition += TOOL_CALL_NAME_PREFIX.size();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
@@ -525,10 +587,21 @@ bool Gemma4ToolParser::parseInToolCallState() {
         argsPos = parenPos;
 
     if (endTagPos != std::string::npos && (argsPos == std::string::npos || endTagPos < argsPos)) {
+        if (currentCallBare) {
+            // Bare `call:` ended by "<tool_call|>" before any argument container:
+            // it was never an anchored call, so keep the bytes as prose.
+            streamingPosition = currentCallStartPos;
+            currentState = State::Content;
+            currentCallBare = false;
+            toolCall = {};
+            currentCallValid = false;
+            return false;
+        }
         SPDLOG_LOGGER_DEBUG(llm_calculator_logger, "Gemma4 tool call ended before an argument container; dropping malformed call");
         streamingPosition = endTagPos + TOOL_CALL_END_TAG.size();
         currentState = State::AfterToolCall;
         currentCallValid = false;
+        currentCallBare = false;
         toolCall = {};
         return true;
     }
@@ -539,6 +612,20 @@ bool Gemma4ToolParser::parseInToolCallState() {
     currentCallValid = saneToolName(toolName) && toolNameAllowed(toolName);
     if (!currentCallValid)
         SPDLOG_LOGGER_WARN(llm_calculator_logger, "Gemma4 parser refusing malformed or unavailable tool name: '{}'", toolName);
+
+    if (!currentCallValid && currentCallBare) {
+        // A bare line-start `call:` without an anchored "<|tool_call>" marker
+        // is ordinary prose unless it names an available tool. Rewind so the
+        // bytes re-emit as content instead of being dropped as a refused call.
+        // findRecoverableBareCall will skip this now-delimited invalid name on
+        // the next pass, so the rewind terminates.
+        streamingPosition = currentCallStartPos;
+        currentState = State::Content;
+        currentCallBare = false;
+        toolCall = {};
+        return false;
+    }
+    currentCallBare = false;
 
     currentArgsOpen = streamingContent[argsPos];
     currentArgsClose = currentArgsOpen == '(' ? ')' : '}';
@@ -565,6 +652,7 @@ bool Gemma4ToolParser::parseToolCallParametersState() {
             streamingPosition = endTagPos + TOOL_CALL_END_TAG.size();
             currentState = State::AfterToolCall;
             currentCallValid = false;
+            currentCallBare = false;
             toolCall = {};
             return true;
         }
@@ -593,6 +681,26 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
     const size_t nextCallPos = streamingContent.find(TOOL_CALL_NAME_PREFIX, streamingPosition);
 
     if (nextCallPos != std::string::npos && (endTagPos == std::string::npos || nextCallPos < endTagPos)) {
+        // A chained call after "<|tool_call>" framing stays anchored (drop on
+        // invalid); a bare line-start `call:` rewinds to content on invalid.
+        currentCallBare = true;
+        currentCallStartPos = nextCallPos;
+        const size_t tagPos = streamingContent.rfind(TOOL_CALL_START_TAG, nextCallPos);
+        if (tagPos != std::string::npos && tagPos >= streamingPosition &&
+            tagPos + TOOL_CALL_START_TAG.size() <= nextCallPos) {
+            bool gapClean = true;
+            for (size_t i = tagPos + TOOL_CALL_START_TAG.size(); i < nextCallPos; ++i) {
+                const char c = streamingContent[i];
+                if (c != ' ' && c != '\t' && c != '\r' && c != '\n') {
+                    gapClean = false;
+                    break;
+                }
+            }
+            if (gapClean) {
+                currentCallBare = false;
+                currentCallStartPos = tagPos;
+            }
+        }
         streamingPosition = nextCallPos + TOOL_CALL_NAME_PREFIX.size();
         currentState = State::ToolCallStarted;
         currentCallValid = true;
@@ -601,6 +709,7 @@ bool Gemma4ToolParser::parseInToolCallEndedState() {
     if (endTagPos != std::string::npos) {
         streamingPosition = endTagPos + TOOL_CALL_END_TAG.length();
         currentState = State::AfterToolCall;
+        currentCallBare = false;
         return true;
     }
     return false;
@@ -652,16 +761,38 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
                 // accumulator. Publish the complete call only after validation.
                 auto delta = ToolCallDelta{++toolCallIndex, toolCall.id, toolCall.name, toolCall.arguments};
                 toolCall = {};
+                currentCallValid = false;
                 return delta;
             }
+            // Nothing to emit and parseInToolCallEndedState found no following
+            // boundary (no next call, no end tag). Waiting here must not spin:
+            // the previous `continue` re-entered this block forever when the
+            // final STOP flush arrived in ToolCallEnded with an empty call
+            // (e.g. a bare call without "<tool_call|>"), hanging the streamer.
             toolCall = {};
-            continue;
+            currentCallValid = false;
+            break;
         }
         if (ready && currentState == State::Content) {
             size_t contentEnd = streamingContent.find(TOOL_CALL_START_TAG, streamingPosition);
             const auto bareCallPos = findRecoverableBareCall(streamingContent, streamingPosition, allowedToolNames, enforceToolRegistry);
             if (bareCallPos.has_value() && (contentEnd == std::string::npos || bareCallPos.value() < contentEnd))
                 contentEnd = bareCallPos.value();
+            if (contentEnd == std::string::npos && finishReason == ov::genai::GenerationFinishReason::NONE) {
+                // No complete boundary yet: hold a trailing fragment that may still
+                // grow into "<|tool_call>" or a line-start bare "call:" split
+                // across streamer chunks (e.g. "call" + ":" under DELAY_N_TOKENS).
+                // Emitting it now as prose would make the boundary unrecoverable.
+                const size_t tagHold = startTagHoldStart(streamingContent, streamingPosition);
+                const size_t bareHold = bareCallHoldStart(streamingContent, streamingPosition);
+                size_t holdStart = std::string::npos;
+                if (tagHold != std::string::npos)
+                    holdStart = tagHold;
+                if (bareHold != std::string::npos && (holdStart == std::string::npos || bareHold < holdStart))
+                    holdStart = bareHold;
+                if (holdStart != std::string::npos)
+                    contentEnd = holdStart;
+            }
             std::string content = contentEnd == std::string::npos
                 ? streamingContent.substr(streamingPosition)
                 : streamingContent.substr(streamingPosition, contentEnd - streamingPosition);
@@ -695,6 +826,7 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
         if (currentState == State::ToolCallEnded && currentCallValid && !toolCall.arguments.empty()) {
             auto delta = ToolCallDelta{++toolCallIndex, toolCall.id, toolCall.name, toolCall.arguments};
             toolCall = {};
+            currentCallValid = false;
             return delta;
         }
         if (currentState == State::Content && streamingPosition < streamingContent.size()) {
