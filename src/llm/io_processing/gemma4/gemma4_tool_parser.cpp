@@ -107,8 +107,25 @@ std::optional<size_t> findRecoverableBareCall(
             argsPos = bracePos;
         if (parenPos != std::string::npos && (argsPos == std::string::npos || parenPos < argsPos))
             argsPos = parenPos;
-        if (argsPos == std::string::npos)
-            return candidate;  // hold a streaming prefix until the argument opener arrives
+        if (argsPos == std::string::npos) {
+            if (!enforceToolRegistry)
+                return candidate;
+
+            std::string partialName = content.substr(nameStart);
+            trimLocal(partialName);
+            if (partialName.empty())
+                return candidate;
+
+            const bool couldBecomeAllowed = saneToolName(partialName) && std::any_of(
+                allowedToolNames.begin(), allowedToolNames.end(), [&](const std::string& allowedName) {
+                    return allowedName.rfind(partialName, 0) == 0;
+                });
+            if (couldBecomeAllowed)
+                return candidate;  // hold only a viable streaming tool-name prefix
+
+            candidate = content.find(Gemma4ToolParser::TOOL_CALL_NAME_PREFIX, candidate + Gemma4ToolParser::TOOL_CALL_NAME_PREFIX.size());
+            continue;
+        }
 
         std::string name = content.substr(nameStart, argsPos - nameStart);
         trimLocal(name);
