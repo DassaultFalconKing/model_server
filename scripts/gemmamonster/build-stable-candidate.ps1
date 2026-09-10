@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param(
     [string]$RepoRoot = (Join-Path $PSScriptRoot '..\..'),
-    [string]$ShortRoot = 'g54',
-    [string]$ArtifactRoot = 'C:\gemmamonster-artifacts\candidates\2026.4-rc2',
+    [ValidateSet('maintainer-rc2','known-good-rc1')][string]$RuntimeProfile = 'maintainer-rc2',
+    [string]$ShortRoot = '',
+    [string]$ArtifactRoot = 'C:\gemmamonster-artifacts\candidates\2026.4',
     [string]$Label = 'latest-refit',
     [switch]$SkipDependencies,
     [switch]$ExpungeDependencies,
@@ -14,6 +15,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+
+. (Join-Path $PSScriptRoot 'stable-runtime-profiles.ps1')
 
 function Get-GitValue([string]$Repo, [string[]]$Args) {
     $out = (& git -C $Repo @Args 2>$null)
@@ -33,42 +36,74 @@ function Require-File([string]$Path, [string]$Label) {
     return (Resolve-Path -LiteralPath $Path).Path
 }
 
-function Assert-StableVersions([string]$VersionsText) {
-    if ($VersionsText -notmatch '2026\.4\.0\.0rc2') {
-        throw 'versions.mk does not point at maintainer 2026.4 RC2 package line.'
-    }
-    if ($VersionsText -match '2026\.5\.0\.0|dev20260903|9b1d5c9494e838d42b5ed90d662c8ce84e5742f8|2e3b291a30e84fa067b042e35b8826d18d273882') {
-        throw 'versions.mk contains 2026.5 runtime pins. This stable builder refuses mixed runtime lineage.'
-    }
-}
-
-function Write-JsonFile([object]$Value, [string]$Path, [int]$Depth = 12) {
+function Write-JsonFile([object]$Value, [string]$Path, [int]$Depth = 14) {
     $parent = Split-Path -Parent $Path
     if ($parent -and -not (Test-Path -LiteralPath $parent)) { New-Item -ItemType Directory -Path $parent -Force | Out-Null }
     $Value | ConvertTo-Json -Depth $Depth | Set-Content -LiteralPath $Path -Encoding UTF8
 }
 
+function Assert-SourceVersionsAuthority([string]$VersionsText) {
+    $authority = Get-GemmamonsterStableRuntimeProfile -Name 'maintainer-rc2'
+    foreach ($pair in @(
+        @('OV_SOURCE_BRANCH', $authority.OV_SOURCE_BRANCH),
+        @('OV_TOKENIZERS_BRANCH', $authority.OV_TOKENIZERS_BRANCH),
+        @('OV_GENAI_BRANCH', $authority.OV_GENAI_BRANCH),
+        @('GENAI_PACKAGE_URL_WINDOWS', $authority.GENAI_PACKAGE_URL_WINDOWS)
+    )) {
+        $name = $pair[0]
+        $value = $pair[1]
+        $escaped = [regex]::Escape($value)
+        if ($VersionsText -notmatch "(?m)^$([regex]::Escape($name))\s*\?=\s*$escaped\s*$") {
+            throw "versions.mk source authority mismatch for ${name}. Expected exact maintainer-rc2 value: $value"
+        }
+    }
+    if ($VersionsText -match '2026\.5') { throw 'versions.mk contains a 2026.5 marker. Refusing stable branch build.' }
+}
+
+function Get-Hash([string]$Path) {
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
+function Assert-SameFile([string]$ExpectedPath, [string]$ActualPath, [string]$Label) {
+    $expected = Get-Hash $ExpectedPath
+    $actual = Get-Hash $ActualPath
+    if ($expected -ne $actual) {
+        throw "Packaged runtime provenance mismatch for ${Label}: source=$ExpectedPath ($expected) packaged=$ActualPath ($actual)"
+    }
+    return [ordered]@{ source_path = $ExpectedPath; source_sha256 = $expected; packaged_path = $ActualPath; packaged_sha256 = $actual }
+}
+
 $root = (Resolve-Path -LiteralPath $RepoRoot).Path
+$profile = Get-GemmamonsterStableRuntimeProfile -Name $RuntimeProfile
+if ([string]::IsNullOrWhiteSpace($ShortRoot)) { $ShortRoot = [string]$profile.default_short_root }
+if ($ShortRoot -notmatch '^[A-Za-z0-9_.-]+$') { throw "ShortRoot must be a simple C:\ directory name, got: $ShortRoot" }
+
 $head = Get-GitValue $root @('rev-parse', 'HEAD')
 $tree = Get-GitValue $root @('rev-parse', "$head^{tree}")
 $branch = Get-GitValue $root @('rev-parse', '--abbrev-ref', 'HEAD')
 $dirtyLines = @(& git -C $root status --porcelain)
 $dirty = $dirtyLines.Count -gt 0
 if ($dirty -and -not $AllowDirty) {
-    throw 'Working tree is dirty. Commit/stash changes or pass -AllowDirty to record the dirty state in the manifest.'
+    throw 'Working tree is dirty before build. Commit/stash changes or pass -AllowDirty; dirty candidates cannot become known-good.'
 }
 
 $versionsPath = Require-File (Join-Path $root 'versions.mk') 'versions.mk'
 $versionsText = Get-Content -LiteralPath $versionsPath -Raw -Encoding UTF8
-Assert-StableVersions $versionsText
+Assert-SourceVersionsAuthority $versionsText
+$versionsHash = Get-Hash $versionsPath
 
 $depsBat = Require-File (Join-Path $root 'windows_install_build_dependencies.bat') 'dependency installer'
 $buildBat = Require-File (Join-Path $root 'windows_build.bat') 'Windows builder'
 $packageBat = Require-File (Join-Path $root 'windows_create_package.bat') 'Windows package builder'
+$verifier = Require-File (Join-Path $root 'scripts\gemmamonster\Test-StableCandidate.ps1') 'candidate verifier'
+$workspacePath = Require-File (Join-Path $root 'WORKSPACE') 'WORKSPACE'
+$workspaceOriginalBytes = [System.IO.File]::ReadAllBytes($workspacePath)
+$workspaceOriginalHash = Get-Hash $workspacePath
+$workspaceRestored = $false
 
 $timestamp = [DateTime]::UtcNow.ToString('yyyyMMddTHHmmssZ')
 $safeLabel = Sanitize-Name $Label
-$candidateName = "$($head.Substring(0, 8))-$safeLabel-$timestamp"
+$candidateName = "$($head.Substring(0, 8))-$RuntimeProfile-$safeLabel-$timestamp"
 $candidateRoot = Join-Path $ArtifactRoot $candidateName
 if (Test-Path -LiteralPath $candidateRoot) { throw "Candidate root already exists: $candidateRoot" }
 New-Item -ItemType Directory -Path $candidateRoot -Force | Out-Null
@@ -78,30 +113,65 @@ foreach ($dir in @('logs','provenance','acceptance','dumps')) {
 
 $buildLog = Join-Path $candidateRoot 'logs\build.log'
 $packageLog = Join-Path $candidateRoot 'logs\package.log'
+$dependencyLog = Join-Path $candidateRoot 'logs\dependencies.log'
 $versionLog = Join-Path $candidateRoot 'provenance\ovms-version.txt'
 
-Push-Location $root
+$envNames = @('OV_SOURCE_BRANCH','OV_TOKENIZERS_BRANCH','OV_GENAI_BRANCH','GENAI_PACKAGE_URL_WINDOWS','GENAI_PACKAGE_URL','OV_USE_BINARY')
+$savedEnv = @{}
+foreach ($name in $envNames) { $savedEnv[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
+
+$buildSucceeded = $false
 try {
-    if (-not $SkipDependencies) {
-        $expunge = if ($ExpungeDependencies) { '1' } else { '0' }
-        $integrityArg = if ($Integrity) { '1' } else { '0' }
-        Write-Host "Installing pinned maintainer 2026.4 RC2 dependencies under C:\$ShortRoot (expunge=$expunge integrity=$integrityArg)"
-        & $depsBat $ShortRoot $expunge $integrityArg 2>&1 | Tee-Object -FilePath (Join-Path $candidateRoot 'logs\dependencies.log')
-        if ($LASTEXITCODE -ne 0) { throw "Dependency installation failed with exit code $LASTEXITCODE" }
+    $env:OV_SOURCE_BRANCH = [string]$profile.OV_SOURCE_BRANCH
+    $env:OV_TOKENIZERS_BRANCH = [string]$profile.OV_TOKENIZERS_BRANCH
+    $env:OV_GENAI_BRANCH = [string]$profile.OV_GENAI_BRANCH
+    $env:GENAI_PACKAGE_URL_WINDOWS = [string]$profile.GENAI_PACKAGE_URL_WINDOWS
+    $env:GENAI_PACKAGE_URL = [string]$profile.GENAI_PACKAGE_URL_WINDOWS
+    $env:OV_USE_BINARY = '1'
+
+    Push-Location $root
+    try {
+        if (-not $SkipDependencies) {
+            $expunge = if ($ExpungeDependencies) { '1' } else { '0' }
+            $integrityArg = if ($Integrity) { '1' } else { '0' }
+            Write-Host "Installing exact runtime profile '$RuntimeProfile' under C:\$ShortRoot"
+            & $depsBat $ShortRoot $expunge $integrityArg 2>&1 | Tee-Object -FilePath $dependencyLog
+            if ($LASTEXITCODE -ne 0) { throw "Dependency installation failed with exit code $LASTEXITCODE" }
+        }
+
+        $openvinoLink = "C:\$ShortRoot\openvino"
+        if (-not (Test-Path -LiteralPath $openvinoLink -PathType Container)) { throw "Pinned OpenVINO/GenAI runtime root missing: $openvinoLink" }
+        $linkItem = Get-Item -LiteralPath $openvinoLink -Force
+        $linkTarget = [string]($linkItem.Target -join ';')
+        if ($linkTarget -notlike "*$($profile.package_marker)*") {
+            throw "Dependency root does not resolve to expected package marker '$($profile.package_marker)': $linkTarget"
+        }
+
+        $pythonArg = if ($NoPython) { '' } else { '--with_python' }
+        $testsArg = if ($WithoutTests) { '' } else { '--with_tests' }
+        Write-Host "Building stable refit HEAD=$head profile=$RuntimeProfile root=C:\$ShortRoot"
+        & $buildBat $ShortRoot $pythonArg $testsArg 2>&1 | Tee-Object -FilePath $buildLog
+        if ($LASTEXITCODE -ne 0) { throw "Build failed with exit code $LASTEXITCODE. See $buildLog" }
+
+        Write-Host "Creating isolated package under $candidateRoot"
+        & $packageBat $ShortRoot $pythonArg $candidateRoot 2>&1 | Tee-Object -FilePath $packageLog
+        if ($LASTEXITCODE -ne 0) { throw "Package creation failed with exit code $LASTEXITCODE. See $packageLog" }
+        $buildSucceeded = $true
+    } finally {
+        Pop-Location
     }
-
-    $pythonArg = if ($NoPython) { '' } else { '--with_python' }
-    $testsArg = if ($WithoutTests) { '' } else { '--with_tests' }
-    Write-Host "Building OVMS stable refit HEAD=$head shortRoot=C:\$ShortRoot python=$(-not $NoPython) tests=$(-not $WithoutTests)"
-    & $buildBat $ShortRoot $pythonArg $testsArg 2>&1 | Tee-Object -FilePath $buildLog
-    if ($LASTEXITCODE -ne 0) { throw "Build failed with exit code $LASTEXITCODE. See $buildLog" }
-
-    Write-Host "Creating isolated package under $candidateRoot"
-    & $packageBat $ShortRoot $pythonArg $candidateRoot 2>&1 | Tee-Object -FilePath $packageLog
-    if ($LASTEXITCODE -ne 0) { throw "Package creation failed with exit code $LASTEXITCODE. See $packageLog" }
 } finally {
-    Pop-Location
+    [System.IO.File]::WriteAllBytes($workspacePath, $workspaceOriginalBytes)
+    $workspaceRestored = ((Get-Hash $workspacePath) -eq $workspaceOriginalHash)
+    foreach ($name in $envNames) {
+        $old = $savedEnv[$name]
+        if ($null -eq $old) { Remove-Item "Env:$name" -ErrorAction SilentlyContinue }
+        else { [Environment]::SetEnvironmentVariable($name, [string]$old, 'Process') }
+    }
 }
+
+if (-not $workspaceRestored) { throw 'WORKSPACE was not restored byte-for-byte after dependency/build operations.' }
+if (-not $buildSucceeded) { throw 'Build/package did not complete successfully.' }
 
 $ovmsDir = Join-Path $candidateRoot 'ovms'
 $ovmsExe = Require-File (Join-Path $ovmsDir 'ovms.exe') 'packaged ovms.exe'
@@ -111,36 +181,48 @@ $versionExit = $LASTEXITCODE
 $versionOutput | Set-Content -LiteralPath $versionLog -Encoding UTF8
 if ($versionExit -ne 0) { throw "Packaged ovms.exe --version failed with exit code $versionExit. See $versionLog" }
 $versionText = ($versionOutput | Out-String)
-if ($versionText -match '2026\.5') {
-    throw 'Packaged candidate reports a 2026.5 component. Refusing stable-2026.4 candidate.'
-}
-if ($versionText -notmatch '2026\.4') {
-    throw 'Packaged candidate did not report any 2026.4 component. Check ovms-version.txt before accepting.'
-}
+if ($versionText -match '2026\.5') { throw 'Packaged candidate reports a 2026.5 component. Refusing stable-2026.4 candidate.' }
+if ($versionText -notmatch '2026\.4') { throw 'Packaged candidate did not report a 2026.4 component.' }
 
-$runtimeFiles = Get-ChildItem -LiteralPath $ovmsDir -Recurse -File | Sort-Object FullName
+$runtimeFiles = @(Get-ChildItem -LiteralPath $ovmsDir -Recurse -File | Sort-Object FullName)
 $shaLines = foreach ($file in $runtimeFiles) {
     $rel = [System.IO.Path]::GetRelativePath($candidateRoot, $file.FullName).Replace('\','/')
-    $hash = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
-    "$hash  $rel"
+    "$(Get-Hash $file.FullName)  $rel"
 }
 $shaPath = Join-Path $candidateRoot 'SHA256SUMS.txt'
 $shaLines | Set-Content -LiteralPath $shaPath -Encoding ASCII
 
-$dlls = @('openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')
-$dllHash = [ordered]@{}
-foreach ($dll in $dlls) {
-    $path = Join-Path $ovmsDir $dll
-    if (Test-Path -LiteralPath $path -PathType Leaf) {
-        $dllHash[$dll] = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-    }
+$sourcePaths = [ordered]@{
+    'openvino.dll' = "C:\$ShortRoot\openvino\runtime\bin\intel64\Release\openvino.dll"
+    'tbb12.dll' = "C:\$ShortRoot\openvino\runtime\3rdparty\tbb\bin\tbb12.dll"
+    'openvino_genai.dll' = (Join-Path $root 'bazel-out\x64_windows-opt\bin\src\openvino_genai.dll')
+    'openvino_tokenizers.dll' = (Join-Path $root 'bazel-out\x64_windows-opt\bin\src\openvino_tokenizers.dll')
+}
+$runtimeProvenance = [ordered]@{}
+foreach ($name in $sourcePaths.Keys) {
+    $sourcePath = Require-File $sourcePaths[$name] "source $name"
+    $packagedPath = Require-File (Join-Path $ovmsDir $name) "packaged $name"
+    $runtimeProvenance[$name] = Assert-SameFile $sourcePath $packagedPath $name
+}
+
+$dllHashes = [ordered]@{}
+foreach ($name in @('openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')) {
+    $dllHashes[$name] = Get-Hash (Join-Path $ovmsDir $name)
+}
+
+$dependencyPins = [ordered]@{
+    OV_SOURCE_BRANCH = [string]$profile.OV_SOURCE_BRANCH
+    OV_TOKENIZERS_BRANCH = [string]$profile.OV_TOKENIZERS_BRANCH
+    OV_GENAI_BRANCH = [string]$profile.OV_GENAI_BRANCH
+    GENAI_PACKAGE_URL_WINDOWS = [string]$profile.GENAI_PACKAGE_URL_WINDOWS
 }
 
 $manifestPath = Join-Path $candidateRoot 'manifest.json'
 $manifest = [ordered]@{
-    schema_version = 1
+    schema_version = 2
     project = 'GEMMAMONSTER'
-    candidate_kind = 'stable-2026.4-rc2-refit'
+    candidate_kind = 'stable-2026.4-refit'
+    runtime_profile = $RuntimeProfile
     repository = 'DassaultFalconKing/model_server'
     created_at_utc = [DateTime]::UtcNow.ToString('o')
     candidate_name = $candidateName
@@ -150,18 +232,26 @@ $manifest = [ordered]@{
     tree_sha = $tree
     repo_dirty = $dirty
     short_root = "C:\$ShortRoot"
-    runtime_policy = 'self-contained ovms/ package; do not accept bare bazel-bin/src/ovms.exe for runtime acceptance'
-    versions_mk_sha256 = (Get-FileHash -LiteralPath $versionsPath -Algorithm SHA256).Hash.ToLowerInvariant()
-    versions_mk_expected_line = 'maintainer 2026.4 RC2, never 2026.5'
+    dependency_pins = $dependencyPins
+    source_authority = [ordered]@{
+        versions_mk_sha256 = $versionsHash
+        versions_mk_policy = 'branch stays exact latest-maintainer 2026.4 RC2; known-good RC1 is selected only by process environment overrides'
+        workspace_sha256_before = $workspaceOriginalHash
+        workspace_restored_byte_exact = $workspaceRestored
+    }
+    runtime_policy = 'self-contained ovms/ package; acceptance must prove loaded modules are inside this package'
     package = [ordered]@{
         ovms_dir = $ovmsDir
         ovms_exe = $ovmsExe
-        ovms_sha256 = (Get-FileHash -LiteralPath $ovmsExe -Algorithm SHA256).Hash.ToLowerInvariant()
+        ovms_sha256 = Get-Hash $ovmsExe
         runtime_file_count = $runtimeFiles.Count
         sha256sums = $shaPath
-        dll_sha256 = $dllHash
+        dll_sha256 = $dllHashes
+        runtime_source_equivalence = $runtimeProvenance
+        archive = (Join-Path $candidateRoot 'ovms.zip')
     }
     logs = [ordered]@{
+        dependencies = $dependencyLog
         build = $buildLog
         package = $packageLog
         version = $versionLog
@@ -169,22 +259,35 @@ $manifest = [ordered]@{
     acceptance = [ordered]@{
         status = 'NOT_RUN'
         required_before_known_good = @(
-            'parser contracts',
-            'generation contracts',
-            'prompt-state contracts',
-            'streaming same-tool repeated calls',
-            'real OpenCode workload on Arc 140V'
+            'source contract tests',
+            'package contract test',
+            'loaded module provenance',
+            'repeated same-tool non-stream',
+            'repeated same-tool stream',
+            'multi-turn session continuity',
+            'real OpenCode workload on Arc 140V',
+            'RC1 versus RC2 A/B if stability differs'
         )
     }
 }
-Write-JsonFile $manifest $manifestPath 12
+Write-JsonFile $manifest $manifestPath 16
+
+Write-JsonFile ([ordered]@{ source_sha=$head; tree_sha=$tree; branch=$branch; repo_dirty=$dirty; versions_mk_sha256=$versionsHash }) (Join-Path $candidateRoot 'provenance\source.json')
+Write-JsonFile ([ordered]@{ runtime_profile=$RuntimeProfile; pins=$dependencyPins; short_root="C:\$ShortRoot"; package_marker=$profile.package_marker }) (Join-Path $candidateRoot 'provenance\dependencies.json')
+Write-JsonFile ([ordered]@{ build_log=$buildLog; with_python=(-not $NoPython); with_tests=(-not $WithoutTests); workspace_restored_byte_exact=$workspaceRestored }) (Join-Path $candidateRoot 'provenance\build.json')
+Write-JsonFile ([ordered]@{ ovms_sha256=$manifest.package.ovms_sha256; dlls=$runtimeProvenance; sha256sums=$shaPath; archive=$manifest.package.archive }) (Join-Path $candidateRoot 'provenance\package.json')
+
+& $verifier -CandidateRoot $candidateRoot -ExpectedSourceSha $head -ExpectedRuntimeProfile $RuntimeProfile | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'Stable candidate verifier failed after package creation.' }
 
 Write-Host ''
-Write-Host 'GEMMAMONSTER STABLE 2026.4 RC2 CANDIDATE BUILT'
+Write-Host 'GEMMAMONSTER STABLE 2026.4 CANDIDATE BUILT'
 Write-Host "  SOURCE_SHA:       $head"
 Write-Host "  BRANCH:           $branch"
+Write-Host "  RUNTIME_PROFILE:  $RuntimeProfile"
+Write-Host "  DEP_ROOT:         C:\$ShortRoot"
 Write-Host "  CANDIDATE_ROOT:   $candidateRoot"
 Write-Host "  OVMS_SHA256:      $($manifest.package.ovms_sha256)"
 Write-Host "  MANIFEST:         $manifestPath"
 Write-Host "  VERSION_EVIDENCE: $versionLog"
-Write-Host '  STATUS:           BUILT_NOT_ACCEPTED'
+Write-Host '  STATUS:           BUILT_PROVENANCE_VERIFIED_NOT_ACCEPTED'
