@@ -91,7 +91,7 @@ if __name__ == "__main__":
 """)
 
     # Locate the Python binary
-    if repository_ctx.os.name == "windows":
+    if repository_ctx.os.name.startswith("windows"):
         python_binary = repository_ctx.which("python")
     else:
         python_binary = repository_ctx.which("python3") or repository_ctx.which("python")
