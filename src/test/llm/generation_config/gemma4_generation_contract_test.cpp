@@ -1,0 +1,1 @@
+// inaccessible via contents-write; preserving exact blob through git tree
