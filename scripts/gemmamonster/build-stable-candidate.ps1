@@ -18,9 +18,9 @@ Set-StrictMode -Version Latest
 
 . (Join-Path $PSScriptRoot 'stable-runtime-profiles.ps1')
 
-function Get-GitValue([string]$Repo, [string[]]$Args) {
-    $out = (& git -C $Repo @Args 2>$null)
-    if ($LASTEXITCODE -ne 0) { throw "git $($Args -join ' ') failed in $Repo" }
+function Get-GitValue([string]$Repo, [string[]]$GitArgs) {
+    $out = (& git.exe -C $Repo @GitArgs 2>$null)
+    if ($LASTEXITCODE -ne 0) { throw "git $($GitArgs -join ' ') failed in $Repo" }
     return ($out | Out-String).Trim()
 }
 
