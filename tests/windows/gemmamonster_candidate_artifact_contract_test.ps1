@@ -8,8 +8,21 @@ Set-StrictMode -Version Latest
 
 $root = (Resolve-Path -LiteralPath $RepoRoot).Path
 $verifier = Join-Path $root 'scripts\gemma4\Test-CandidateArtifact.ps1'
-if (-not (Test-Path -LiteralPath $verifier -PathType Leaf)) {
-    throw "Candidate artifact verifier is missing: $verifier"
+$launcher = Join-Path $root 'scripts\gemma4\launch-gemma4-candidate.ps1'
+$acceptance = Join-Path $root 'scripts\gemma4\run-candidate-acceptance.ps1'
+foreach ($script in @($verifier, $launcher, $acceptance)) {
+    if (-not (Test-Path -LiteralPath $script -PathType Leaf)) {
+        throw "Required candidate artifact script is missing: $script"
+    }
+}
+
+$launcherCommand = Get-Command -LiteralPath $launcher
+if (-not $launcherCommand.Parameters.ContainsKey('CandidateRoot')) {
+    throw 'launch-gemma4-candidate.ps1 must accept -CandidateRoot.'
+}
+$acceptanceCommand = Get-Command -LiteralPath $acceptance
+if (-not $acceptanceCommand.Parameters.ContainsKey('CandidateRoot')) {
+    throw 'run-candidate-acceptance.ps1 must accept -CandidateRoot.'
 }
 
 function Write-Sha256Manifest {
@@ -154,6 +167,14 @@ try {
 
     Assert-ThrowsLike -Pattern 'git SHA mismatch' -Action {
         & $verifier -CandidateRoot $valid -ExpectedGitSha '89abcdef0123456789abcdef0123456789abcdef' | Out-Null
+    }
+
+    # Both consumers must enforce artifact integrity before they touch model/network/runtime state.
+    Assert-ThrowsLike -Pattern 'Hash mismatch|SHA256' -Action {
+        & $launcher -CandidateRoot $tampered -ModelPath $temp | Out-Null
+    }
+    Assert-ThrowsLike -Pattern 'Hash mismatch|SHA256' -Action {
+        & $acceptance -CandidateRoot $tampered -ModelName 'synthetic' -CommitSha $expectedSha -BaseUrl 'http://127.0.0.1:1' -Reliability None | Out-Null
     }
 
     Write-Host 'GEMMAMONSTER_CANDIDATE_ARTIFACT_CONTRACT_TEST_PASS'
