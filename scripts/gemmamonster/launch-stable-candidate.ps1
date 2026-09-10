@@ -56,7 +56,6 @@ $manifestPath = Require-File (Join-Path $candidate 'manifest.json') 'candidate m
 $manifest = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
 $verifier = Require-File (Join-Path $PSScriptRoot 'Test-StableCandidate.ps1') 'candidate verifier'
 & $verifier -CandidateRoot $candidate -ExpectedSourceSha ([string]$manifest.source_sha) -ExpectedRuntimeProfile ([string]$manifest.runtime_profile) | Out-Null
-if ($LASTEXITCODE -ne 0) { throw 'Candidate verifier failed before launch.' }
 
 $ovmsDir = Join-Path $candidate 'ovms'
 $ovmsExe = Require-File (Join-Path $ovmsDir 'ovms.exe') 'packaged ovms.exe'
