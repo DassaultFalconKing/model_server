@@ -1,10 +1,9 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)][string]$OvmsExe,
+    [Parameter(Mandatory = $true)][string]$CandidateRoot,
     [Parameter(Mandatory = $true)][string]$ModelPath,
     [string]$ModelName = 'gemma4-26-heretic',
     [string]$RepoRoot = (Join-Path $PSScriptRoot '..\..'),
-    [string]$ShortRoot = 'g5',
     [string]$Label = '2026.5-candidate',
     [ValidateSet('E', 'Stable', 'PrefixCache')][string]$Profile = 'E',
     [ValidateSet('JINJA', 'MINJA')][string]$ChatTemplateMode = 'JINJA',
@@ -18,9 +17,12 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 $root = (Resolve-Path -LiteralPath $RepoRoot).Path
-$ovms = (Resolve-Path -LiteralPath $OvmsExe).Path
+$verifyScript = Join-Path $root 'scripts\gemma4\Test-CandidateArtifact.ps1'
+$artifact = & $verifyScript -CandidateRoot $CandidateRoot
+$candidate = $artifact.CandidateRoot
+$packageRoot = $artifact.PackageRoot
+$ovms = $artifact.OvmsExe
 $model = (Resolve-Path -LiteralPath $ModelPath).Path
-if (-not (Test-Path -LiteralPath $ovms -PathType Leaf)) { throw "ovms.exe not found: $ovms" }
 if (-not (Test-Path -LiteralPath $model -PathType Container)) { throw "model directory not found: $model" }
 
 function Test-PortOpen([int]$Port) {
@@ -48,8 +50,6 @@ $profileNote = 'B2-style correctness isolation'
 
 switch ($Profile) {
     'E' {
-        # Current target-machine working profile. Do not silently inherit cache_size
-        # from B2/C because the exact E cache_size was never committed in the freeze.
         $pluginConfig.KV_CACHE_PRECISION = 'u8'
         $enablePrefixCaching = $true
         $cacheSizeLine = ''
@@ -124,37 +124,33 @@ $configPath = Join-Path $runtimeDir 'config.json'
 $config | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $configPath -Encoding UTF8
 
 $env:OVMS_GRAPH_QUEUE_MAX_SIZE = '0'
+
+# Candidate v1 is a self-contained Windows runtime. Put only package-local runtime
+# directories ahead of the inherited PATH; do not inject C:\g5, C:\opt OpenVINO,
+# or another machine-level dependency root.
 $pathPrepend = New-Object System.Collections.Generic.List[string]
-$openVinoRoot = "C:\$ShortRoot\openvino"
 foreach ($p in @(
-    (Join-Path $openVinoRoot 'runtime\bin'),
-    (Join-Path $openVinoRoot 'runtime\3rdparty\tbb\bin'),
-    'C:\opt\Python312',
-    'C:\opt\Python312\Scripts'
+    $packageRoot,
+    (Join-Path $packageRoot 'python'),
+    (Join-Path $packageRoot 'python\Scripts')
 )) {
     if (Test-Path -LiteralPath $p) { $pathPrepend.Add($p) }
-}
-$versionsPath = Join-Path $root 'versions.mk'
-if (Test-Path -LiteralPath $versionsPath) {
-    $versionsText = Get-Content -LiteralPath $versionsPath -Raw -Encoding UTF8
-    if ($versionsText -match '(?m)^OPENCV_VERSION\s+\?=\s+([^\s]+)') {
-        $opencv = "C:\opt\opencv_$($Matches[1])\x64\vc17\bin"
-        if (Test-Path -LiteralPath $opencv) { $pathPrepend.Add($opencv) }
-    }
 }
 if ($pathPrepend.Count -gt 0) { $env:PATH = (@($pathPrepend) -join ';') + ';' + $env:PATH }
 
 if ($ChatTemplateMode -eq 'JINJA') {
-    $pythonHome = 'C:\opt\Python312'
-    if (Test-Path -LiteralPath $pythonHome) { $env:PYTHONHOME = $pythonHome }
-    $pythonPaths = New-Object System.Collections.Generic.List[string]
-    foreach ($p in @(
-        (Join-Path $root 'bazel-out\x64_windows-opt\bin\src\python\binding'),
-        'C:\opt\Python312\Lib\site-packages'
-    )) {
-        if (Test-Path -LiteralPath $p) { $pythonPaths.Add($p) }
+    $pythonHome = Join-Path $packageRoot 'python'
+    if (Test-Path -LiteralPath (Join-Path $pythonHome 'Lib\encodings') -PathType Container) {
+        $env:PYTHONHOME = $pythonHome
+    } else {
+        Remove-Item Env:PYTHONHOME -ErrorAction SilentlyContinue
     }
-    if ($pythonPaths.Count -gt 0) { $env:PYTHONPATH = @($pythonPaths) -join ';' }
+    $sitePackages = Join-Path $pythonHome 'Lib\site-packages'
+    if (Test-Path -LiteralPath $sitePackages -PathType Container) {
+        $env:PYTHONPATH = $sitePackages
+    } else {
+        Remove-Item Env:PYTHONPATH -ErrorAction SilentlyContinue
+    }
 }
 
 $logPath = Join-Path $runtimeDir 'ovms.log'
@@ -166,14 +162,20 @@ $args = @(
     '--log_path', $logPath
 )
 $launchRecord = [ordered]@{
-    schema_version = 2
+    schema_version = 3
     launched_at_utc = [DateTime]::UtcNow.ToString('o')
     label = $Label
     profile = $Profile
     profile_note = $profileNote
     chat_template_mode = $ChatTemplateMode
+    candidate_contract = $artifact.Contract
+    candidate_root = $candidate
+    candidate_git_sha = $artifact.GitSha
+    candidate_manifest = $artifact.ManifestPath
+    package_root = $packageRoot
     ovms_exe = $ovms
-    ovms_sha256 = (Get-FileHash -LiteralPath $ovms -Algorithm SHA256).Hash.ToLowerInvariant()
+    ovms_sha256 = $artifact.OvmsSha256
+    runtime_policy = 'SELF_CONTAINED_PACKAGE_ONLY'
     model_path = $model
     model_name = $ModelName
     rest_port = $RestPort
@@ -192,12 +194,14 @@ $launchRecord = [ordered]@{
 $launchRecord | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $runtimeDir 'launch.json') -Encoding UTF8
 
 Write-Host "Launching $Label / Profile $Profile"
-Write-Host "  profile: $profileNote"
-Write-Host "  binary:  $ovms"
-Write-Host "  model:   $model"
-Write-Host "  config:  $configPath"
-Write-Host "  REST:    http://127.0.0.1:$RestPort"
-$process = Start-Process -FilePath $ovms -ArgumentList $args -PassThru -NoNewWindow
+Write-Host "  profile:   $profileNote"
+Write-Host "  candidate: $candidate"
+Write-Host "  binary:    $ovms"
+Write-Host "  SHA256:    $($artifact.OvmsSha256)"
+Write-Host "  model:     $model"
+Write-Host "  config:    $configPath"
+Write-Host "  REST:      http://127.0.0.1:$RestPort"
+$process = Start-Process -FilePath $ovms -ArgumentList $args -WorkingDirectory $packageRoot -PassThru -NoNewWindow
 $launchRecord.pid = $process.Id
 $launchRecord | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $runtimeDir 'launch.json') -Encoding UTF8
 
@@ -213,7 +217,15 @@ while ([DateTime]::UtcNow -lt $deadline) {
 }
 if (-not $ready) { throw "OVMS did not become ready within $ReadinessTimeoutSeconds seconds. PID=$($process.Id), log=$logPath" }
 
+# Prove that the running candidate resolved its core runtime from the immutable
+# package rather than from C:\g5, C:\opt, or any other ambient PATH entry.
+$runtimeVerification = & $verifyScript -CandidateRoot $candidate -ExpectedGitSha $artifact.GitSha -VerifyLoadedRuntime
+$launchRecord.loaded_runtime_verified = $true
+$launchRecord.loaded_runtime_verified_pid = $runtimeVerification.ProcessId
+$launchRecord | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $runtimeDir 'launch.json') -Encoding UTF8
+
 Write-Host "OVMS READY pid=$($process.Id)"
+Write-Host "Candidate runtime verified self-contained: $packageRoot"
 Write-Host "Generated runtime directory: $runtimeDir"
 if ($Wait) {
     Wait-Process -Id $process.Id
