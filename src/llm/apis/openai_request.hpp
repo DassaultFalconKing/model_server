@@ -50,8 +50,7 @@ struct OpenAIRequest {
     std::optional<bool> ignoreEOS{std::nullopt};
     std::optional<std::set<std::string>> stop{std::nullopt};
     std::optional<bool> includeStopStrInOutput{std::nullopt};
-    std::optional<int> numReturnSequences{std::nullopt};  // effective for beam search and multinomial decoding
-    // Multinomial decoding specific
+    std::optional<int> numReturnSequences{std::nullopt};
     std::optional<float> temperature{std::nullopt};
     std::optional<float> topP{std::nullopt};
     std::optional<float> minP{std::nullopt};
@@ -60,40 +59,35 @@ struct OpenAIRequest {
     std::optional<float> frequencyPenalty{std::nullopt};
     std::optional<float> presencePenalty{std::nullopt};
     std::optional<float> repetitionPenalty{std::nullopt};
-    // Beam search specific
     std::optional<int> bestOf{std::nullopt};
     std::optional<float> lengthPenalty{std::nullopt};
 
-    // Assisted decoding specific (only with speculative decoding or prompt lookup pipeline)
     std::optional<int> numAssistantTokens{std::nullopt};
     std::optional<float> assistantConfidenceThreshold{std::nullopt};
     std::optional<int> maxNgramSize{std::nullopt};
-    // EAGLE3 tree drafting (tree_depth > 0 enables tree mode; branching_factor controls top-k per layer)
     std::optional<size_t> branchingFactor{std::nullopt};
     std::optional<size_t> treeDepth{std::nullopt};
 
     std::optional<uint32_t> maxModelLength;
 
-    // Guided generation specific
-    // String representation of response format object
     std::optional<std::string> responseFormat{std::nullopt};
-    // Map that holds tool names and schemas for their arguments
     ToolsSchemas_t toolNameSchemaMap;
-    // Holds value for tool_choice field as described in https://platform.openai.com/docs/api-reference/chat/create#chat_create-tool_choice
     std::string toolChoice;
+    // OpenAI-compatible default is true when omitted. This policy is consumed by
+    // Gemma4 structural generation to decide whether later tool triggers remain legal.
+    bool parallelToolCalls{true};
 
     bool skipSpecialTokens{true};
 
-    // Audio output (Omni pipeline)
     enum class AudioFormat { WAV,
         PCM16 };
     static constexpr AudioFormat DEFAULT_AUDIO_FORMAT = AudioFormat::WAV;
     bool audioOutputRequested{false};
-    bool textOutputRequested{true};  // false when modalities is ["audio"] without "text"
-    std::string audioVoice;          // maps to OmniTalkerSpeechConfig::speaker
+    bool textOutputRequested{true};
+    std::string audioVoice;
     AudioFormat audioFormat{DEFAULT_AUDIO_FORMAT};
     static constexpr size_t DEFAULT_AUDIO_CHUNK_FRAMES = 4;
-    size_t audioChunkFrames{DEFAULT_AUDIO_CHUNK_FRAMES};  // Number of codec frames per streaming audio chunk (each frame = 80ms @ 24kHz)
+    size_t audioChunkFrames{DEFAULT_AUDIO_CHUNK_FRAMES};
 
     OpenAIRequest() = default;
     ~OpenAIRequest() = default;
