@@ -2433,6 +2433,7 @@ cc_library(
     name = "test_platform_utils",
     hdrs = ["test/platform_utils.hpp",],
     srcs = ["test/platform_utils.cpp",],
+    visibility = ["//src/test:__subpackages__"],
     deps = [
         "@com_google_googletest//:gtest",
     ],
