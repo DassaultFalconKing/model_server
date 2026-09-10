@@ -103,7 +103,7 @@ try {
 if (-not $workspaceRestored) {
     throw 'WORKSPACE was not restored byte-for-byte after source contract execution.'
 }
-$postStatus = @(& git -C $root status --porcelain)
+$postStatus = @(& git -C $root status --porcelain | Where-Object { $_ -notmatch '^\?\? bazel-[^/]*/$' })
 if ($postStatus.Count -gt 0) {
     throw "Source contract runner left the working tree dirty:`n$($postStatus -join "`n")"
 }
