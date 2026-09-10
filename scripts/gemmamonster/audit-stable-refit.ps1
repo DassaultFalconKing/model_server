@@ -10,10 +10,10 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot 'stable-runtime-profiles.ps1')
 
-function Git([string[]]$Args, [switch]$AllowFailure) {
-    $out = & git -C $root @Args 2>&1
+function Git([string[]]$GitArgs, [switch]$AllowFailure) {
+    $out = & git.exe -C $root @GitArgs 2>&1
     $rc = $LASTEXITCODE
-    if ($rc -ne 0 -and -not $AllowFailure) { throw "git $($Args -join ' ') failed ($rc): $($out -join ' ')" }
+    if ($rc -ne 0 -and -not $AllowFailure) { throw "git $($GitArgs -join ' ') failed ($rc): $($out -join ' ')" }
     return [pscustomobject]@{ ExitCode=$rc; Output=(($out | Out-String).Trim()) }
 }
 
@@ -139,7 +139,7 @@ if ($advancedAvailable -and (File-ExistsAtHead $berichtPath)) {
     if ($null -eq $advancedBerichtBlob) {
         $failures.Add("advanced ref does not contain required provenance Bericht: $berichtPath")
     } elseif ($currentBerichtBlob -ne $advancedBerichtBlob) {
-        $failures.Add("provenance Bericht is not byte-exact with $AdvancedRef: current=$currentBerichtBlob advanced=$advancedBerichtBlob")
+        $failures.Add("provenance Bericht is not byte-exact with ${AdvancedRef}: current=$currentBerichtBlob advanced=$advancedBerichtBlob")
     }
 }
 
