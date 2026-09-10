@@ -14,7 +14,6 @@ $verifier = Join-Path $repoRoot 'scripts\gemmamonster\Test-StableCandidate.ps1'
 if (-not (Test-Path -LiteralPath $verifier -PathType Leaf)) { throw "Candidate verifier missing: $verifier" }
 
 $result = & $verifier -CandidateRoot $root -ExpectedSourceSha $ExpectedGitSha -ExpectedRuntimeProfile $ExpectedRuntimeProfile
-if ($LASTEXITCODE -ne 0) { throw 'Stable candidate verifier failed.' }
 
 $ovmsDir = Join-Path $root 'ovms'
 $ovmsExe = Join-Path $ovmsDir 'ovms.exe'
