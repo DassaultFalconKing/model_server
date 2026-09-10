@@ -79,7 +79,14 @@ try {
     }
 
     $targetText = $targets -join ' '
-    $cmd = "call `"$setupvars`" && call `"$opencvSetup`" && set `"BAZEL_SH=C:\opt\msys64\usr\bin\bash.exe`" && bazel --output_user_root=C:\$ShortRoot test --config=$config --action_env OpenVINO_DIR=$openvinoDir --test_output=errors --verbose_failures $targetText"
+    # Contract test binaries need the selected runtime's DLLs on THEIR PATH.
+    # env_inherit reads the bazel SERVER env (stale, from build time), not the
+    # client cmd env, so setupvars in the chain below never reaches the tests.
+    # Proven by env bisect: bins-on-PATH starts the binary (exit 1, tests run),
+    # PYTHONHOME/USERPROFILE do not matter for the AV. Pass explicit test env.
+    $testBinPath = "C:\$ShortRoot\openvino\runtime\bin\intel64\Release;C:\$ShortRoot\openvino\runtime\3rdparty\tbb\bin"
+    $testPathValue = "$testBinPath;C:\opt\Python312;" + $env:PATH
+    $cmd = "call `"$setupvars`" && call `"$opencvSetup`" && set `"BAZEL_SH=C:\opt\msys64\usr\bin\bash.exe`" && set `"PYTHONHOME=C:\opt\Python312`" && bazel --output_user_root=C:\$ShortRoot test --config=$config --action_env OpenVINO_DIR=$openvinoDir --test_env=PYTHONHOME=C:\opt\Python312 --test_env=`"PATH=$testPathValue`" --test_output=errors --verbose_failures $targetText"
     Write-Host "Running GEMMAMONSTER source contracts on $RuntimeProfile"
     Write-Host "  HEAD: $((& git -C $root rev-parse HEAD).Trim())"
     Write-Host "  dependency root: C:\$ShortRoot"
