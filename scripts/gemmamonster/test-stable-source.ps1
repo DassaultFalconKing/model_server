@@ -12,6 +12,10 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 . (Join-Path $PSScriptRoot 'stable-runtime-profiles.ps1')
 
+function Get-Hash([string]$Path) {
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
 $root = (Resolve-Path -LiteralPath $RepoRoot).Path
 $profile = Get-GemmamonsterStableRuntimeProfile -Name $RuntimeProfile
 if ([string]::IsNullOrWhiteSpace($ShortRoot)) { $ShortRoot = [string]$profile.default_short_root }
@@ -21,6 +25,20 @@ $linkItem = Get-Item -LiteralPath $depRoot -Force
 $linkTarget = [string]($linkItem.Target -join ';')
 if ($linkTarget -notlike "*$($profile.package_marker)*") {
     throw "Runtime root does not match requested profile '$RuntimeProfile': $linkTarget"
+}
+
+$workspacePath = (Resolve-Path -LiteralPath (Join-Path $root 'WORKSPACE')).Path
+$workspaceOriginalBytes = [System.IO.File]::ReadAllBytes($workspacePath)
+$workspaceOriginalHash = Get-Hash $workspacePath
+$workspaceText = [System.Text.Encoding]::UTF8.GetString($workspaceOriginalBytes)
+$defaultOpenVinoLiteral = 'C:\\opt\\openvino\\runtime'
+$profileOpenVinoLiteral = "C:\\$ShortRoot\\openvino\\runtime"
+if (-not $workspaceText.Contains($defaultOpenVinoLiteral)) {
+    throw "WORKSPACE does not contain expected Windows OpenVINO authority path '$defaultOpenVinoLiteral'; refusing an unproven rewrite."
+}
+$profileWorkspaceText = $workspaceText.Replace($defaultOpenVinoLiteral, $profileOpenVinoLiteral)
+if ($profileWorkspaceText -eq $workspaceText) {
+    throw "WORKSPACE runtime-profile rewrite made no change for C:\$ShortRoot."
 }
 
 if ([string]::IsNullOrWhiteSpace($LogPath)) {
@@ -45,7 +63,17 @@ if (-not (Test-Path -LiteralPath $setupvars -PathType Leaf)) { throw "OpenVINO s
 if (-not (Test-Path -LiteralPath $opencvSetup -PathType Leaf)) { throw "OpenCV setup script missing: $opencvSetup" }
 
 $oldTokenizer = $env:GEMMA4_TOKENIZER_PATH
+$workspaceRestored = $false
 try {
+    [System.IO.File]::WriteAllText($workspacePath, $profileWorkspaceText, [System.Text.UTF8Encoding]::new($false))
+    $activeWorkspace = Get-Content -LiteralPath $workspacePath -Raw -Encoding UTF8
+    if (-not $activeWorkspace.Contains($profileOpenVinoLiteral)) {
+        throw "WORKSPACE was not rebound to selected runtime profile C:\$ShortRoot."
+    }
+    if ($activeWorkspace.Contains($defaultOpenVinoLiteral)) {
+        throw 'WORKSPACE still contains C:\opt\openvino\runtime after profile binding; source contract provenance is ambiguous.'
+    }
+
     if (-not [string]::IsNullOrWhiteSpace($Gemma4TokenizerPath)) {
         $env:GEMMA4_TOKENIZER_PATH = (Resolve-Path -LiteralPath $Gemma4TokenizerPath).Path
     }
@@ -55,6 +83,7 @@ try {
     Write-Host "Running GEMMAMONSTER source contracts on $RuntimeProfile"
     Write-Host "  HEAD: $((& git -C $root rev-parse HEAD).Trim())"
     Write-Host "  dependency root: C:\$ShortRoot"
+    Write-Host "  WORKSPACE OpenVINO path: $profileOpenVinoLiteral"
     Write-Host "  log: $LogPath"
     Push-Location $root
     try {
@@ -65,10 +94,21 @@ try {
     }
     if ($rc -ne 0) { throw "GEMMAMONSTER source contracts FAILED with exit code $rc. See $LogPath" }
 } finally {
+    [System.IO.File]::WriteAllBytes($workspacePath, $workspaceOriginalBytes)
+    $workspaceRestored = ((Get-Hash $workspacePath) -eq $workspaceOriginalHash)
     if ($null -eq $oldTokenizer) { Remove-Item Env:GEMMA4_TOKENIZER_PATH -ErrorAction SilentlyContinue }
     else { $env:GEMMA4_TOKENIZER_PATH = $oldTokenizer }
+}
+
+if (-not $workspaceRestored) {
+    throw 'WORKSPACE was not restored byte-for-byte after source contract execution.'
+}
+$postStatus = @(& git -C $root status --porcelain)
+if ($postStatus.Count -gt 0) {
+    throw "Source contract runner left the working tree dirty:`n$($postStatus -join "`n")"
 }
 
 Write-Host 'GEMMAMONSTER_SOURCE_CONTRACTS_PASS'
 Write-Host "  runtime_profile: $RuntimeProfile"
 Write-Host "  log: $LogPath"
+Write-Host '  workspace_restored_byte_exact: true'
