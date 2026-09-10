@@ -96,10 +96,17 @@ $depsBat = Require-File (Join-Path $root 'windows_install_build_dependencies.bat
 $buildBat = Require-File (Join-Path $root 'windows_build.bat') 'Windows builder'
 $packageBat = Require-File (Join-Path $root 'windows_create_package.bat') 'Windows package builder'
 $verifier = Require-File (Join-Path $root 'scripts\gemmamonster\Test-StableCandidate.ps1') 'candidate verifier'
-$workspacePath = Require-File (Join-Path $root 'WORKSPACE') 'WORKSPACE'
-$workspaceOriginalBytes = [System.IO.File]::ReadAllBytes($workspacePath)
-$workspaceOriginalHash = Get-Hash $workspacePath
-$workspaceRestored = $false
+
+$mutableTracked = [ordered]@{}
+foreach ($relative in @('WORKSPACE','src\version.hpp')) {
+    $path = Require-File (Join-Path $root $relative) $relative
+    $mutableTracked[$relative] = [ordered]@{
+        path = $path
+        bytes = [System.IO.File]::ReadAllBytes($path)
+        sha256 = Get-Hash $path
+    }
+}
+$trackedFilesRestored = $false
 
 $timestamp = [DateTime]::UtcNow.ToString('yyyyMMddTHHmmssZ')
 $safeLabel = Sanitize-Name $Label
@@ -161,8 +168,13 @@ try {
         Pop-Location
     }
 } finally {
-    [System.IO.File]::WriteAllBytes($workspacePath, $workspaceOriginalBytes)
-    $workspaceRestored = ((Get-Hash $workspacePath) -eq $workspaceOriginalHash)
+    foreach ($entry in $mutableTracked.GetEnumerator()) {
+        [System.IO.File]::WriteAllBytes([string]$entry.Value.path, [byte[]]$entry.Value.bytes)
+    }
+    $trackedFilesRestored = $true
+    foreach ($entry in $mutableTracked.GetEnumerator()) {
+        if ((Get-Hash ([string]$entry.Value.path)) -ne [string]$entry.Value.sha256) { $trackedFilesRestored = $false }
+    }
     foreach ($name in $envNames) {
         $old = $savedEnv[$name]
         if ($null -eq $old) { Remove-Item "Env:$name" -ErrorAction SilentlyContinue }
@@ -170,7 +182,13 @@ try {
     }
 }
 
-if (-not $workspaceRestored) { throw 'WORKSPACE was not restored byte-for-byte after dependency/build operations.' }
+if (-not $trackedFilesRestored) { throw 'Build-mutated tracked files were not restored byte-for-byte.' }
+if (-not $dirty) {
+    $postStatus = @(& git -C $root status --porcelain)
+    if ($postStatus.Count -gt 0) {
+        throw "Build left unexpected worktree mutations after restoration:`n$($postStatus -join "`n")"
+    }
+}
 if (-not $buildSucceeded) { throw 'Build/package did not complete successfully.' }
 
 $ovmsDir = Join-Path $candidateRoot 'ovms'
@@ -236,8 +254,8 @@ $manifest = [ordered]@{
     source_authority = [ordered]@{
         versions_mk_sha256 = $versionsHash
         versions_mk_policy = 'branch stays exact latest-maintainer 2026.4 RC2; known-good RC1 is selected only by process environment overrides'
-        workspace_sha256_before = $workspaceOriginalHash
-        workspace_restored_byte_exact = $workspaceRestored
+        restored_tracked_files = @($mutableTracked.Keys)
+        restored_byte_exact = $trackedFilesRestored
     }
     runtime_policy = 'self-contained ovms/ package; acceptance must prove loaded modules are inside this package'
     package = [ordered]@{
@@ -272,13 +290,14 @@ $manifest = [ordered]@{
 }
 Write-JsonFile $manifest $manifestPath 16
 
-Write-JsonFile ([ordered]@{ source_sha=$head; tree_sha=$tree; branch=$branch; repo_dirty=$dirty; versions_mk_sha256=$versionsHash }) (Join-Path $candidateRoot 'provenance\source.json')
+Write-JsonFile ([ordered]@{ source_sha=$head; tree_sha=$tree; branch=$branch; repo_dirty=$dirty; versions_mk_sha256=$versionsHash; restored_tracked_files=@($mutableTracked.Keys); restored_byte_exact=$trackedFilesRestored }) (Join-Path $candidateRoot 'provenance\source.json')
 Write-JsonFile ([ordered]@{ runtime_profile=$RuntimeProfile; pins=$dependencyPins; short_root="C:\$ShortRoot"; package_marker=$profile.package_marker }) (Join-Path $candidateRoot 'provenance\dependencies.json')
-Write-JsonFile ([ordered]@{ build_log=$buildLog; with_python=(-not $NoPython); with_tests=(-not $WithoutTests); workspace_restored_byte_exact=$workspaceRestored }) (Join-Path $candidateRoot 'provenance\build.json')
+Write-JsonFile ([ordered]@{ build_log=$buildLog; with_python=(-not $NoPython); with_tests=(-not $WithoutTests); restored_tracked_files=@($mutableTracked.Keys); restored_byte_exact=$trackedFilesRestored }) (Join-Path $candidateRoot 'provenance\build.json')
 Write-JsonFile ([ordered]@{ ovms_sha256=$manifest.package.ovms_sha256; dlls=$runtimeProvenance; sha256sums=$shaPath; archive=$manifest.package.archive }) (Join-Path $candidateRoot 'provenance\package.json')
 
-& $verifier -CandidateRoot $candidateRoot -ExpectedSourceSha $head -ExpectedRuntimeProfile $RuntimeProfile | Out-Null
-if ($LASTEXITCODE -ne 0) { throw 'Stable candidate verifier failed after package creation.' }
+$verifyArgs = @{ CandidateRoot=$candidateRoot; ExpectedSourceSha=$head; ExpectedRuntimeProfile=$RuntimeProfile }
+if ($AllowDirty) { $verifyArgs.AllowDirtySource = $true }
+& $verifier @verifyArgs | Out-Null
 
 Write-Host ''
 Write-Host 'GEMMAMONSTER STABLE 2026.4 CANDIDATE BUILT'
@@ -290,4 +309,4 @@ Write-Host "  CANDIDATE_ROOT:   $candidateRoot"
 Write-Host "  OVMS_SHA256:      $($manifest.package.ovms_sha256)"
 Write-Host "  MANIFEST:         $manifestPath"
 Write-Host "  VERSION_EVIDENCE: $versionLog"
-Write-Host '  STATUS:           BUILT_PROVENANCE_VERIFIED_NOT_ACCEPTED'
+Write-Host ('  STATUS:           ' + $(if ($dirty) { 'BUILT_DIRTY_NOT_ACCEPTABLE' } else { 'BUILT_PROVENANCE_VERIFIED_NOT_ACCEPTED' }))
