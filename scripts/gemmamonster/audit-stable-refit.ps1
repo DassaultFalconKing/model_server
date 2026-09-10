@@ -22,7 +22,7 @@ function File-ExistsAtHead([string]$Path) {
 }
 
 function Changed-FromAncestor([string]$Path) {
-    & git -C $root diff --quiet "$Ancestor..HEAD" -- $Path
+    & git.exe -C $root diff --quiet "$Ancestor..HEAD" -- $Path
     return $LASTEXITCODE -ne 0
 }
 
@@ -159,7 +159,7 @@ foreach ($pair in @(
 }
 if ($versionsText -match '2026\.5') { $failures.Add('versions.mk contains 2026.5 marker') }
 
-$dirty = @(& git -C $root status --porcelain)
+$dirty = @(& git.exe -C $root status --porcelain)
 if ($dirty.Count -gt 0) { $failures.Add("working tree is dirty: $($dirty -join '; ')") }
 
 $report = [ordered]@{
@@ -180,8 +180,8 @@ $report = [ordered]@{
         advanced_blob = if ($advancedAvailable) { Blob-At $AdvancedRef $berichtPath } else { $null }
     }
     authority_note = 'Bericht provenance union is broader than current diff; this gate validates the active functional/build-ready subset and requires the exact fde0762 Bericht when that ref is available.'
-    rows = @($rows)
-    failures = @($failures)
+    rows = $rows.ToArray()
+    failures = $failures.ToArray()
     verdict = if ($failures.Count -eq 0) { 'BUILD_READY_SOURCE_AUDIT_PASS' } else { 'BUILD_READY_SOURCE_AUDIT_FAIL' }
 }
 
