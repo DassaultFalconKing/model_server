@@ -36,6 +36,11 @@ struct ParsedParallelPolicy {
     bool parallelToolCalls{true};
 };
 
+ov::genai::Tokenizer makeTokenizer() {
+    return ov::genai::Tokenizer(getGenericFullPathForSrcTest(
+        "/ovms/src/test/llm_testing/facebook/opt-125m"));
+}
+
 ParsedParallelPolicy parseParallelPolicy(const std::string& parallelField) {
     rapidjson::Document doc;
     const std::string json = requestJson(parallelField);
@@ -44,19 +49,64 @@ ParsedParallelPolicy parseParallelPolicy(const std::string& parallelField) {
         return {absl::InvalidArgumentError("test JSON failed to parse"), true};
     }
 
-    ov::genai::Tokenizer tokenizer(getGenericFullPathForSrcTest(
-        "/ovms/src/test/llm_testing/facebook/opt-125m"));
     OpenAIChatCompletionsHandler handler(
         doc,
         Endpoint::CHAT_COMPLETIONS,
         std::chrono::system_clock::now(),
-        tokenizer);
+        makeTokenizer());
 
     auto status = handler.parseRequest(
         /*maxTokensLimit=*/std::nullopt,
         /*bestOfLimit=*/0,
         /*maxModelLength=*/std::nullopt);
     return {status, handler.getRequest().parallelToolCalls};
+}
+
+absl::Status parseChatRequestWithoutTools(const std::string& toolChoiceJson) {
+    rapidjson::Document doc;
+    const std::string json = std::string(R"({
+        "model": "gemma4",
+        "messages": [{"role": "user", "content": "You must use a tool"}],
+        "tool_choice": )") + toolChoiceJson + "}";
+    doc.Parse(json.c_str());
+    if (doc.HasParseError())
+        return absl::InvalidArgumentError("test JSON failed to parse");
+
+    OpenAIChatCompletionsHandler handler(
+        doc,
+        Endpoint::CHAT_COMPLETIONS,
+        std::chrono::system_clock::now(),
+        makeTokenizer());
+    return handler.parseRequest(
+        /*maxTokensLimit=*/std::nullopt,
+        /*bestOfLimit=*/0,
+        /*maxModelLength=*/std::nullopt);
+}
+
+absl::Status parseResponsesRequestWithoutTools(const std::string& toolChoiceJson) {
+    rapidjson::Document doc;
+    const std::string json = std::string(R"({
+        "model": "gemma4",
+        "input": "You must use a tool",
+        "tool_choice": )") + toolChoiceJson + "}";
+    doc.Parse(json.c_str());
+    if (doc.HasParseError())
+        return absl::InvalidArgumentError("test JSON failed to parse");
+
+    OpenAIResponsesHandler handler(
+        doc,
+        Endpoint::RESPONSES,
+        std::chrono::system_clock::now(),
+        makeTokenizer());
+    return handler.parseRequest(
+        /*maxTokensLimit=*/std::nullopt,
+        /*bestOfLimit=*/0,
+        /*maxModelLength=*/std::nullopt);
+}
+
+void expectInvalidArgument(const absl::Status& status) {
+    EXPECT_FALSE(status.ok());
+    EXPECT_EQ(status.code(), absl::StatusCode::kInvalidArgument);
 }
 
 }  // namespace
@@ -86,6 +136,18 @@ TEST(OpenAIParallelToolCallsContractTest, RejectsNonBooleanValues) {
     }
 }
 
+TEST(OpenAIParallelToolCallsContractTest, HardToolChoiceWithoutToolsFailsClosedForChatCompletions) {
+    expectInvalidArgument(parseChatRequestWithoutTools("\"required\""));
+    expectInvalidArgument(parseChatRequestWithoutTools(
+        R"({"type":"function","function":{"name":"first"}})"));
+}
+
+TEST(OpenAIParallelToolCallsContractTest, HardToolChoiceWithoutToolsFailsClosedForResponses) {
+    expectInvalidArgument(parseResponsesRequestWithoutTools("\"required\""));
+    expectInvalidArgument(parseResponsesRequestWithoutTools(
+        R"({"type":"function","name":"first"})"));
+}
+
 TEST(OpenAIParallelToolCallsContractTest, ResponsesPreservesPolicyInRequestAndResponseObject) {
     rapidjson::Document doc;
     const std::string json = R"({
@@ -101,13 +163,11 @@ TEST(OpenAIParallelToolCallsContractTest, ResponsesPreservesPolicyInRequestAndRe
     doc.Parse(json.c_str());
     ASSERT_FALSE(doc.HasParseError());
 
-    ov::genai::Tokenizer tokenizer(getGenericFullPathForSrcTest(
-        "/ovms/src/test/llm_testing/facebook/opt-125m"));
     OpenAIResponsesHandler handler(
         doc,
         Endpoint::RESPONSES,
         std::chrono::system_clock::now(),
-        tokenizer);
+        makeTokenizer());
 
     ASSERT_TRUE(handler.parseRequest(
         /*maxTokensLimit=*/std::nullopt,
