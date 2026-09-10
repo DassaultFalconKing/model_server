@@ -1,1 +1,1 @@
-// inaccessible via contents-write; preserving exact blob through git tree
+// exact fde0762 blob restored in next git-tree commit
