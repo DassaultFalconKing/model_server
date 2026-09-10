@@ -53,7 +53,11 @@ set "PYTHONHOME=C:\opt\Python312"
 set "PATH=%setPath%"
 
 :: Bazel compilation settings
-set VS_2022_BT="C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
+if defined BAZEL_VS (
+    set VS_2022_BT="%BAZEL_VS:"=%"
+) ELSE (
+    set VS_2022_BT="C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools"
+)
 IF /I EXIST %VS_2022_BT% goto :msvc_bt ELSE goto :msvc_error
 
 :msvc_error
