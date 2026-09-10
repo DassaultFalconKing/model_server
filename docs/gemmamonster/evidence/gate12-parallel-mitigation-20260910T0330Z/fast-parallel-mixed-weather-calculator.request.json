@@ -1,0 +1,67 @@
+{
+  "messages": [
+    {
+      "content": "Call weather for Paris and calculator to multiply 6 by 7. Do not answer in prose.",
+      "role": "user"
+    }
+  ],
+  "max_tokens": 160,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": "weather",
+        "description": "Get current weather for a city."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "parameters": {
+          "required": [
+            "a",
+            "b",
+            "op"
+          ],
+          "properties": {
+            "op": {
+              "type": "string",
+              "enum": [
+                "add",
+                "multiply"
+              ]
+            },
+            "a": {
+              "type": "integer"
+            },
+            "b": {
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "name": "calculator",
+        "description": "Calculate with integer inputs."
+      }
+    }
+  ],
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "tool_choice": "auto",
+  "parallel_tool_calls": true,
+  "seed": 317,
+  "model": "gemma4-26-heretic",
+  "temperature": 0
+}

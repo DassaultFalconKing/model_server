@@ -1,0 +1,64 @@
+{
+  "model": "gemma4-26-heretic",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": "weather",
+        "description": "Get current weather for a city."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "parameters": {
+          "required": [
+            "a",
+            "b",
+            "op"
+          ],
+          "properties": {
+            "b": {
+              "type": "integer"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "add",
+                "multiply"
+              ]
+            },
+            "a": {
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "name": "calculator",
+        "description": "Calculate with integer inputs."
+      }
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call the weather tool for Paris and Berlin, and call calculator to multiply 6 by 7. Do not answer in prose."
+    }
+  ],
+  "parallel_tool_calls": true,
+  "max_tokens": 192,
+  "seed": 103,
+  "tool_choice": "auto",
+  "temperature": 0
+}

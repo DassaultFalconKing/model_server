@@ -1,0 +1,37 @@
+{
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          }
+        },
+        "name": "weather",
+        "description": "Get current weather for a city."
+      },
+      "type": "function"
+    }
+  ],
+  "max_tokens": 160,
+  "tool_choice": "required",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call the weather tool once for Paris and once for Berlin. Do not answer in prose."
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "temperature": 0,
+  "seed": 314,
+  "parallel_tool_calls": true
+}

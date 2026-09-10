@@ -1,0 +1,12 @@
+{
+  "max_tokens": 24,
+  "seed": 101,
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is 19 plus 23? Answer with only the integer."
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "temperature": 0
+}

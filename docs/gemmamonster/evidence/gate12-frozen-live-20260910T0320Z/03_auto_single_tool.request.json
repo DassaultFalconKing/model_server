@@ -1,0 +1,33 @@
+{
+  "tool_choice": "auto",
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": "weather",
+        "description": "Get current weather for a city."
+      },
+      "type": "function"
+    }
+  ],
+  "messages": [
+    {
+      "content": "Use the weather tool to look up Paris. Do not answer in prose.",
+      "role": "user"
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "max_tokens": 96,
+  "seed": 203,
+  "temperature": 0
+}

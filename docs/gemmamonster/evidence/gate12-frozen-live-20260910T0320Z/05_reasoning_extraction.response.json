@@ -1,0 +1,23 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "72",
+        "reasoning_content": "The user wants to know the result of 8 multiplied by 9.\n8 * 9 = 72.\nThe user requested \"only the number\".\n\nFinal Answer: 72.",
+        "role": "assistant",
+        "tool_calls": []
+      }
+    }
+  ],
+  "created": 1789010193,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 33,
+    "completion_tokens": 49,
+    "total_tokens": 82
+  }
+}

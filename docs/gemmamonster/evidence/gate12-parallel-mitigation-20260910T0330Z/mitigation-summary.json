@@ -1,0 +1,9 @@
+{
+  "label": "fast-max32-auto",
+  "status": "HTTP_OK",
+  "elapsed_s": 2.504,
+  "server_alive": true,
+  "tool_call_count": 0,
+  "args": "",
+  "finish": "length"
+}

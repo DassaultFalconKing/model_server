@@ -1,0 +1,22 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "42",
+        "role": "assistant",
+        "tool_calls": []
+      }
+    }
+  ],
+  "created": 1789010179,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 29,
+    "completion_tokens": 3,
+    "total_tokens": 32
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "parallel_tool_calls": true,
+  "temperature": 0,
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "properties": {},
+          "required": [],
+          "type": "object"
+        },
+        "name": "weather_paris",
+        "description": "Get current weather for Paris."
+      },
+      "type": "function"
+    },
+    {
+      "function": {
+        "parameters": {
+          "properties": {},
+          "required": [],
+          "type": "object"
+        },
+        "name": "weather_berlin",
+        "description": "Get current weather for Berlin."
+      },
+      "type": "function"
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  },
+  "tool_choice": "auto",
+  "messages": [
+    {
+      "content": "Call weather_paris and weather_berlin. Do not answer in prose.",
+      "role": "user"
+    }
+  ],
+  "max_tokens": 128,
+  "seed": 316
+}

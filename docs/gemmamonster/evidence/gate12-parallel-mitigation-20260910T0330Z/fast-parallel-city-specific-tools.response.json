@@ -1,0 +1,39 @@
+{
+  "choices": [
+    {
+      "finish_reason": "tool_calls",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "content": "",
+        "role": "assistant",
+        "tool_calls": [
+          {
+            "id": "lQSRuHePx",
+            "type": "function",
+            "function": {
+              "name": "weather_paris",
+              "arguments": "{}"
+            }
+          },
+          {
+            "id": "Asnj88u4Z",
+            "type": "function",
+            "function": {
+              "name": "weather_berlin",
+              "arguments": "{}"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "created": 1789010574,
+  "model": "gemma4-26-heretic",
+  "object": "chat.completion",
+  "usage": {
+    "prompt_tokens": 172,
+    "completion_tokens": 18,
+    "total_tokens": 190
+  }
+}

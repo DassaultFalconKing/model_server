@@ -1,0 +1,50 @@
+{
+  "tool_choice": {
+    "function": {
+      "name": "calculator"
+    },
+    "type": "function"
+  },
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "a",
+            "b",
+            "op"
+          ],
+          "properties": {
+            "b": {
+              "type": "integer"
+            },
+            "a": {
+              "type": "integer"
+            },
+            "op": {
+              "enum": [
+                "add",
+                "multiply"
+              ],
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": "calculator",
+        "description": "Calculate with integer inputs."
+      },
+      "type": "function"
+    }
+  ],
+  "messages": [
+    {
+      "content": "Use the calculator tool to add 17 and 25. Do not answer in prose.",
+      "role": "user"
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "max_tokens": 96,
+  "seed": 202,
+  "temperature": 0
+}

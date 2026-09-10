@@ -1,0 +1,51 @@
+{
+  "temperature": 0,
+  "model": "gemma4-26-heretic",
+  "max_tokens": 64,
+  "messages": [
+    {
+      "content": "Use lookup_order for order A-100, then after the tool result answer with only the delivery city.",
+      "role": "user"
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "id": "call_lookup_1",
+          "function": {
+            "arguments": "{\"order_id\":\"A-100\"}",
+            "name": "lookup_order"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "content": "{\"order_id\":\"A-100\",\"status\":\"shipped\",\"delivery_city\":\"Lisbon\"}",
+      "role": "tool",
+      "tool_call_id": "call_lookup_1"
+    }
+  ],
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "order_id"
+          ],
+          "properties": {
+            "order_id": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": "lookup_order",
+        "description": "Look up an order by id."
+      },
+      "type": "function"
+    }
+  ],
+  "seed": 204
+}

@@ -1,0 +1,34 @@
+{
+  "model": "gemma4-26-heretic",
+  "max_tokens": 32,
+  "seed": 306,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call the weather tool for Paris and Berlin. Do not answer in prose."
+    }
+  ],
+  "parallel_tool_calls": true,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "description": "Get current weather for a city.",
+        "parameters": {
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "city"
+          ]
+        },
+        "name": "weather"
+      }
+    }
+  ],
+  "temperature": 0,
+  "tool_choice": "auto"
+}
