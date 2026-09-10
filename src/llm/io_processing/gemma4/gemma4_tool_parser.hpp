@@ -50,9 +50,9 @@ public:
         cfg.tokenIdStartTags = {"<|tool_call>"};
         // Bare `call:` is a tolerance/recovery form, not the canonical Google
         // Gemma4 protocol. Canonical tool calls use <|tool_call>call:name{...}.
-        // The syntax-only constructor retains this broad preamble for compatibility;
-        // the registry-aware production constructor narrows it to the request's
-        // allowed tool names plus their immediate argument opener.
+        // The syntax-only constructor retains broad text markers for compatibility;
+        // the registry-aware production constructor narrows both canonical and bare
+        // text starts to request tools while keeping the special-token start separate.
         cfg.preambleStartTags = {"call:"};
         cfg.endTag = "<tool_call|>";
         cfg.needsSpecialTokens = true;
@@ -65,12 +65,12 @@ public:
         BaseOutputParser(tokenizer,
             configOverride.has_value() ? std::move(*configOverride) : defaultParsingConfig()) {}
 
-    // Registry-aware production form. Besides executable-call validation, the
-    // request registry lets the generic OutputParser distinguish a recoverable
-    // bare native call from ordinary prose before entering tool phase. Exact
-    // preambles include the argument opener so `call:question prose` stays
-    // content, while a streaming prefix such as `call:quest` is held until a
-    // possible `ion{...}` continuation arrives.
+    // Registry-aware production form. Text-phase detection requires the complete
+    // native prefix for a request tool, including the immediate argument opener.
+    // This prevents ordinary prose containing a literal <|tool_call> marker from
+    // entering tool phase. tokenIdStartTags intentionally remains <|tool_call> so
+    // OVMSTextStreamer can still make the special token visible before text-phase
+    // confirmation. Bare `call:` recovery is narrowed the same way.
     Gemma4ToolParser(ov::genai::Tokenizer& tokenizer,
         const ToolsSchemas_t& toolsSchemas,
         std::optional<OutputParsingConfig> configOverride = std::nullopt) :
@@ -82,11 +82,17 @@ public:
         }
         enforceToolRegistry = !allowedToolNames.empty();
         if (enforceToolRegistry && !configOverride.has_value()) {
+            parsingConfig.startTags.clear();
             parsingConfig.preambleStartTags.clear();
+            parsingConfig.startTags.reserve(allowedToolNames.size() * 2);
             parsingConfig.preambleStartTags.reserve(allowedToolNames.size() * 2);
             for (const auto& name : allowedToolNames) {
-                parsingConfig.preambleStartTags.push_back(TOOL_CALL_NAME_PREFIX + name + "{");
-                parsingConfig.preambleStartTags.push_back(TOOL_CALL_NAME_PREFIX + name + "(");
+                const std::string bracePreamble = TOOL_CALL_NAME_PREFIX + name + "{";
+                const std::string parenPreamble = TOOL_CALL_NAME_PREFIX + name + "(";
+                parsingConfig.startTags.push_back(TOOL_CALL_START_TAG + bracePreamble);
+                parsingConfig.startTags.push_back(TOOL_CALL_START_TAG + parenPreamble);
+                parsingConfig.preambleStartTags.push_back(bracePreamble);
+                parsingConfig.preambleStartTags.push_back(parenPreamble);
             }
         }
     }
@@ -100,6 +106,8 @@ public:
         currentArgsOpen = '{';
         currentArgsClose = '}';
         currentCallValid = true;
+        currentCallBare = false;
+        currentCallStartPos = 0;
     }
 
     std::optional<Delta> parseChunk(const std::string& chunk, const std::vector<int64_t>& tokens, ov::genai::GenerationFinishReason finishReason) override;
@@ -137,6 +145,12 @@ private:
     char currentArgsOpen{'{'};
     char currentArgsClose{'}'};
     bool currentCallValid{true};
+    // Whether the in-flight call started from a bare line-start `call:`
+    // (no "<|tool_call>" anchor) and where that start sits in
+    // streamingContent. An unknown tool name on a bare call must be rewound
+    // and re-emitted as ordinary content; an anchored unknown call stays dropped.
+    bool currentCallBare{false};
+    size_t currentCallStartPos{0};
     bool enforceToolRegistry{false};
     std::unordered_set<std::string> allowedToolNames;
 };

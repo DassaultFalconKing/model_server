@@ -460,6 +460,12 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
         return parseReasoningChunk(tokens, finishReason);
     } else if (processingPhase == CONTENT) {
         if (applyToolParser) {
+            // Gemma4 owns tool-call/content boundaries after ordinary prose has
+            // started. The generic content parser cannot recover split line-start
+            // `call:` or strip Gemma4 turn/tool-response markers without losing
+            // byte ownership, so route through the owning parser once requested.
+            if (toolParser->getParsingConfig().ownsToolCallBoundaries)
+                return parseToolCallChunk(tokens, finishReason);
             TagLookupStatus toolStartTagStatus = streamOutputCache.lookupTags(toolParser->getParsingConfig().startTags);
             if (toolStartTagStatus == TagLookupStatus::FOUND_COMPLETE) {
                 return parseToolCallChunk(tokens, finishReason);
