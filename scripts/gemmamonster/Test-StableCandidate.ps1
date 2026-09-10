@@ -89,6 +89,20 @@ Assert-ExactPin $pins 'OV_TOKENIZERS_BRANCH' $profile.OV_TOKENIZERS_BRANCH
 Assert-ExactPin $pins 'OV_GENAI_BRANCH' $profile.OV_GENAI_BRANCH
 Assert-ExactPin $pins 'GENAI_PACKAGE_URL_WINDOWS' $profile.GENAI_PACKAGE_URL_WINDOWS
 
+$versionPath = Require-File (Join-Path $root 'provenance\ovms-version.txt') 'ovms-version.txt'
+$versionText = Get-Content -LiteralPath $versionPath -Raw -Encoding UTF8
+$ovFingerprint = ([string]$profile.OV_SOURCE_BRANCH).Substring(0, 11)
+$genaiFingerprint = ([string]$profile.OV_GENAI_BRANCH).Substring(0, 11)
+if ($versionText -match '2026\.5') {
+    throw "Runtime version fingerprint mismatch: stable candidate reports a 2026.5 component.`n$versionText"
+}
+if ($versionText -notmatch [regex]::Escape($ovFingerprint)) {
+    throw "Runtime version fingerprint mismatch: expected OpenVINO SHA prefix $ovFingerprint for profile $runtimeProfile.`n$versionText"
+}
+if ($versionText -notmatch [regex]::Escape($genaiFingerprint)) {
+    throw "Runtime version fingerprint mismatch: expected GenAI SHA prefix $genaiFingerprint for profile $runtimeProfile.`n$versionText"
+}
+
 $ovmsDir = Join-Path $root 'ovms'
 foreach ($name in @('ovms.exe','openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')) {
     Require-File (Join-Path $ovmsDir $name) $name | Out-Null
@@ -116,5 +130,7 @@ foreach ($name in @('openvino.dll','openvino_genai.dll','openvino_tokenizers.dll
     source_sha = $sourceSha
     runtime_profile = $runtimeProfile
     ovms_sha256 = $actualOvms
+    openvino_fingerprint = $ovFingerprint
+    genai_fingerprint = $genaiFingerprint
     dependency_pins = $pins
 }
