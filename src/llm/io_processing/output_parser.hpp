@@ -48,8 +48,11 @@ namespace ovms {
 //   - Implement parseChunk() to process the text it receives during its active phase.
 //     The parser may maintain arbitrary internal state and buffers to satisfy its own
 //     format requirements; OutputParser does not inspect or constrain that state.
-//   - Return a JSON delta (OpenAI streaming format) or nullopt to signal "nothing to
+//   - Return a typed Delta event (ContentDelta/ReasoningDelta/ToolCallDelta/
+//     FinishDelta/AudioDelta, see delta.hpp) or nullopt to signal "nothing to
 //     emit yet"; the orchestrator propagates that decision upstream unchanged.
+//     OpenAI wire format is produced downstream by the Chat/Responses emitters,
+//     never here — parsers speak Delta, not model or wire protocol.
 //
 // Design invariant: OutputParser must contain NO logic specific to any individual model
 // format.  All format-specific behaviour must be encapsulated in the parser subclasses
@@ -129,7 +132,7 @@ public:
     // Parse one decoded chunk in streaming mode.
     //
     // Contract:
-    //   - Returns a JSON delta conforming to the OpenAI streaming API, or nullopt when no
+    //   - Returns a typed Delta event (see delta.hpp), or nullopt when no
     //     output can yet be produced (partial tag match, preamble stripping, etc.).
     //   - Processes AT MOST ONE phase per call.  If a chunk spans a phase boundary (e.g. a
     //     token whose text contains both an end tag and the start of the next phase), the bytes
