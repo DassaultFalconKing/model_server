@@ -115,9 +115,15 @@ std::optional<Delta> OutputParser::parseToolCallChunk(const std::vector<int64_t>
         throw std::runtime_error("Tool parser is not available, cannot parse tool call chunk");
     }
     if (toolParser->getParsingConfig().ownsToolCallBoundaries) {
+        const bool bareRecovery = streamOutputCache.getBuffer().rfind("call:", 0) == 0 &&
+            finishReason == ov::genai::GenerationFinishReason::NONE;
         auto result = toolParser->parseChunk(streamOutputCache.getBuffer(), tokens, finishReason);
         streamOutputCache.clear();
         processingPhase = TOOL_CALLS_PROCESSING_TOOL;
+        if (bareRecovery && result.has_value() && std::holds_alternative<ToolCallDelta>(*result)) {
+            pendingDelta = std::move(result);
+            return std::nullopt;
+        }
         return result;
     }
     std::string remainder;
@@ -265,6 +271,7 @@ std::string OutputParser::getToolParserStartTag() const {
 void OutputParser::resetStreamingState() {
     processingPhase = UNKNOWN;
     streamOutputCache.clear();
+    pendingDelta.reset();
     if (toolParser)
         toolParser->resetState();
     if (reasoningParser)
@@ -348,6 +355,11 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
     bool applyToolParser = toolParserExistsAndSupportsStreaming && toolsAvailable;
 
     streamOutputCache.add(chunkResponse);
+    if (pendingDelta.has_value()) {
+        auto result = std::move(pendingDelta);
+        pendingDelta.reset();
+        return result;
+    }
 
     if (llm_calculator_logger->should_log(spdlog::level::trace)) {
         std::string tokenIds;

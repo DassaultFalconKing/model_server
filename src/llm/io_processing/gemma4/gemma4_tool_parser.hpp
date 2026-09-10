@@ -84,13 +84,15 @@ public:
         if (enforceToolRegistry && !configOverride.has_value()) {
             parsingConfig.startTags.clear();
             parsingConfig.preambleStartTags.clear();
-            parsingConfig.startTags.reserve(allowedToolNames.size() * 2);
+            parsingConfig.startTags.reserve(allowedToolNames.size() * 4);
             parsingConfig.preambleStartTags.reserve(allowedToolNames.size() * 2);
             for (const auto& name : allowedToolNames) {
                 const std::string bracePreamble = TOOL_CALL_NAME_PREFIX + name + "{";
                 const std::string parenPreamble = TOOL_CALL_NAME_PREFIX + name + "(";
                 parsingConfig.startTags.push_back(TOOL_CALL_START_TAG + bracePreamble);
                 parsingConfig.startTags.push_back(TOOL_CALL_START_TAG + parenPreamble);
+                parsingConfig.startTags.push_back(TOOL_CALL_START_TAG + ":" + name + "{");
+                parsingConfig.startTags.push_back(TOOL_CALL_START_TAG + ":" + name + "(");
                 parsingConfig.preambleStartTags.push_back(bracePreamble);
                 parsingConfig.preambleStartTags.push_back(parenPreamble);
             }

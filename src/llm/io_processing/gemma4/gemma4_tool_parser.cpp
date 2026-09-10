@@ -58,6 +58,41 @@ std::optional<std::string> normalizeJsonLosslessly(const std::string& input) {
     return std::string(buffer.GetString(), buffer.GetSize());
 }
 
+bool isValidJsonNumber(const std::string& token) {
+    size_t pos = 0;
+    if (pos < token.size() && token[pos] == '-')
+        ++pos;
+    if (pos == token.size())
+        return false;
+    if (token[pos] == '0') {
+        ++pos;
+    } else {
+        if (!std::isdigit(static_cast<unsigned char>(token[pos])))
+            return false;
+        while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])))
+            ++pos;
+    }
+    if (pos < token.size() && token[pos] == '.') {
+        ++pos;
+        const size_t digits = pos;
+        while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])))
+            ++pos;
+        if (pos == digits)
+            return false;
+    }
+    if (pos < token.size() && (token[pos] == 'e' || token[pos] == 'E')) {
+        ++pos;
+        if (pos < token.size() && (token[pos] == '+' || token[pos] == '-'))
+            ++pos;
+        const size_t digits = pos;
+        while (pos < token.size() && std::isdigit(static_cast<unsigned char>(token[pos])))
+            ++pos;
+        if (pos == digits)
+            return false;
+    }
+    return pos == token.size();
+}
+
 void trimLocal(std::string& value) {
     auto notSpace = [](unsigned char c) { return !std::isspace(c); };
     value.erase(value.begin(), std::find_if(value.begin(), value.end(), notSpace));
@@ -205,6 +240,8 @@ bool anchoredToolCallMayStartAt(const std::string& content, size_t pos) {
     const size_t suffixSize = content.size() - afterTag;
     if (suffixSize == 0)
         return true;  // full tag at tail; next chunk decides whether it is a call
+    if (content[afterTag] == ':')
+        return true;
     if (suffixSize < prefix.size())
         return prefix.compare(0, suffixSize, content, afterTag, suffixSize) == 0;
     return content.compare(afterTag, prefix.size(), prefix) == 0;
@@ -414,10 +451,13 @@ class NativeValueParser {
         if (token.empty())
             return false;
         const bool numericCandidate = std::isdigit(static_cast<unsigned char>(token.front())) || token.front() == '-';
+        if (numericCandidate) {
+            if (!isValidJsonNumber(token))
+                return false;
+            return writer.RawValue(token.data(), static_cast<rapidjson::SizeType>(token.size()), rapidjson::kNumberType);
+        }
         if (writeJsonToken(token))
             return true;
-        if (numericCandidate)
-            return false;  // never silently retype malformed numeric output as a string
         writer.String(token.c_str(), static_cast<rapidjson::SizeType>(token.size()));
         return true;
     }
@@ -605,11 +645,12 @@ bool Gemma4ToolParser::parseInContentState() {
         if (suffixSize < TOOL_CALL_NAME_PREFIX.size() &&
             TOOL_CALL_NAME_PREFIX.compare(0, suffixSize, streamingContent, namePrefixPos, suffixSize) == 0)
             return false;
-        if (streamingContent.compare(namePrefixPos, TOOL_CALL_NAME_PREFIX.size(), TOOL_CALL_NAME_PREFIX) != 0)
+        const bool colonVariant = suffixSize > 0 && streamingContent[namePrefixPos] == ':';
+        if (!colonVariant && streamingContent.compare(namePrefixPos, TOOL_CALL_NAME_PREFIX.size(), TOOL_CALL_NAME_PREFIX) != 0)
             return true;
         currentCallStartPos = toolCallStartTagPos.value();
         currentCallBare = false;
-        streamingPosition = namePrefixPos + TOOL_CALL_NAME_PREFIX.size();
+        streamingPosition = namePrefixPos + (colonVariant ? 1 : TOOL_CALL_NAME_PREFIX.size());
         currentState = State::ToolCallStarted;
         currentCallValid = true;
         return false;

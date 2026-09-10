@@ -109,13 +109,6 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         bool parallelToolCalls,
         bool atLeastOne) {
         using Structured = ov::genai::StructuredOutputConfig;
-        // When parallel_tool_calls=true and only a single tool is provided,
-        // xgrammar cannot re-enter the same tagged structure after the first
-        // trigger completes. Duplicate the sole tag entry so the grammar
-        // permits at least two sequential applications of the same tool.
-        if (parallelToolCalls && toolTags.size() == 1) {
-            toolTags.push_back(toolTags[0]);
-        }
         auto triggeredTags = std::make_shared<Structured::TriggeredTags>();
         triggeredTags->triggers = {"<|tool_call>"};
         triggeredTags->tags = std::move(toolTags);
@@ -138,14 +131,6 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         std::vector<ov::genai::StructuredOutputConfig::Tag> toolTags,
         bool parallelToolCalls) {
         using Structured = ov::genai::StructuredOutputConfig;
-
-        // When parallel_tool_calls=true and only a single tool is provided,
-        // xgrammar cannot re-enter the same tagged structure after the first
-        // trigger completes. Duplicate the sole tag entry so the grammar
-        // permits at least two sequential applications of the same tool.
-        if (parallelToolCalls && toolTags.size() == 1) {
-            toolTags.push_back(toolTags[0]);
-        }
 
         auto requiredTags = std::make_shared<Structured::TagsWithSeparator>();
         requiredTags->tags = std::move(toolTags);

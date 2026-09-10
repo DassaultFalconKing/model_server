@@ -94,6 +94,7 @@ private:
     // Streaming related members
     ProcessingPhase processingPhase = UNKNOWN;
     StreamOutputCache streamOutputCache;
+    std::optional<Delta> pendingDelta;
     bool implicitReasoningStart = false;
 
     // Baseline decode mode for content/unknown phases — true when the model/output format
