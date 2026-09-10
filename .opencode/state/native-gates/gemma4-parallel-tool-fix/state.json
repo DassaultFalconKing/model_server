@@ -1,0 +1,66 @@
+{
+  "objective": "Record native gates for Gemma4 parallel tool call grammar fix (single-tool re-entry)",
+  "targetSha": "6decc8b9532606adcaffa321d2f2fc9286fb7751",
+  "gates": [
+    {
+      "id": "gate-contract-test-single-tool-parallel",
+      "name": "Single-tool parallel contract test",
+      "gateClass": "REPO_PROVABLE",
+      "required": true,
+      "command": "bazel test --test_filter=\"Gemma4GenerationContractTest.SingleToolParallel*\" //src/test/llm/generation_config:gemma4_generation_contract_test",
+      "evidence": [
+        {
+          "path": "src/test/llm/generation_config/gemma4_generation_contract_test.cpp",
+          "locator": "TEST(Gemma4GenerationContractTest, SingleToolParallelEnabledAllowsRepeatedSameToolGrammar)"
+        },
+        {
+          "path": "src/test/llm/generation_config/gemma4_generation_contract_test.cpp",
+          "locator": "TEST(Gemma4GenerationContractTest, SingleToolParallelDisabledPermitsSingleCall)"
+        }
+      ]
+    },
+    {
+      "id": "gate-contract-test-regression",
+      "name": "Regression contract tests for grammar generation",
+      "gateClass": "REPO_PROVABLE",
+      "required": true,
+      "command": "bazel test //src/test/llm/generation_config:gemma4_generation_contract_test",
+      "evidence": [
+        {
+          "path": "src/test/llm/generation_config/gemma4_generation_contract_test.cpp",
+          "locator": "TEST(Gemma4GenerationContractTest, ParallelToolCallsControlsGrammarRepeatability)"
+        },
+        {
+          "path": "src/test/llm/generation_config/gemma4_generation_contract_test.cpp",
+          "locator": "TEST(Gemma4GenerationContractTest, AutoUsesTriggeredToolGrammarAndHardChoicesStayImmediateAndRepeatable)"
+        }
+      ]
+    },
+    {
+      "id": "gate-prompt-state-tests",
+      "name": "Prompt state adaptation contract tests",
+      "gateClass": "REPO_PROVABLE",
+      "required": true,
+      "command": "bazel test //src/test/llm/generation_config:gemma4_prompt_state_generation_contract_test",
+      "evidence": [
+        {
+          "path": "src/test/llm/generation_config/gemma4_prompt_state_generation_contract_test.cpp",
+          "locator": "TEST(Gemma4PromptStateContractTest, RequiredChoiceGrammarAdaptsWhenPromptEndsInOpenReasoning)"
+        }
+      ]
+    },
+    {
+      "id": "gate-openai-parallel-contract",
+      "name": "OpenAI parallel tool calls contract test",
+      "gateClass": "REPO_PROVABLE",
+      "required": true,
+      "command": "bazel test //src/test/llm/generation_config:openai_parallel_tool_calls_contract_test",
+      "evidence": [
+        {
+          "path": "src/test/llm/generation_config/openai_parallel_tool_calls_contract_test.cpp",
+          "locator": "TEST(OpenAIParallelToolCallsContractTest, SingleToolParallelEnabled)"
+        }
+      ]
+    }
+  ]
+}

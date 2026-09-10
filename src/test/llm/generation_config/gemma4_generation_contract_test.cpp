@@ -317,3 +317,59 @@ TEST(Gemma4GenerationContractTest, GeneratedToolGrammarsNeverUseEmptyConstString
         EXPECT_EQ(grammarString(builder.getConfig()).find("ConstString(\"\")"), std::string::npos) << choice;
     }
 }
+
+TEST(Gemma4GenerationContractTest, SingleToolParallelEnabledAllowsRepeatedSameToolGrammar) {
+    for (const std::string choice : {"auto", "required"}) {
+        SCOPED_TRACE(choice);
+        OpenAIRequest request;
+        request.toolChoice = choice;
+        request.parallelToolCalls = true;
+        request.toolNameSchemaMap.emplace("weather", ToolSchemaWrapper{nullptr, emptySchema});
+        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(request);
+        ASSERT_TRUE(builder.getConfig().structured_output_config.has_value());
+
+        if (choice == "auto") {
+            const auto& triggered = autoGrammar(builder.getConfig());
+            EXPECT_FALSE(triggered.stop_after_first)
+                << "parallel enabled must not stop after first trigger";
+            EXPECT_GE(triggered.tags.size(), 2u)
+                << "single tool with parallel enabled must duplicate tag entries "
+                   "so xgrammar can re-enter the same tool call after the first "
+                   "trigger completes; a single tag entry blocks re-triggering";
+        } else {
+            const auto& tags = grammar<Structured::TagsWithSeparator>(builder.getConfig());
+            EXPECT_FALSE(tags.stop_after_first)
+                << "parallel enabled must not stop after first tag";
+            EXPECT_TRUE(tags.at_least_one);
+            EXPECT_GE(tags.tags.size(), 2u)
+                << "single tool with parallel enabled must duplicate tag entries "
+                   "in TagsWithSeparator so xgrammar can re-enter the same tool";
+        }
+    }
+}
+
+TEST(Gemma4GenerationContractTest, SingleToolParallelDisabledPermitsSingleCall) {
+    for (const std::string choice : {"auto", "required"}) {
+        SCOPED_TRACE(choice);
+        OpenAIRequest request;
+        request.toolChoice = choice;
+        request.parallelToolCalls = false;
+        request.toolNameSchemaMap.emplace("weather", ToolSchemaWrapper{nullptr, emptySchema});
+        GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+        builder.parseConfigFromRequest(request);
+        ASSERT_TRUE(builder.getConfig().structured_output_config.has_value());
+
+        if (choice == "auto") {
+            const auto& triggered = autoGrammar(builder.getConfig());
+            EXPECT_TRUE(triggered.stop_after_first);
+            EXPECT_EQ(triggered.tags.size(), 1u)
+                << "single tool without parallel must have exactly one tag";
+        } else {
+            const auto& tags = grammar<Structured::TagsWithSeparator>(builder.getConfig());
+            EXPECT_TRUE(tags.stop_after_first);
+            EXPECT_EQ(tags.tags.size(), 1u)
+                << "single tool without parallel must have exactly one tag";
+        }
+    }
+}
