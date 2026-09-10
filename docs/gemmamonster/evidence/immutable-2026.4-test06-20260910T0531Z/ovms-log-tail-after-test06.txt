@@ -1,0 +1,150 @@
+[2026-09-10 04:35:48.088][28160][serving][info][server.cpp:115] OpenVINO Model Server 2026.4.0.a08b30bdb
+[2026-09-10 04:35:48.088][28160][serving][info][server.cpp:116] OpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4
+[2026-09-10 04:35:48.088][28160][serving][info][server.cpp:119] OpenVINO GenAI backend 2026.4.0.0-3401-5f7f1278107
+[2026-09-10 04:35:48.088][28160][serving][info][pythoninterpretermodule.cpp:37] PythonInterpreterModule starting
+[2026-09-10 04:35:48.089][28160][serving][info][pythoninterpretermodule.cpp:40] Initializing python interpreter
+[2026-09-10 04:35:48.130][28160][serving][info][pythoninterpretermodule.cpp:59] PythonInterpreterModule started
+[2026-09-10 04:35:48.309][28160][modelmanager][info][modelmanager.cpp:169] Available devices for Open VINO: CPU, GPU, NPU
+[2026-09-10 04:35:48.312][28160][serving][info][capimodule.cpp:40] C-APIModule starting
+[2026-09-10 04:35:48.312][28160][serving][info][capimodule.cpp:42] C-APIModule started
+[2026-09-10 04:35:48.312][28160][serving][info][grpcservermodule.cpp:106] GRPCServerModule starting
+[2026-09-10 04:35:48.312][28160][serving][info][grpcservermodule.cpp:133] Binding gRPC server to address: 0.0.0.0:9000
+[2026-09-10 04:35:48.314][28160][serving][info][grpcservermodule.cpp:186] GRPCServerModule started
+[2026-09-10 04:35:48.315][28160][serving][info][grpcservermodule.cpp:187] Started gRPC server on port 9000
+[2026-09-10 04:35:48.315][28160][serving][info][httpservermodule.cpp:35] HTTPServerModule starting
+[2026-09-10 04:35:48.315][28160][serving][info][httpservermodule.cpp:39] Will start 8 REST workers
+[2026-09-10 04:35:48.315][8112][serving][info][drogon_http_server.cpp:157] Binding REST server to address: 0.0.0.0:9090
+[2026-09-10 04:35:48.365][28160][serving][info][drogon_http_server.cpp:187] REST server listening on port 9090 with 8 unary threads and 8 streaming threads
+[2026-09-10 04:35:48.366][28160][serving][info][http_server.cpp:238] API key not provided via --api_key_file or API_KEY environment variable. Authentication will be disabled.
+[2026-09-10 04:35:48.369][28160][serving][info][httpservermodule.cpp:52] HTTPServerModule started
+[2026-09-10 04:35:48.369][28160][serving][info][httpservermodule.cpp:53] Started REST server at 0.0.0.0:9090
+[2026-09-10 04:35:48.369][28160][serving][info][servablemanagermodule.cpp:51] ServableManagerModule starting
+[2026-09-10 04:35:48.372][28160][serving][info][mediapipegraphdefinition.cpp:515] MediapipeGraphDefinition initializing graph nodes
+[2026-09-10 04:35:48.373][28160][modelmanager][info][servable_initializer.cpp:684] Initializing Visual Language Model Continuous Batching servable
+[2026-09-10 04:36:22.022][28160][llm_calculator][info][servable_initializer.cpp:227] Auto-detected tool_parser: gemma4
+[2026-09-10 04:36:22.022][28160][llm_calculator][info][servable_initializer.cpp:237] Auto-detected reasoning_parser: gemma4
+[2026-09-10 04:36:22.304][14712][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 04:36:22.305][28160][modelmanager][info][mediapipegraphdefinition.cpp:297] Mediapipe: gemma4-26-heretic inputs: 
+name: input; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-10 04:36:22.305][28160][modelmanager][info][mediapipegraphdefinition.cpp:298] Mediapipe: gemma4-26-heretic outputs: 
+name: output; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-10 04:36:22.306][28160][modelmanager][info][mediapipegraphdefinition.cpp:299] Mediapipe: gemma4-26-heretic kfs pass through: false
+[2026-09-10 04:36:22.306][28160][modelmanager][info][pipelinedefinitionstatus.hpp:60] Mediapipe: gemma4-26-heretic state changed to: AVAILABLE after handling: ValidationPassedEvent: 
+[2026-09-10 04:36:22.307][28160][serving][info][servablemanagermodule.cpp:55] ServableManagerModule started
+[2026-09-10 04:36:22.307][33056][modelmanager][info][modelmanager.cpp:1048] Started model manager thread
+[2026-09-10 04:36:22.307][14592][modelmanager][info][modelmanager.cpp:1067] Started cleaner thread
+[2026-09-10 04:36:35.005][9756][llm_calculator][info][servable.cpp:381] session-state: store disabled; OVMS_SESSION_STORE_DIR is unset
+[2026-09-10 04:36:35.452][14712][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 04:36:36.198][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 75.0% of 7.8 MB;
+[2026-09-10 04:36:36.596][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 75.0% of 7.8 MB;
+[2026-09-10 04:36:37.006][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 100.0% of 7.8 MB;
+[2026-09-10 04:36:37.419][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 25.0% of 38.9 MB;
+[2026-09-10 04:36:37.782][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 25.0% of 38.9 MB;
+[2026-09-10 04:36:38.148][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 30.0% of 38.9 MB;
+[2026-09-10 04:36:38.514][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 30.0% of 38.9 MB;
+[2026-09-10 04:36:38.881][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 35.0% of 38.9 MB;
+[2026-09-10 04:36:39.257][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 40.0% of 38.9 MB;
+[2026-09-10 04:36:39.630][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 40.0% of 38.9 MB;
+[2026-09-10 04:36:40.010][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 45.0% of 38.9 MB;
+[2026-09-10 04:36:40.396][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 50.0% of 38.9 MB;
+[2026-09-10 04:36:40.773][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 50.0% of 38.9 MB;
+[2026-09-10 04:36:41.156][14712][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 55.0% of 38.9 MB;
+[2026-09-10 04:36:41.308][14712][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 04:37:36.051][14712][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 04:38:10.258][1284][serving][info][server.cpp:115] OpenVINO Model Server 2026.4.0.a08b30bdb
+[2026-09-10 04:38:10.258][1284][serving][info][server.cpp:116] OpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4
+[2026-09-10 04:38:10.258][1284][serving][info][server.cpp:119] OpenVINO GenAI backend 2026.4.0.0-3401-5f7f1278107
+[2026-09-10 04:38:10.258][1284][serving][info][pythoninterpretermodule.cpp:37] PythonInterpreterModule starting
+[2026-09-10 04:38:10.258][1284][serving][info][pythoninterpretermodule.cpp:40] Initializing python interpreter
+[2026-09-10 04:38:10.282][1284][serving][info][pythoninterpretermodule.cpp:59] PythonInterpreterModule started
+[2026-09-10 04:38:10.456][1284][modelmanager][info][modelmanager.cpp:169] Available devices for Open VINO: CPU, GPU, NPU
+[2026-09-10 04:38:10.459][1284][serving][info][capimodule.cpp:40] C-APIModule starting
+[2026-09-10 04:38:10.459][1284][serving][info][capimodule.cpp:42] C-APIModule started
+[2026-09-10 04:38:10.459][1284][serving][info][grpcservermodule.cpp:106] GRPCServerModule starting
+[2026-09-10 04:38:10.459][1284][serving][info][grpcservermodule.cpp:133] Binding gRPC server to address: 0.0.0.0:9000
+[2026-09-10 04:38:10.462][1284][serving][info][grpcservermodule.cpp:186] GRPCServerModule started
+[2026-09-10 04:38:10.462][1284][serving][info][grpcservermodule.cpp:187] Started gRPC server on port 9000
+[2026-09-10 04:38:10.462][1284][serving][info][httpservermodule.cpp:35] HTTPServerModule starting
+[2026-09-10 04:38:10.462][1284][serving][info][httpservermodule.cpp:39] Will start 8 REST workers
+[2026-09-10 04:38:10.463][22340][serving][info][drogon_http_server.cpp:157] Binding REST server to address: 0.0.0.0:8000
+[2026-09-10 04:38:10.512][1284][serving][info][drogon_http_server.cpp:187] REST server listening on port 8000 with 8 unary threads and 8 streaming threads
+[2026-09-10 04:38:10.513][1284][serving][info][http_server.cpp:238] API key not provided via --api_key_file or API_KEY environment variable. Authentication will be disabled.
+[2026-09-10 04:38:10.515][1284][serving][info][httpservermodule.cpp:52] HTTPServerModule started
+[2026-09-10 04:38:10.515][1284][serving][info][httpservermodule.cpp:53] Started REST server at 0.0.0.0:8000
+[2026-09-10 04:38:10.516][1284][serving][info][servablemanagermodule.cpp:51] ServableManagerModule starting
+[2026-09-10 04:38:10.519][1284][serving][info][mediapipegraphdefinition.cpp:515] MediapipeGraphDefinition initializing graph nodes
+[2026-09-10 04:38:10.519][1284][modelmanager][info][servable_initializer.cpp:684] Initializing Visual Language Model Continuous Batching servable
+[2026-09-10 04:38:45.874][1284][llm_calculator][info][servable_initializer.cpp:227] Auto-detected tool_parser: gemma4
+[2026-09-10 04:38:45.875][1284][llm_calculator][info][servable_initializer.cpp:237] Auto-detected reasoning_parser: gemma4
+[2026-09-10 04:38:46.165][29012][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 04:38:46.166][1284][modelmanager][info][mediapipegraphdefinition.cpp:297] Mediapipe: gemma4-26-heretic inputs: 
+name: input; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-10 04:38:46.166][1284][modelmanager][info][mediapipegraphdefinition.cpp:298] Mediapipe: gemma4-26-heretic outputs: 
+name: output; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-10 04:38:46.166][1284][modelmanager][info][mediapipegraphdefinition.cpp:299] Mediapipe: gemma4-26-heretic kfs pass through: false
+[2026-09-10 04:38:46.167][1284][modelmanager][info][pipelinedefinitionstatus.hpp:60] Mediapipe: gemma4-26-heretic state changed to: AVAILABLE after handling: ValidationPassedEvent: 
+[2026-09-10 04:38:46.167][1284][serving][info][servablemanagermodule.cpp:55] ServableManagerModule started
+[2026-09-10 04:38:46.167][12392][modelmanager][info][modelmanager.cpp:1067] Started cleaner thread
+[2026-09-10 04:38:46.167][27296][modelmanager][info][modelmanager.cpp:1048] Started model manager thread
+[2026-09-10 04:38:58.517][32072][llm_calculator][info][servable.cpp:381] session-state: store disabled; OVMS_SESSION_STORE_DIR is unset
+[2026-09-10 04:38:59.539][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 75.0% of 7.8 MB;
+[2026-09-10 04:38:59.961][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 75.0% of 7.8 MB;
+[2026-09-10 04:39:00.419][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 100.0% of 7.8 MB;
+[2026-09-10 04:39:00.877][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 25.0% of 38.9 MB;
+[2026-09-10 04:39:01.267][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 25.0% of 38.9 MB;
+[2026-09-10 04:39:01.676][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 30.0% of 38.9 MB;
+[2026-09-10 04:39:02.098][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 35.0% of 38.9 MB;
+[2026-09-10 04:39:02.524][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 35.0% of 38.9 MB;
+[2026-09-10 04:39:02.905][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 40.0% of 38.9 MB;
+[2026-09-10 04:39:03.348][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 40.0% of 38.9 MB;
+[2026-09-10 04:39:03.735][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 45.0% of 38.9 MB;
+[2026-09-10 04:39:04.124][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 50.0% of 38.9 MB;
+[2026-09-10 04:39:04.510][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 50.0% of 38.9 MB;
+[2026-09-10 04:39:04.887][29012][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 55.0% of 38.9 MB;
+[2026-09-10 04:39:04.963][29012][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 04:43:44.358][29012][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 05:30:44.885][4012][serving][info][server.cpp:115] OpenVINO Model Server 2026.4.0.a08b30bdb
+[2026-09-10 05:30:44.885][4012][serving][info][server.cpp:116] OpenVINO backend 2026.4.0-22930-61afcb26271-releases/2026/4
+[2026-09-10 05:30:44.885][4012][serving][info][server.cpp:119] OpenVINO GenAI backend 2026.4.0.0-3401-5f7f1278107
+[2026-09-10 05:30:44.885][4012][serving][info][pythoninterpretermodule.cpp:37] PythonInterpreterModule starting
+[2026-09-10 05:30:44.885][4012][serving][info][pythoninterpretermodule.cpp:40] Initializing python interpreter
+[2026-09-10 05:30:44.900][4012][serving][info][pythoninterpretermodule.cpp:59] PythonInterpreterModule started
+[2026-09-10 05:30:45.057][4012][modelmanager][info][modelmanager.cpp:169] Available devices for Open VINO: CPU, GPU, NPU
+[2026-09-10 05:30:45.059][4012][serving][info][capimodule.cpp:40] C-APIModule starting
+[2026-09-10 05:30:45.059][4012][serving][info][capimodule.cpp:42] C-APIModule started
+[2026-09-10 05:30:45.059][4012][serving][info][grpcservermodule.cpp:106] GRPCServerModule starting
+[2026-09-10 05:30:45.059][4012][serving][info][grpcservermodule.cpp:133] Binding gRPC server to address: 0.0.0.0:9000
+[2026-09-10 05:30:45.061][4012][serving][info][grpcservermodule.cpp:186] GRPCServerModule started
+[2026-09-10 05:30:45.061][4012][serving][info][grpcservermodule.cpp:187] Started gRPC server on port 9000
+[2026-09-10 05:30:45.061][4012][serving][info][httpservermodule.cpp:35] HTTPServerModule starting
+[2026-09-10 05:30:45.061][4012][serving][info][httpservermodule.cpp:39] Will start 8 REST workers
+[2026-09-10 05:30:45.061][29068][serving][info][drogon_http_server.cpp:157] Binding REST server to address: 0.0.0.0:8888
+[2026-09-10 05:30:45.112][4012][serving][info][drogon_http_server.cpp:187] REST server listening on port 8888 with 8 unary threads and 8 streaming threads
+[2026-09-10 05:30:45.112][4012][serving][info][http_server.cpp:238] API key not provided via --api_key_file or API_KEY environment variable. Authentication will be disabled.
+[2026-09-10 05:30:45.113][4012][serving][info][httpservermodule.cpp:52] HTTPServerModule started
+[2026-09-10 05:30:45.113][4012][serving][info][httpservermodule.cpp:53] Started REST server at 0.0.0.0:8888
+[2026-09-10 05:30:45.113][4012][serving][info][servablemanagermodule.cpp:51] ServableManagerModule starting
+[2026-09-10 05:30:45.115][4012][serving][info][mediapipegraphdefinition.cpp:515] MediapipeGraphDefinition initializing graph nodes
+[2026-09-10 05:30:45.116][4012][modelmanager][info][servable_initializer.cpp:684] Initializing Visual Language Model Continuous Batching servable
+[2026-09-10 05:31:16.149][4012][llm_calculator][info][servable_initializer.cpp:227] Auto-detected tool_parser: gemma4
+[2026-09-10 05:31:16.149][4012][llm_calculator][info][servable_initializer.cpp:237] Auto-detected reasoning_parser: gemma4
+[2026-09-10 05:31:16.364][35760][llm_executor][info][llm_executor.hpp:128] All requests: 0; Scheduled requests: 0;
+[2026-09-10 05:31:16.365][4012][modelmanager][info][mediapipegraphdefinition.cpp:297] Mediapipe: gemma4-26-heretic inputs: 
+name: input; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-10 05:31:16.365][4012][modelmanager][info][mediapipegraphdefinition.cpp:298] Mediapipe: gemma4-26-heretic outputs: 
+name: output; mapping: ; shape: (); precision: UNDEFINED; layout: ...
+[2026-09-10 05:31:16.365][4012][modelmanager][info][mediapipegraphdefinition.cpp:299] Mediapipe: gemma4-26-heretic kfs pass through: false
+[2026-09-10 05:31:16.366][4012][modelmanager][info][pipelinedefinitionstatus.hpp:60] Mediapipe: gemma4-26-heretic state changed to: AVAILABLE after handling: ValidationPassedEvent: 
+[2026-09-10 05:31:16.366][4012][serving][info][servablemanagermodule.cpp:55] ServableManagerModule started
+[2026-09-10 05:31:16.366][26708][modelmanager][info][modelmanager.cpp:1048] Started model manager thread
+[2026-09-10 05:31:16.366][17964][modelmanager][info][modelmanager.cpp:1067] Started cleaner thread
+[2026-09-10 05:31:36.354][27764][llm_calculator][info][servable.cpp:381] session-state: store disabled; OVMS_SESSION_STORE_DIR is unset
+[2026-09-10 05:31:37.744][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 62.5% of 31.1 MB;
+[2026-09-10 05:31:38.112][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 68.8% of 31.1 MB;
+[2026-09-10 05:31:38.473][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 68.8% of 31.1 MB;
+[2026-09-10 05:31:38.839][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 75.0% of 31.1 MB;
+[2026-09-10 05:31:39.204][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 81.2% of 31.1 MB;
+[2026-09-10 05:31:39.570][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 81.2% of 31.1 MB;
+[2026-09-10 05:31:39.943][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 87.5% of 31.1 MB;
+[2026-09-10 05:31:40.459][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 87.5% of 31.1 MB;
+[2026-09-10 05:31:40.828][35760][llm_executor][info][llm_executor.hpp:105] All requests: 1; Scheduled requests: 1; Cache type: dynamic, cache usage: 93.8% of 31.1 MB;

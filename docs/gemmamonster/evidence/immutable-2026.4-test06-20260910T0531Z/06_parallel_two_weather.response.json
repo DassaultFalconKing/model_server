@@ -1,0 +1,28 @@
+{
+  "status": "HTTP_OK",
+  "status_code": 200,
+  "elapsed_seconds": 4.739,
+  "finish_reason": "length",
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "length",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "content": "",
+          "role": "assistant",
+          "tool_calls": []
+        }
+      }
+    ],
+    "created": 1789011096,
+    "model": "gemma4-26-heretic",
+    "object": "chat.completion",
+    "usage": {
+      "prompt_tokens": 145,
+      "completion_tokens": 96,
+      "total_tokens": 241
+    }
+  }
+}
