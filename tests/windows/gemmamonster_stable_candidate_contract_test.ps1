@@ -21,6 +21,7 @@ function Write-HashManifest([string]$CandidateRoot) {
 
 function New-FakeCandidate([string]$Root, [string]$RuntimeProfile) {
     New-Item -ItemType Directory -Path (Join-Path $Root 'ovms') -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $Root 'provenance') -Force | Out-Null
     foreach ($name in @('ovms.exe','openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')) {
         Set-Content -LiteralPath (Join-Path $Root "ovms\$name") -Value "fixture-$RuntimeProfile-$name" -Encoding ASCII
     }
@@ -44,6 +45,11 @@ function New-FakeCandidate([string]$Root, [string]$RuntimeProfile) {
     } else {
         throw "Unsupported fixture runtime profile: $RuntimeProfile"
     }
+
+    @(
+        "OpenVINO backend 2026.4.0-00000-$($pins.OV_SOURCE_BRANCH.Substring(0, 11))",
+        "OpenVINO GenAI backend 2026.4.0.0-0000-$($pins.OV_GENAI_BRANCH.Substring(0, 11))"
+    ) | Set-Content -LiteralPath (Join-Path $Root 'provenance\ovms-version.txt') -Encoding UTF8
 
     $dllHashes = [ordered]@{}
     foreach ($name in @('openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')) {
@@ -100,6 +106,14 @@ try {
     $manifest.dependency_pins.OV_GENAI_BRANCH = '0000000000000000000000000000000000000000'
     $manifest | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
     Expect-Failure { & $verifier -CandidateRoot $wrongPin -ExpectedSourceSha $sha -ExpectedRuntimeProfile 'maintainer-rc2' | Out-Null } 'Dependency pin mismatch'
+
+    $wrongVersion = Join-Path $temp 'wrong-version'
+    $sha = New-FakeCandidate -Root $wrongVersion -RuntimeProfile 'maintainer-rc2'
+    @(
+        'OpenVINO backend 2026.4.0-00000-00000000000',
+        'OpenVINO GenAI backend 2026.4.0.0-0000-00000000000'
+    ) | Set-Content -LiteralPath (Join-Path $wrongVersion 'provenance\ovms-version.txt') -Encoding UTF8
+    Expect-Failure { & $verifier -CandidateRoot $wrongVersion -ExpectedSourceSha $sha -ExpectedRuntimeProfile 'maintainer-rc2' | Out-Null } 'Runtime version fingerprint mismatch'
 
     $wrongSource = Join-Path $temp 'wrong-source'
     $sha = New-FakeCandidate -Root $wrongSource -RuntimeProfile 'known-good-rc1'
