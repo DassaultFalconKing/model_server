@@ -18,6 +18,23 @@ cc_test(
 )
 
 cc_test(
+    name = "gemma4_prompt_state_generation_contract_test",
+    env_inherit = ["PATH"],
+    srcs = ["gemma4_prompt_state_generation_contract_test.cpp"],
+    deps = [
+        "@com_google_googletest//:gtest_main",
+        "//src/llm:generation_config_builders",
+        "//src/llm:io_processing_input_processors",
+        "//third_party:genai",
+        "//third_party:openvino",
+    ],
+    copts = COPTS_TESTS,
+    local_defines = COMMON_LOCAL_DEFINES,
+    linkopts = COMMON_STATIC_LIBS_LINKOPTS,
+    linkstatic = 1,
+)
+
+cc_test(
     name = "openai_parallel_tool_calls_contract_test",
     env_inherit = ["PATH"],
     srcs = ["openai_parallel_tool_calls_contract_test.cpp"],
