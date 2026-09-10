@@ -6,7 +6,7 @@
 - Branch: `integration/gemmamonster-2026.4-latest-refit`.
 - Required ancestor: `9eb93f15fecb848d399f17c7a6a6626e5a1498d7`, the latest maintainer OVMS source state before the upstream 2026.5 runtime switch.
 - Advanced semantic authority: `fde0762ba314dc5f6448726dfce7c533bad9a8a6` plus the preceding Gemma4 protocol-hardening ancestry.
-- Historical provenance authority: `docs/gemmamonster/Bericht-Provenance-Descendance-diff.md` at `fde0762`.
+- Historical provenance authority: the byte-exact `docs/gemmamonster/Bericht-Provenance-Descendance-diff.md` carried from `fde0762`.
 - Known-good behavioural/runtime oracle: `freeze/gemmamonster-2026.4-known-good` at `c48366fee1f10cdf6b5fe3c181522ed0c58fc9fd`.
 
 Do not infer completeness from current diff alone. The Bericht provenance union is broader than the current upstream-different file set.
@@ -22,6 +22,7 @@ The current line contains the active Gemma4 protocol/generator blast radius:
 - guided generation with `TriggeredTags`, hard/named grammar, optional thought-before-tool grammar, fail-closed hard choices, and `parallel_tool_calls` propagation;
 - the exact `fde0762` single-tool repeated-call grammar intent;
 - OpenAI `parallel_tool_calls` ingress/egress policy;
+- fail-closed hard/named `tool_choice` validation when no tools are supplied, preserved through the current header-based policy seam;
 - persistent session continuity, carried as an acceptance-critical high-risk slice;
 - parser/recovery/streamer, generation/prompt-state, overlay, and OpenAI contracts.
 
@@ -90,23 +91,31 @@ git rev-parse HEAD
 git status --short
 
 .\scripts\gemmamonster\audit-stable-refit.ps1
+.\tests\windows\gemmamonster_stable_candidate_contract_test.ps1
 ```
 
-The audit must finish with:
+The source audit must finish with:
 
 ```text
 BUILD_READY_SOURCE_AUDIT_PASS
 ```
 
-It checks exact ancestry, current 2026.4 RC2 source authority, the active runtime blast-radius files, contract files and build-ready helpers. If `fde0762` is available locally, it also records byte-exact versus refitted relations for runtime files.
+The candidate-verifier unit contract must finish with:
+
+```text
+GEMMAMONSTER_STABLE_CANDIDATE_CONTRACT_TEST_PASS
+```
+
+The audit checks exact ancestry, current 2026.4 RC2 source authority, the active runtime blast-radius files, contract files and build-ready helpers. It also requires the exact `fde0762` Bericht when that ref is locally available and records byte-exact versus refitted relations for runtime files.
 
 ## Primary build: latest maintainer 2026.4 RC2
+
+For a fresh isolated dependency root, do **not** use `-ExpungeDependencies` on the first run. The upstream installer applies expunge to shared system dependencies under `C:\opt` as well as the short-root package, including MSYS, Bazel, Python/OpenCL/BoringSSL and related build prerequisites.
 
 ```powershell
 .\scripts\gemmamonster\build-stable-candidate.ps1 `
   -RuntimeProfile maintainer-rc2 `
   -Label gemma4-stable-rc2 `
-  -ExpungeDependencies `
   -WithoutTests
 ```
 
@@ -117,6 +126,8 @@ BUILT_PROVENANCE_VERIFIED_NOT_ACCEPTED
 ```
 
 Record the printed candidate root and source SHA.
+
+Use `-ExpungeDependencies` only to deliberately repair/reinstall a contaminated dependency environment after reviewing the upstream installer's system-wide effects.
 
 ## Source contracts
 
@@ -137,12 +148,12 @@ If the tokenizer fixture is not at the repository-default test path, pass it exp
 
 The runner executes these Bazel targets:
 
-- `//src/test/llm/gemma4_fast:gemma4_parser_contract_test`
-- `//src/test/llm/generation_config:gemma4_generation_contract_test`
-- `//src/test/llm/generation_config:gemma4_prompt_state_generation_contract_test`
-- `//src/test/llm/generation_config:openai_parallel_tool_calls_contract_test`
-- `//src/test/llm/gemma4_overlay:gemma4_chat_template_overlay_contract_test`
-- `//src/test/llm/gemma4_overlay:gemma4_google_jinja_contract_test`
+- `//src/test/llm/gemma4_fast:gemma4_parser_contract_test` (this one target compiles/runs parser, reasoning semantic refit, and recovery contract sources together);
+- `//src/test/llm/generation_config:gemma4_generation_contract_test`;
+- `//src/test/llm/generation_config:gemma4_prompt_state_generation_contract_test`;
+- `//src/test/llm/generation_config:openai_parallel_tool_calls_contract_test`;
+- `//src/test/llm/gemma4_overlay:gemma4_chat_template_overlay_contract_test`;
+- `//src/test/llm/gemma4_overlay:gemma4_google_jinja_contract_test`.
 
 No `PASS` is inferred merely because these targets exist.
 
@@ -162,13 +173,12 @@ This verifies the candidate envelope, exact dependency profile, hashes, required
 
 ## Exact known-good-runtime A/B build
 
-If RC2 is unstable, or for the mandatory runtime-control experiment, build the identical source HEAD with the known-good RC1 dependency set:
+If RC2 is unstable, or for the mandatory runtime-control experiment, build the identical source HEAD with the known-good RC1 dependency set. Again, use the fresh isolated root without expunge first:
 
 ```powershell
 .\scripts\gemmamonster\build-stable-candidate.ps1 `
   -RuntimeProfile known-good-rc1 `
   -Label gemma4-stable-rc1-ab `
-  -ExpungeDependencies `
   -WithoutTests
 
 .\scripts\gemmamonster\test-stable-source.ps1 `
