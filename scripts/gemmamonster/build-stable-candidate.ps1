@@ -251,6 +251,14 @@ $manifest = [ordered]@{
     repo_dirty = $dirty
     short_root = "C:\$ShortRoot"
     dependency_pins = $dependencyPins
+    tooling = [ordered]@{
+        python = [string]$profile.PYTHON_VERSION
+        optimum = [string]$profile.OPTIMUM_VERSION
+        optimum_intel = [string]$profile.OPTIMUM_INTEL_VERSION
+        openvino = [string]$profile.OPTIMUM_OPENVINO_VERSION
+        openvino_tokenizers = [string]$profile.OPTIMUM_OPENVINO_TOKENIZERS_VERSION
+        isolation = 'ovms/tools/optimum/site-packages; excluded from OVMS runtime PATH'
+    }
     source_authority = [ordered]@{
         versions_mk_sha256 = $versionsHash
         versions_mk_policy = 'branch stays exact latest-maintainer 2026.4 RC2; known-good RC1 is selected only by process environment overrides'

@@ -41,6 +41,11 @@ try {
 
     & $ovmsExe --help | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Packaged ovms.exe --help failed.' }
+
+    & (Join-Path $ovmsDir 'python\python.exe') --version | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Bundled python.exe --version failed.' }
+    & (Join-Path $ovmsDir 'tools\optimum\optimum-cli.cmd') --help | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw 'Bundled optimum-cli --help failed.' }
 } finally {
     Pop-Location
 }

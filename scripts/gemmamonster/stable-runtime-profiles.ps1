@@ -9,6 +9,11 @@ $script:GemmamonsterStableRuntimeProfiles = [ordered]@{
         GENAI_PACKAGE_URL_WINDOWS = 'https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/pre-release/2026.4.0.0rc2/openvino_genai_windows_2026.4.0.0rc2_x86_64.zip'
         package_marker = '2026.4.0.0rc2'
         default_short_root = 'g54r2'
+        PYTHON_VERSION = '3.12.10'
+        OPTIMUM_VERSION = '2.3.0'
+        OPTIMUM_INTEL_VERSION = '2.1.0'
+        OPTIMUM_OPENVINO_VERSION = '2026.3.1'
+        OPTIMUM_OPENVINO_TOKENIZERS_VERSION = '2026.3.1.0'
     }
     'known-good-rc1' = [ordered]@{
         label = 'GEMMAMONSTER previously accepted 2026.4 RC1 runtime line'
@@ -18,6 +23,11 @@ $script:GemmamonsterStableRuntimeProfiles = [ordered]@{
         GENAI_PACKAGE_URL_WINDOWS = 'https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/pre-release/2026.4.0.0rc1/openvino_genai_windows_2026.4.0.0rc1_x86_64.zip'
         package_marker = '2026.4.0.0rc1'
         default_short_root = 'g54r1'
+        PYTHON_VERSION = '3.12.10'
+        OPTIMUM_VERSION = '2.3.0'
+        OPTIMUM_INTEL_VERSION = '2.1.0'
+        OPTIMUM_OPENVINO_VERSION = '2026.3.1'
+        OPTIMUM_OPENVINO_TOKENIZERS_VERSION = '2026.3.1.0'
     }
 }
 

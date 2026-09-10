@@ -22,6 +22,11 @@ set "PATH=%setPath%"
 for /f "usebackq eol=# tokens=1,3" %%A in ("%cd%\versions.mk") do (
     if "%%A"=="OPENCV_VERSION" if "!opencv_version!"=="" set "opencv_version=%%B"
     if "%%A"=="CURL_VERSION" if "!curl_version!"=="" set "curl_version=%%B"
+    if "%%A"=="PYTHON_VERSION" if "!python_version!"=="" set "python_version=%%B"
+    if "%%A"=="OPTIMUM_VERSION" if "!optimum_version!"=="" set "optimum_version=%%B"
+    if "%%A"=="OPTIMUM_INTEL_VERSION" if "!optimum_intel_version!"=="" set "optimum_intel_version=%%B"
+    if "%%A"=="OPTIMUM_OPENVINO_VERSION" if "!optimum_openvino_version!"=="" set "optimum_openvino_version=%%B"
+    if "%%A"=="OPTIMUM_OPENVINO_TOKENIZERS_VERSION" if "!optimum_openvino_tokenizers_version!"=="" set "optimum_openvino_tokenizers_version=%%B"
 )
 :: Build DLL suffix by removing dots (e.g. 4.14.0 -> 4140)
 set "opencv_dll_ver=!opencv_version:.=!"
@@ -77,8 +82,6 @@ if /i "%with_python%"=="true" (
     if !errorlevel! neq 0 exit /b !errorlevel!
 
     :: Prepare self-contained python
-    set "python_version=3.12.10"
-
     call %cd%\windows_prepare_python.bat %dest_dir% !python_version!
     if !errorlevel! neq 0 (
         echo Error occurred when creating Python environment for the distribution.
@@ -94,6 +97,16 @@ if /i "%with_python%"=="true" (
     if !errorlevel! neq 0 (
         echo Error during Python dependencies for LLM installation. The package will not be fully functional.
     )
+
+    set "optimum_root=!package_dir!\tools\optimum"
+    set "optimum_site=!optimum_root!\site-packages"
+    md "!optimum_site!"
+    "!package_dir!\python\python.exe" -m pip install --target "!optimum_site!" "optimum==!optimum_version!" "optimum-intel[openvino]==!optimum_intel_version!" "openvino==!optimum_openvino_version!" "openvino-tokenizers==!optimum_openvino_tokenizers_version!"
+    if !errorlevel! neq 0 exit /b !errorlevel!
+    >"!optimum_root!\optimum-cli.cmd" echo @echo off
+    >>"!optimum_root!\optimum-cli.cmd" echo setlocal
+    >>"!optimum_root!\optimum-cli.cmd" echo set "PYTHONPATH=%%~dp0site-packages"
+    >>"!optimum_root!\optimum-cli.cmd" echo "%%~dp0..\..\python\python.exe" -m optimum.commands.optimum_cli %%*
 )
 
 copy C:\%output_user_root%\openvino\runtime\3rdparty\tbb\bin\tbb12.dll "!package_dir!"

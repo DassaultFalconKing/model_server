@@ -37,3 +37,10 @@ GENAI_PACKAGE_URL_WINDOWS ?= https://storage.openvinotoolkit.org/repositories/op
 # Third-party dependency versions (used for binary builds)
 OPENCV_VERSION ?= 4.14.0
 CURL_VERSION ?= 8.21.0_7
+
+# Self-contained Windows export tooling (isolated from the OVMS runtime DLL path)
+PYTHON_VERSION ?= 3.12.10
+OPTIMUM_VERSION ?= 2.3.0
+OPTIMUM_INTEL_VERSION ?= 2.1.0
+OPTIMUM_OPENVINO_VERSION ?= 2026.3.1
+OPTIMUM_OPENVINO_TOKENIZERS_VERSION ?= 2026.3.1.0

@@ -21,10 +21,14 @@ function Write-HashManifest([string]$CandidateRoot) {
 
 function New-FakeCandidate([string]$Root, [string]$RuntimeProfile) {
     New-Item -ItemType Directory -Path (Join-Path $Root 'ovms') -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $Root 'ovms\python') -Force | Out-Null
+    New-Item -ItemType Directory -Path (Join-Path $Root 'ovms\tools\optimum\site-packages') -Force | Out-Null
     New-Item -ItemType Directory -Path (Join-Path $Root 'provenance') -Force | Out-Null
     foreach ($name in @('ovms.exe','openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')) {
         Set-Content -LiteralPath (Join-Path $Root "ovms\$name") -Value "fixture-$RuntimeProfile-$name" -Encoding ASCII
     }
+    Set-Content -LiteralPath (Join-Path $Root 'ovms\python\python.exe') -Value 'fixture-python' -Encoding ASCII
+    Set-Content -LiteralPath (Join-Path $Root 'ovms\tools\optimum\optimum-cli.cmd') -Value 'fixture-optimum-cli' -Encoding ASCII
     Write-HashManifest $Root
 
     $sourceSha = '0123456789abcdef0123456789abcdef01234567'
@@ -64,6 +68,13 @@ function New-FakeCandidate([string]$Root, [string]$RuntimeProfile) {
         source_sha = $sourceSha
         repo_dirty = $false
         dependency_pins = $pins
+        tooling = [ordered]@{
+            python = '3.12.10'
+            optimum = '2.3.0'
+            optimum_intel = '2.1.0'
+            openvino = '2026.3.1'
+            openvino_tokenizers = '2026.3.1.0'
+        }
         package = [ordered]@{
             ovms_sha256 = (Get-FileHash -LiteralPath (Join-Path $Root 'ovms\ovms.exe') -Algorithm SHA256).Hash.ToLowerInvariant()
             dll_sha256 = $dllHashes
@@ -75,13 +86,17 @@ function New-FakeCandidate([string]$Root, [string]$RuntimeProfile) {
 }
 
 function Expect-Failure([scriptblock]$Action, [string]$Contains) {
+    $failure = $null
     try {
         & $Action
-        throw "Expected failure containing '$Contains', but action passed."
     } catch {
-        if ($_.Exception.Message -notlike "*$Contains*") {
-            throw "Expected failure containing '$Contains', got: $($_.Exception.Message)"
-        }
+        $failure = $_
+    }
+    if ($null -eq $failure) {
+        throw "Expected failure containing '$Contains', but action passed."
+    }
+    if ($failure.Exception.Message -notlike "*$Contains*") {
+        throw "Expected failure containing '$Contains', got: $($failure.Exception.Message)"
     }
 }
 
@@ -123,6 +138,12 @@ try {
     $sha = New-FakeCandidate -Root $missingDll -RuntimeProfile 'maintainer-rc2'
     Remove-Item -LiteralPath (Join-Path $missingDll 'ovms\openvino_tokenizers.dll') -Force
     Expect-Failure { & $verifier -CandidateRoot $missingDll -ExpectedSourceSha $sha -ExpectedRuntimeProfile 'maintainer-rc2' | Out-Null } 'Missing required runtime file'
+
+    $missingTooling = Join-Path $temp 'missing-tooling'
+    $sha = New-FakeCandidate -Root $missingTooling -RuntimeProfile 'maintainer-rc2'
+    Remove-Item -LiteralPath (Join-Path $missingTooling 'ovms\tools\optimum\optimum-cli.cmd') -Force
+    Write-HashManifest $missingTooling
+    Expect-Failure { & $verifier -CandidateRoot $missingTooling -ExpectedSourceSha $sha -ExpectedRuntimeProfile 'maintainer-rc2' | Out-Null } 'Missing required tooling file'
 
     Write-Host 'GEMMAMONSTER_STABLE_CANDIDATE_CONTRACT_TEST_PASS'
 } finally {

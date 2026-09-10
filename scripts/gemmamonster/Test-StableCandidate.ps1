@@ -89,6 +89,20 @@ Assert-ExactPin $pins 'OV_TOKENIZERS_BRANCH' $profile.OV_TOKENIZERS_BRANCH
 Assert-ExactPin $pins 'OV_GENAI_BRANCH' $profile.OV_GENAI_BRANCH
 Assert-ExactPin $pins 'GENAI_PACKAGE_URL_WINDOWS' $profile.GENAI_PACKAGE_URL_WINDOWS
 
+$tooling = $manifest.tooling
+if ($null -eq $tooling) { throw 'Candidate manifest is missing tooling pins.' }
+foreach ($pin in @(
+    @('python','PYTHON_VERSION'),
+    @('optimum','OPTIMUM_VERSION'),
+    @('optimum_intel','OPTIMUM_INTEL_VERSION'),
+    @('openvino','OPTIMUM_OPENVINO_VERSION'),
+    @('openvino_tokenizers','OPTIMUM_OPENVINO_TOKENIZERS_VERSION')
+)) {
+    $actual = [string]$tooling.($pin[0])
+    $expected = [string]$profile.($pin[1])
+    if ($actual -ne $expected) { throw "Tooling pin mismatch for $($pin[0]): expected=$expected actual=$actual" }
+}
+
 $versionPath = Require-File (Join-Path $root 'provenance\ovms-version.txt') 'ovms-version.txt'
 $versionText = Get-Content -LiteralPath $versionPath -Raw -Encoding UTF8
 $ovFingerprint = ([string]$profile.OV_SOURCE_BRANCH).Substring(0, 11)
@@ -106,6 +120,10 @@ if ($versionText -notmatch [regex]::Escape($genaiFingerprint)) {
 $ovmsDir = Join-Path $root 'ovms'
 foreach ($name in @('ovms.exe','openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')) {
     Require-File (Join-Path $ovmsDir $name) $name | Out-Null
+}
+foreach ($relative in @('python\python.exe','tools\optimum\optimum-cli.cmd')) {
+    $path = Join-Path $ovmsDir $relative
+    if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Missing required tooling file: $path" }
 }
 
 Assert-HashManifest $root $shaPath
