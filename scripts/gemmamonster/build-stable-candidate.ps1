@@ -215,8 +215,20 @@ if (-not $buildSucceeded) { throw 'Build/package did not complete successfully.'
 $ovmsDir = Join-Path $candidateRoot 'ovms'
 $ovmsExe = Require-File (Join-Path $ovmsDir 'ovms.exe') 'packaged ovms.exe'
 
-$versionOutput = & cmd.exe /d /c "cd /d `"$ovmsDir`" && ovms.exe --version" 2>&1
-$versionExit = $LASTEXITCODE
+# ovms.exe --version crashes bare (0xC0000005) without its runtime env: it needs
+# PYTHONHOME + PATH exactly as the packaged setupvars provides. Proven: same
+# binary fails bare, passes with env (candidate 21044f8d GenAI 7ea2546852a).
+$versionPythonHome = [Environment]::GetEnvironmentVariable('PYTHONHOME', 'Process')
+$versionPath = [Environment]::GetEnvironmentVariable('PATH', 'Process')
+[Environment]::SetEnvironmentVariable('PYTHONHOME', (Join-Path $ovmsDir 'python'), 'Process')
+[Environment]::SetEnvironmentVariable('PATH', "$ovmsDir;$ovmsDir\python;$ovmsDir\python\Scripts;$versionPath", 'Process')
+try {
+    $versionOutput = & cmd.exe /d /c "cd /d `"$ovmsDir`" && ovms.exe --version" 2>&1
+    $versionExit = $LASTEXITCODE
+} finally {
+    if ($null -eq $versionPythonHome) { Remove-Item 'Env:PYTHONHOME' -ErrorAction SilentlyContinue } else { [Environment]::SetEnvironmentVariable('PYTHONHOME', $versionPythonHome, 'Process') }
+    [Environment]::SetEnvironmentVariable('PATH', $versionPath, 'Process')
+}
 $versionOutput | Set-Content -LiteralPath $versionLog -Encoding UTF8
 if ($versionExit -ne 0) { throw "Packaged ovms.exe --version failed with exit code $versionExit. See $versionLog" }
 $versionText = ($versionOutput | Out-String)
