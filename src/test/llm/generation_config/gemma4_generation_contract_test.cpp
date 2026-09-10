@@ -5,6 +5,7 @@
 #include <openvino/genai/llm_pipeline.hpp>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
 #include <memory>
 #include <set>
 #include <string>
@@ -66,6 +67,39 @@ std::string availableGemmaTokenizerPath() {
         return configured;
     const auto fixture = getGenericFullPathForSrcTest("/ovms/src/test/llm_testing/OpenVINO/gemma-4-E4B-it-int4-ov");
     return std::filesystem::exists(fixture) ? fixture : std::string{};
+}
+
+bool pinnedXGrammarAccepts(const std::string& format, const std::string& text) {
+    const char* python = std::getenv("GEMMA4_XGRAMMAR_PYTHON");
+    const char* pythonPath = std::getenv("GEMMA4_XGRAMMAR_PYTHONPATH");
+    if (!python || !pythonPath)
+        throw std::runtime_error("GEMMA4_XGRAMMAR_PYTHON/PYTHONPATH are required");
+    const auto root = std::filesystem::temp_directory_path() / "ovms-gemma4-xgrammar-semantic";
+    std::filesystem::create_directories(root);
+    const auto script = root / "accept.py";
+    const auto grammar = root / "grammar.json";
+    const auto input = root / "input.txt";
+    const auto result = root / "result.txt";
+    std::ofstream(script) << R"PY(import importlib.metadata, json, sys
+import xgrammar as xg
+assert importlib.metadata.version("xgrammar") == "0.1.31"
+fmt=json.load(open(sys.argv[1], encoding="utf-8"))
+text=open(sys.argv[2], encoding="utf-8").read()
+ti=xg.TokenizerInfo([chr(i) for i in range(128)], xg.VocabType.RAW, vocab_size=128)
+grammar=xg.Grammar.from_structural_tag({"type":"structural_tag","format":fmt})
+matcher=xg.GrammarMatcher(xg.GrammarCompiler(ti).compile_grammar(grammar), terminate_without_stop_token=True)
+open(sys.argv[3], "w", encoding="ascii").write("1" if matcher.accept_string(text) else "0")
+)PY";
+    std::ofstream(grammar) << format;
+    std::ofstream(input) << text;
+    const std::string command = "cmd.exe /d /s /c \"set PYTHONPATH=" + std::string(pythonPath) + "&& \"" + python +
+        "\" \"" + script.string() + "\" \"" + grammar.string() + "\" \"" + input.string() + "\" \"" + result.string() + "\"\"";
+    if (std::system(command.c_str()) != 0)
+        throw std::runtime_error("pinned xgrammar semantic probe failed");
+    std::ifstream output(result);
+    char accepted = '0';
+    output >> accepted;
+    return accepted == '1';
 }
 }  // namespace
 
@@ -353,6 +387,27 @@ TEST(Gemma4GenerationContractTest, SingleToolParallelEnabledAllowsRepeatedSameTo
                 << "parallel enabled must not stop after first tag";
             EXPECT_TRUE(tags.at_least_one);
             EXPECT_EQ(tags.tags.size(), 1u);
+        }
+    }
+}
+
+TEST(Gemma4GenerationContractTest, PinnedXGrammarControlsSameToolMultiplicityWithStopAfterFirst) {
+    if (!std::getenv("GEMMA4_XGRAMMAR_PYTHON") || !std::getenv("GEMMA4_XGRAMMAR_PYTHONPATH"))
+        GTEST_SKIP() << "pinned xgrammar v0.1.31 probe environment is not configured";
+    const std::string call = R"(<|tool_call>call:weather{}<tool_call|>)";
+    for (const std::string choice : {"auto", "required"}) {
+        for (bool parallel : {true, false}) {
+            SCOPED_TRACE(choice + std::string(parallel ? ":parallel" : ":single"));
+            OpenAIRequest request;
+            request.toolChoice = choice;
+            request.parallelToolCalls = parallel;
+            request.toolNameSchemaMap.emplace("weather", ToolSchemaWrapper{nullptr, emptySchema});
+            GenerationConfigBuilder builder({}, "gemma4", false, STANDARD);
+            builder.parseConfigFromRequest(request);
+            const auto format = std::visit([](const auto& value) {
+                return Structured::structural_tag_to_json(value);
+            }, rootGrammar(builder.getConfig()));
+            EXPECT_EQ(pinnedXGrammarAccepts(format, call + call), parallel);
         }
     }
 }

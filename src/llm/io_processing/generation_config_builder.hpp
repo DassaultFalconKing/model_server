@@ -109,6 +109,8 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         bool parallelToolCalls,
         bool atLeastOne) {
         using Structured = ov::genai::StructuredOutputConfig;
+        // The fde0762 sole-tag duplication was a superseded workaround. Pinned
+        // GenAI/xgrammar v0.1.31 repeats one alternative when stop_after_first=false.
         auto triggeredTags = std::make_shared<Structured::TriggeredTags>();
         triggeredTags->triggers = {"<|tool_call>"};
         triggeredTags->tags = std::move(toolTags);
@@ -131,6 +133,7 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         std::vector<ov::genai::StructuredOutputConfig::Tag> toolTags,
         bool parallelToolCalls) {
         using Structured = ov::genai::StructuredOutputConfig;
+        // Keep alternatives unique; stop_after_first alone controls multiplicity.
 
         auto requiredTags = std::make_shared<Structured::TagsWithSeparator>();
         requiredTags->tags = std::move(toolTags);
