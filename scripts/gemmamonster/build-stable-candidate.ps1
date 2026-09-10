@@ -202,7 +202,10 @@ try {
 
 if (-not $trackedFilesRestored) { throw 'Build-mutated tracked files were not restored byte-for-byte.' }
 if (-not $dirty) {
-    $postStatus = @(& git -C $root status --porcelain)
+    # Bazel recreates its `bazel-<workspace>` execroot convenience link (untracked,
+    # not covered by .gitignore which only lists bazel-bin/out/testlogs). Tolerate
+    # exactly top-level untracked bazel-* links; anything else still fails closed.
+    $postStatus = @(& git -C $root status --porcelain | Where-Object { $_ -notmatch '^\?\? bazel-[^/]*/$' })
     if ($postStatus.Count -gt 0) {
         throw "Build left unexpected worktree mutations after restoration:`n$($postStatus -join "`n")"
     }
