@@ -1,0 +1,38 @@
+#!/usr/bin/env sh
+set -eu
+HERE=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ROOT=$(CDPATH= cd -- "$HERE/../.." && pwd)
+REPO_ROOT=$(CDPATH= cd -- "$HERE/../../.." && pwd)
+SETTINGS="$ROOT/.opencode/review-pack-user.json"
+TUI_CONFIG="$ROOT/.opencode/tui.json"
+EXA=1
+if [ -f "$SETTINGS" ]; then
+  EXA=$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1], encoding="utf-8")); print("1" if d.get("runtime",{}).get("exaEnabled", True) else "0")' "$SETTINGS" 2>/dev/null || printf '1')
+fi
+if [ "$EXA" = "1" ]; then
+  export OPENCODE_ENABLE_EXA=1
+else
+  unset OPENCODE_ENABLE_EXA || true
+fi
+if [ -f "$TUI_CONFIG" ]; then
+  export OPENCODE_TUI_CONFIG="$TUI_CONFIG"
+fi
+
+# EHA/read-only dogfood may supply an external writable CodeSleuth runtime so
+# package metadata writes stay outside the tracked target repository.
+# OPENCODE_CONFIG_DIR is additive, so it is not an isolation boundary by itself:
+# explicitly suppress target-project .opencode discovery before starting OpenCode.
+if [ -n "${CODESLEUTH_EHA_RUNTIME_CONFIG:-}" ]; then
+  HELPER="$REPO_ROOT/scripts/eha_opencode_runtime.py"
+  if [ ! -f "$HELPER" ]; then
+    printf '%s\n' "CodeSleuth EHA runtime-config helper missing at exact target: $HELPER" >&2
+    exit 2
+  fi
+  python3 "$HELPER" \
+    --source "$ROOT/.opencode" \
+    --target "$CODESLEUTH_EHA_RUNTIME_CONFIG"
+  export OPENCODE_CONFIG_DIR="$CODESLEUTH_EHA_RUNTIME_CONFIG"
+  export OPENCODE_DISABLE_PROJECT_CONFIG="1"
+fi
+
+exec opencode "$@"

@@ -1,0 +1,16 @@
+{
+  "process_id": 19064,
+  "executable": "C:\\git\\model_server-gemma4-fast\\bazel-bin\\src\\ovms.exe",
+  "arguments": [
+    "--rest_port",
+    "8888",
+    "--port",
+    "9000",
+    "--config_path",
+    "C:\\git\\model_server-gemma4-fast\\runtime\\gemmamonster-ovms\\config.json"
+  ],
+  "working_directory": "C:\\git\\model_server-gemma4-fast",
+  "readiness_url": "http://127.0.0.1:8888/v3/models",
+  "stdout_log": "C:\\git\\model_server-gemma4-fast\\runtime\\gemmamonster-ovms\\ovms.stdout.log",
+  "stderr_log": "C:\\git\\model_server-gemma4-fast\\runtime\\gemmamonster-ovms\\ovms.stderr.log"
+}

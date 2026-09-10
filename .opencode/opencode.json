@@ -1,0 +1,102 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "edit": "allow",
+    "bash": {
+      "*": "allow",
+      "git push*": "ask",
+      "git reset --hard*": "ask",
+      "git clean*": "ask"
+    },
+    "codesleuth_context_*": "deny",
+    "context_graph_read_*": "deny",
+    "repo_context_provider_*": "deny",
+    "external_directory": "ask",
+    "websearch": "allow",
+    "webfetch": "allow",
+    "lsp": "allow",
+    "skill": {
+      "*": "ask",
+      "repository-deep-review": "allow",
+      "codesleuth-reports": "allow"
+    },
+    "question": "allow",
+    "doom_loop": "ask"
+  },
+  "agent": {
+    "build": {
+      "permission": {
+        "codesleuth_context_get": "allow",
+        "context_graph_read_*": "allow",
+        "repo_context_provider_status": "allow",
+        "repo_context_provider_extract": "allow"
+      }
+    }
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 20000
+  },
+  "watcher": {
+    "ignore": [
+      ".git/**",
+      ".opencode/cache/**",
+      ".opencode/logs/**",
+      ".opencode/state/**",
+      ".codesleuth/reports/**",
+      "node_modules/**",
+      "target/**",
+      "dist/**",
+      "build/**",
+      ".venv/**",
+      "__pycache__/**"
+    ]
+  },
+  "plugin": [
+    [
+      "opencode-keepalive@0.1.0",
+      {
+        "intervalMs": 10000,
+        "stallMs": 480000,
+        "childStallAction": "abort-resume-parent",
+        "maxStallRecoveries": 2,
+        "abortWaitMs": 30000,
+        "toolStallMsByTool": {
+          "glob": 90000,
+          "grep": 90000,
+          "read": 120000,
+          "webfetch": 180000,
+          "websearch": 180000
+        },
+        "bashQuickStallMs": 90000,
+        "output": "file"
+      }
+    ]
+  ],
+  "provider": {
+    "gemma4-local": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Gemma4 OVMS (local)",
+      "options": {
+        "baseURL": "http://127.0.0.1:9090/v3",
+        "apiKey": "local"
+      },
+      "models": {
+        "gemma4-26-heretic": {
+          "name": "Gemma 4 26B Heretic (OVMS)",
+          "limit": {
+            "context": 65536,
+            "output": 16384
+          }
+        }
+      }
+    }
+  }
+}
