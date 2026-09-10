@@ -136,8 +136,26 @@ try {
     $env:GENAI_PACKAGE_URL = [string]$profile.GENAI_PACKAGE_URL_WINDOWS
     $env:OV_USE_BINARY = '1'
 
-    Push-Location $root
+        Push-Location $root
     try {
+        # Transient WORKSPACE pin rewrite (fail-closed).
+        # Bazel new_local_repository pins for windows_openvino/windows_genai are
+        # static (C:\opt\openvino\runtime = rc1 tree). Without this rewrite the
+        # build links GenAI/Tokenizers from C:\opt regardless of $ShortRoot:
+        # proven by candidate af2f7049 (rc2 core + rc1 GenAI 5f7f127, packaged
+        # DLLs == C:\opt hashes). Restored byte-exact by the finally block
+        # below (WORKSPACE is in $mutableTracked).
+        $workspacePath = Join-Path $root 'WORKSPACE'
+        $pinFrom = 'C:\\opt\\openvino\\runtime'
+        $pinTo = "C:\\$ShortRoot\\openvino\\runtime"
+        if ($pinTo -ne $pinFrom) {
+            $workspaceText = [System.IO.File]::ReadAllText($workspacePath)
+            $pinHits = ([regex]::Matches($workspaceText, [regex]::Escape($pinFrom))).Count
+            if ($pinHits -ne 2) { throw "WORKSPACE pin rewrite refused: expected 2 '$pinFrom' pins, found $pinHits." }
+            [System.IO.File]::WriteAllText($workspacePath, $workspaceText.Replace($pinFrom, $pinTo))
+            Write-Host "WORKSPACE pins transiently rewritten to $pinTo (2 hits; restored after build)"
+        }
+
         if (-not $SkipDependencies) {
             $expunge = if ($ExpungeDependencies) { '1' } else { '0' }
             $integrityArg = if ($Integrity) { '1' } else { '0' }
