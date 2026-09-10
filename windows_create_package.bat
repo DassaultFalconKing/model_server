@@ -98,15 +98,22 @@ if /i "%with_python%"=="true" (
         echo Error during Python dependencies for LLM installation. The package will not be fully functional.
     )
 
-    set "optimum_root=!package_dir!\tools\optimum"
-    set "optimum_site=!optimum_root!\site-packages"
-    md "!optimum_site!"
-    "!package_dir!\python\python.exe" -m pip install --target "!optimum_site!" "optimum==!optimum_version!" "optimum-intel[openvino]==!optimum_intel_version!" "openvino==!optimum_openvino_version!" "openvino-tokenizers==!optimum_openvino_tokenizers_version!"
-    if !errorlevel! neq 0 exit /b !errorlevel!
-    >"!optimum_root!\optimum-cli.cmd" echo @echo off
-    >>"!optimum_root!\optimum-cli.cmd" echo setlocal
-    >>"!optimum_root!\optimum-cli.cmd" echo set "PYTHONPATH=%%~dp0site-packages"
-    >>"!optimum_root!\optimum-cli.cmd" echo "%%~dp0..\..\python\python.exe" -m optimum.commands.optimum_cli %%*
+    :: Optimum CLI tooling is opt-in (4th arg --with_optimum). Default package is
+    :: lean runtime-only, matching upstream Jenkins expectations. Full candidate
+    :: (model pull/convert on-site) passes --with_optimum explicitly.
+    if "%~4"=="--with_optimum" (
+        set "optimum_root=!package_dir!\tools\optimum"
+        set "optimum_site=!optimum_root!\site-packages"
+        md "!optimum_site!"
+        "!package_dir!\python\python.exe" -m pip install --target "!optimum_site!" "optimum==!optimum_version!" "optimum-intel[openvino]==!optimum_intel_version!" "openvino==!optimum_openvino_version!" "openvino-tokenizers==!optimum_openvino_tokenizers_version!"
+        if !errorlevel! neq 0 exit /b !errorlevel!
+        >"!optimum_root!\optimum-cli.cmd" echo @echo off
+        >>"!optimum_root!\optimum-cli.cmd" echo setlocal
+        >>"!optimum_root!\optimum-cli.cmd" echo set "PYTHONPATH=%%~dp0site-packages"
+        >>"!optimum_root!\optimum-cli.cmd" echo "%%~dp0..\..\python\python.exe" -m optimum.commands.optimum_cli %%*
+    ) ELSE (
+        echo Skipping Optimum CLI tooling bundle ^(no --with_optimum^)
+    )
 )
 
 copy C:\%output_user_root%\openvino\runtime\3rdparty\tbb\bin\tbb12.dll "!package_dir!"

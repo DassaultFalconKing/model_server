@@ -121,7 +121,13 @@ $ovmsDir = Join-Path $root 'ovms'
 foreach ($name in @('ovms.exe','openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')) {
     Require-File (Join-Path $ovmsDir $name) $name | Out-Null
 }
-foreach ($relative in @('python\python.exe','tools\optimum\optimum-cli.cmd')) {
+# optimum_bundled missing (old manifests) means bundled: early candidates always had it.
+$optimumBundled = $true
+$optimumFlag = $tooling.PSObject.Properties['optimum_bundled']
+if ($null -ne $optimumFlag) { $optimumBundled = [bool]$optimumFlag.Value }
+$requiredTooling = @('python\python.exe')
+if ($optimumBundled) { $requiredTooling += 'tools\optimum\optimum-cli.cmd' }
+foreach ($relative in $requiredTooling) {
     $path = Join-Path $ovmsDir $relative
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Missing required tooling file: $path" }
 }

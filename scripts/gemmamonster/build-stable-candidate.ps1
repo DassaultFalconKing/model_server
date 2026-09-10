@@ -10,7 +10,8 @@ param(
     [switch]$NoPython,
     [switch]$WithoutTests,
     [switch]$Integrity,
-    [switch]$AllowDirty
+    [switch]$AllowDirty,
+    [switch]$WithOptimum
 )
 
 $ErrorActionPreference = 'Stop'
@@ -179,7 +180,8 @@ try {
         if ($LASTEXITCODE -ne 0) { throw "Build failed with exit code $LASTEXITCODE. See $buildLog" }
 
         Write-Host "Creating isolated package under $candidateRoot"
-        & $packageBat $ShortRoot $pythonArg $candidateRoot 2>&1 | Tee-Object -FilePath $packageLog
+        $optimumArg = if ($WithOptimum) { '--with_optimum' } else { '' }
+        & $packageBat $ShortRoot $pythonArg $candidateRoot $optimumArg 2>&1 | Tee-Object -FilePath $packageLog
         if ($LASTEXITCODE -ne 0) { throw "Package creation failed with exit code $LASTEXITCODE. See $packageLog" }
         $buildSucceeded = $true
     } finally {
@@ -290,6 +292,7 @@ $manifest = [ordered]@{
         optimum_intel = [string]$profile.OPTIMUM_INTEL_VERSION
         openvino = [string]$profile.OPTIMUM_OPENVINO_VERSION
         openvino_tokenizers = [string]$profile.OPTIMUM_OPENVINO_TOKENIZERS_VERSION
+        optimum_bundled = [bool]$WithOptimum
         isolation = 'ovms/tools/optimum/site-packages; excluded from OVMS runtime PATH'
     }
     source_authority = [ordered]@{
