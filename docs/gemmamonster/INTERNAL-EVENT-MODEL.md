@@ -8,7 +8,9 @@ Authority snapshot:
 - inspected refit HEAD before this document: `dc668c1667a58c3a399a76e3df5c7678b8cdcc80`
 - accepted protocol provenance used by the refit: `fde0762ba314dc5f6448726dfce7c533bad9a8a6`
 
-This document defines the internal event boundary introduced by the Gemmamonster refit. It is intentionally narrower than the public OpenAI API contracts and broader than Gemma 4 alone. The purpose is to make ownership explicit so parser state, stream transport, and endpoint serialization do not collapse back into one accidental state machine.
+The typed `Delta` algebra and `DeltaChannel` transport already exist at the upstream 2026.4 source base. Gemmamonster does **not** claim authorship of that substrate. The refit extends and hardens the ownership model around it: Gemma 4 protocol parsing, reasoning/tool phase handoff, prompt-state reconciliation, repeated/parallel tool correlation, endpoint policy, special-token transport, and persistent session continuity are made to cooperate through the existing typed event seam rather than bypass it.
+
+This document therefore defines the **effective event boundary of the Gemmamonster refit**, including which parts are inherited substrate and which responsibilities were added or reassigned. It is intentionally narrower than the public OpenAI API contracts and broader than Gemma 4 alone. The purpose is to make ownership explicit so parser state, stream transport, and endpoint serialization do not collapse back into one accidental state machine.
 
 ## 1. Architectural decision
 
@@ -27,6 +29,8 @@ The authoritative type definition is:
 
 `src/llm/io_processing/delta.hpp`
 
+The type itself is inherited unchanged from upstream 2026.4. The refit's architectural decision is to preserve it as the mandatory semantic seam and move Gemma 4-specific correctness into components below that seam while keeping endpoint-specific emission above it.
+
 A parser does **not** own Chat Completions JSON, Responses API SSE events, HTTP framing, or client-visible lifecycle sequencing. A parser owns semantic interpretation of model output and emits typed `Delta` values.
 
 Endpoint handlers do **not** interpret Gemma 4 protocol tokens. They consume typed deltas and own conversion into their public API shape.
@@ -35,7 +39,28 @@ Endpoint handlers do **not** interpret Gemma 4 protocol tokens. They consume typ
 
 This split is the core rule. Violating it recreates the old class of failures where a tokenizer detail, parser boundary, and OpenAI JSON field become one inseparable bug.
 
-## 2. Data flow
+## 2. Substrate versus refit extensions
+
+Inherited unchanged from upstream 2026.4:
+
+- `ContentDelta`, `ReasoningDelta`, `ToolCallDelta`, `FinishDelta`, `AudioDelta`, and the `Delta` variant;
+- `DeltaChannel` as the thread-safe producer/consumer transport;
+- Delta-based unary and streaming serializer interfaces in `OpenAIApiHandler`;
+- endpoint-specific public serialization as a layer above the typed event stream.
+
+Refit additions or ownership changes layered onto that substrate:
+
+- model-native Gemma 4 reasoning semantics;
+- hardened Gemma 4 tool parser and parser-owned tool boundary contract;
+- `OutputParsingConfig` ownership flags and routing changes required by parser-owned boundaries;
+- post-render prompt-state detection and grammar adaptation;
+- special-token reasoning-to-tool streamer handoff;
+- fail-closed tool policy and `parallel_tool_calls` propagation;
+- repeated same-tool calls correlated by call index/ID rather than function name;
+- persistent session state outside parser/emitter state;
+- stable runtime-profile/provenance tooling that binds source contracts to the intended 2026.4 runtime.
+
+## 3. Data flow
 
 ```mermaid
 flowchart LR
@@ -59,9 +84,9 @@ flowchart LR
 
 `AudioDelta` follows the same transport/event representation but belongs to the omni/audio path, not to Gemma 4 tool-calling semantics.
 
-## 3. Event types
+## 4. Event types
 
-### 3.1 `ContentDelta`
+### 4.1 `ContentDelta`
 
 ```cpp
 struct ContentDelta {
@@ -80,7 +105,7 @@ Public emitters:
 
 A `ContentDelta` must never contain Gemma 4 tool boundary tokens or reasoning-channel boundary tokens after those phases have been recognized.
 
-### 3.2 `ReasoningDelta`
+### 4.2 `ReasoningDelta`
 
 ```cpp
 struct ReasoningDelta {
@@ -102,7 +127,7 @@ Public emitters:
 
 The reasoning parser may terminate reasoning when a tool-start boundary is observed. It does not serialize the resulting tool call.
 
-### 3.3 `ToolCallDelta`
+### 4.3 `ToolCallDelta`
 
 ```cpp
 struct ToolCallDelta {
@@ -135,7 +160,7 @@ Public emitters:
 - Chat Completions: indexed `tool_calls[]` streaming deltas.
 - Responses API: a `function_call` output item plus incremental `response.function_call_arguments.delta` events.
 
-### 3.4 `FinishDelta`
+### 4.4 `FinishDelta`
 
 ```cpp
 struct FinishDelta {};
@@ -149,7 +174,7 @@ Public emitter owner: endpoint serializer, which combines finish state with `Gen
 
 `FinishDelta` carries no public API semantics by itself. In particular, it does not decide whether the final reason is `stop`, `length`, `tool_calls`, or an endpoint-specific equivalent.
 
-### 3.5 `AudioDelta`
+### 4.5 `AudioDelta`
 
 ```cpp
 struct AudioDelta {
@@ -161,7 +186,7 @@ Meaning: base64 PCM16 audio payload in the omni/audio path.
 
 It is deliberately part of the same event algebra so transport and endpoint dispatch can remain type-safe. It is not part of the Gemma 4 parser contract and must not be made a dependency of Gemma 4-specific code.
 
-## 4. Owners
+## 5. Owners
 
 The word **owner** means the component with final authority over one class of state or one transformation. More than one owner for the same fact is a bug farm.
 
@@ -182,17 +207,17 @@ The word **owner** means the component with final authority over one class of st
 | Persistent GenAI chat/session continuity | `LLMServable` session state | parser |
 | Runtime provenance/profile selection | Gemmamonster runtime-profile tooling | parser |
 
-## 5. Emitters
+## 6. Emitters
 
 There are three different meanings of “emitter” in the refit and they must remain distinguished.
 
-### 5.1 Semantic emitters
+### 6.1 Semantic emitters
 
 `BaseOutputParser::parseChunk()` and its model-specific implementations emit `std::optional<Delta>`.
 
 They emit semantic events, not wire-format responses.
 
-### 5.2 Stream transport emitter
+### 6.2 Stream transport emitter
 
 `OVMSTextStreamer` is the transport emitter between generation and request handling. Its responsibilities are:
 
@@ -205,7 +230,7 @@ They emit semantic events, not wire-format responses.
 
 It must not synthesize OpenAI JSON fields.
 
-### 5.3 Public API emitters
+### 6.3 Public API emitters
 
 The OpenAI handlers are wire-format emitters.
 
@@ -232,7 +257,7 @@ It converts `ReasoningDelta` into the reasoning summary lifecycle and `ContentDe
 
 This lifecycle is endpoint state. It must not be pushed down into Gemma 4 parser state.
 
-## 6. Phase model
+## 7. Phase model
 
 `OutputParser` currently exposes the following processing phases:
 
@@ -250,7 +275,7 @@ Important Gemma 4 refinement: ownership of a tool-call delimiter may be assigned
 
 Reasoning-to-tool handoff is a first-class transition. When Gemma 4 produces a tool opener while reasoning is active, the reasoning phase must terminate without losing the reasoning prefix or the tool opener, even when the boundary is split across decoder chunks.
 
-## 7. Prompt state is an input to the event machine, not an event
+## 8. Prompt state is an input to the event machine, not an event
 
 The rendered Jinja prompt may already leave the model inside a reasoning channel. That state is detected after rendering and affects both parser initialization and hard generation grammar.
 
@@ -265,7 +290,7 @@ Ownership:
 
 This avoids the duplicate-opener failure where a hard tool grammar demands a reasoning opener that the rendered prompt has already emitted.
 
-## 8. Repeated and parallel tool calls
+## 9. Repeated and parallel tool calls
 
 The event model treats tool-call position as identity.
 
@@ -286,7 +311,7 @@ Therefore repeated same-tool calls and parallel distinct-tool calls use the same
 
 When parallel calls are disabled, the generation grammar is responsible for preventing a second call. The parser and serializers should still remain structurally capable of representing multiple indices, because parsing must not silently alias or corrupt unexpected output.
 
-## 9. Unary path
+## 10. Unary path
 
 Unary and streaming responses must share semantic parsing.
 
@@ -312,7 +337,7 @@ struct ParsedOutput {
 
 It is not the streaming authority and must not become a second parser implementation.
 
-## 10. State boundaries and reset requirements
+## 11. State boundaries and reset requirements
 
 Every request/generation must start with clean parser and endpoint emission state.
 
@@ -327,7 +352,7 @@ Required resets include:
 
 Persistent GenAI chat/session continuity is separate. It may preserve conversation/KV/session state across requests, but it must not preserve an unfinished parser phase or an endpoint SSE lifecycle from the previous response.
 
-## 11. Fault domains
+## 12. Fault domains
 
 The refit intentionally separates the following fault domains:
 
@@ -343,7 +368,7 @@ The refit intentionally separates the following fault domains:
 
 A test failure should be classified into one of these domains before code changes are made.
 
-## 12. Required invariants
+## 13. Required invariants
 
 The following are architecture invariants, not implementation preferences:
 
@@ -361,7 +386,7 @@ The following are architecture invariants, not implementation preferences:
 12. A parser must be testable by asserting `Delta` sequences without running an HTTP server.
 13. A serializer must be testable with synthetic `Delta` sequences without running a real model.
 
-## 13. Contract tests implied by the model
+## 14. Contract tests implied by the model
 
 At minimum, source-level and runtime acceptance should cover:
 
@@ -380,13 +405,11 @@ At minimum, source-level and runtime acceptance should cover:
 - response-state reset between requests;
 - persistent session continuity without parser/emitter state leakage.
 
-## 14. Known documentation debt discovered while defining this contract
+## 15. Known documentation debt discovered while defining this contract
 
-`src/llm/io_processing/output_parser.hpp` still contains comments describing parser output as “JSON delta (OpenAI streaming format)”. The actual interface is `std::optional<Delta>` and the public JSON is produced later by endpoint handlers.
+`src/llm/io_processing/output_parser.hpp` still contains comments describing parser output as “JSON delta (OpenAI streaming format)”. The actual interface is `std::optional<Delta>` and the public JSON is produced later by endpoint handlers. This stale prose is inherited from the 2026.4 baseline and should be corrected separately.
 
-Those comments are stale and should be corrected. The code already follows the typed-event model more closely than that older prose suggests.
-
-## 15. Consequence for future forward ports
+## 16. Consequence for future forward ports
 
 When rebasing Gemmamonster onto a later OVMS release, compare layers independently:
 
