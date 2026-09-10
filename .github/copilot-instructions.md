@@ -192,3 +192,19 @@ Run the full test suite only after the targeted tests pass.
 - Test models are stored in `src/test/` subdirectories (e.g., `dummy/`, `passthrough/`, `summator/`)
 - Specialized test areas: `src/test/llm/`, `src/test/mediapipe/`, `src/test/python/`, `src/test/embeddings/`
 
+## Gemmamonster versioned PR and Jenkins protocol
+
+For Gemmamonster package, release, CI, or PR work, `docs/gemmamonster/JENKINS-AND-UPSTREAM-LINEAGE.md` is mandatory authority.
+
+Before building a package or creating a PR, the coding assistant MUST:
+
+1. Read the checked-out tree's `PRODUCT_VERSION` and normalize it to the OVMS release line.
+2. Inspect same-version branches in the Gemmamonster fork and prove the intended PR base with Git ancestry. Prefer an actual ancestor of `HEAD`; record the target SHA and merge-base.
+3. Resolve the matching canonical `openvinotoolkit/model_server:releases/<YYYY>/<M>` branch and use that exact ref as the Jenkins/build profile authority.
+4. Inspect that release's Jenkins/build files, including `ci/build_test_OnCommit.groovy`, `Makefile`, `versions.mk`, `.bazelversion`, and the Windows build/package/test batch files when relevant.
+5. Compile and package with commands compatible with that release-line profile before claiming Jenkins readiness.
+6. Report `PRODUCT_VERSION`, `RELEASE_LINE`, `WORK_HEAD`, `PR_TARGET`, `PR_TARGET_HEAD`, `MERGE_BASE`, `JENKINS_PROFILE_REF`, `JENKINS_PROFILE_HEAD`, and compile/package/test status.
+
+The coding assistant MUST NOT default a Gemmamonster PR to repository `main`, upstream `main`, or `develop` merely because those branches are defaults. If the matching version target or Jenkins profile cannot be resolved unambiguously, fail closed and do not create the PR.
+
+Infrastructure policy is versioned. Use branches named `infra/gemmamonster-<YYYY.M>-jenkins-lineage`. A new OVMS line such as 2026.6 gets a new infrastructure branch and a fresh Jenkins-profile audit; do not mutate the 2026.4 infrastructure branch into a 2026.6 policy branch.
