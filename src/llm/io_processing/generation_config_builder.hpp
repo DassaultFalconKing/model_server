@@ -113,6 +113,8 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         triggeredTags->triggers = {"<|tool_call>"};
         triggeredTags->tags = std::move(toolTags);
         triggeredTags->at_least_one = atLeastOne;
+        // xgrammar's structural-tag contract maps parallel_tool_calls=false to
+        // stop_after_first=true. With the default true, later triggers remain legal.
         triggeredTags->stop_after_first = !parallelToolCalls;
         return triggeredTags;
     }
@@ -120,6 +122,8 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
     static ov::genai::StructuredOutputConfig::StructuralTag buildAutoToolGrammar(
         std::vector<ov::genai::StructuredOutputConfig::Tag> toolTags,
         bool parallelToolCalls) {
+        // TriggeredTags supplies the free-text prefix. `auto` deliberately does
+        // not require the trigger, so ordinary prose remains legal.
         return buildTriggeredToolGrammar(std::move(toolTags), parallelToolCalls, false);
     }
 
@@ -134,6 +138,11 @@ class Gemma4GenerationConfigBuilder : public BaseGenerationConfigBuilder {
         requiredTags->at_least_one = true;
         requiredTags->stop_after_first = !parallelToolCalls;
 
+        // On a normal new model turn, canonical Google Gemma4 can either call a
+        // tool immediately or emit a complete thought channel and then call it.
+        // Selecting a named tool restricts the available tags, not the thought
+        // phase. xgrammar rejects empty ConstString, so optional thought is a
+        // Union of tools-only versus thought-then-tools.
         auto thought = std::make_shared<Structured::Tag>();
         thought->begin = "<|channel>thought\n";
         thought->content = Structured::AnyText();
@@ -179,6 +188,9 @@ public:
 
         switch (mode) {
         case ToolConstraintMode::Auto:
+            // OpenVINO GenAI TriggeredTags maps to xgrammar's lazy structural-tag
+            // dispatch: normal text is unconstrained until the tool marker appears,
+            // then the selected request tool name and JSON schema become authoritative.
             setStructuralTagsConfig(buildAutoToolGrammar(std::move(toolTags), request.parallelToolCalls));
             return;
         case ToolConstraintMode::Hard:

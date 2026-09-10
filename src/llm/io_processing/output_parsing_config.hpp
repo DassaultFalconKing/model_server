@@ -55,8 +55,10 @@ namespace ovms {
 //
 // Cross-parser transition:
 //   toolStartTerminatesReasoning — while this reasoning parser is active, a tool parser
-//                                  start tag is also an implicit reasoning end. Model parsers
-//                                  may enable this only as an explicit tolerance/recovery seam.
+//                                  start tag is also an implicit reasoning end. Some model
+//                                  protocols (notably Gemma4) allow a tool call to begin
+//                                  directly from the thought channel without first emitting
+//                                  the ordinary reasoning end tag.
 struct OutputParsingConfig {
     std::vector<std::string> startTags;
     std::vector<std::string> tokenIdStartTags;

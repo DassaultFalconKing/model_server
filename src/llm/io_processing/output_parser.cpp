@@ -442,6 +442,9 @@ std::optional<Delta> OutputParser::parseChunk(const std::string& chunkResponse, 
                 }
             }
 
+            // Hold back a partial tool opener at the tail instead of leaking its
+            // bytes into reasoning. This mirrors the boundary holdback used by
+            // the dedicated Gemma4 parsers in other runtimes.
             if (toolStartTagStatus == TagLookupStatus::FOUND_INCOMPLETE &&
                 endTagStatus != TagLookupStatus::FOUND_COMPLETE &&
                 finishReason == ov::genai::GenerationFinishReason::NONE) {

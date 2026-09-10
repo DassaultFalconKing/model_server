@@ -108,7 +108,7 @@ std::optional<size_t> findRecoverableBareCall(
         if (parenPos != std::string::npos && (argsPos == std::string::npos || parenPos < argsPos))
             argsPos = parenPos;
         if (argsPos == std::string::npos)
-            return candidate;
+            return candidate;  // hold a streaming prefix until the argument opener arrives
 
         std::string name = content.substr(nameStart, argsPos - nameStart);
         trimLocal(name);
@@ -137,11 +137,14 @@ class NativeValueParser {
 
     bool writeJsonToken(const std::string& token) {
         if (!token.empty() && (std::isdigit(static_cast<unsigned char>(token.front())) || token.front() == '-')) {
+            // The native grammar already delimits this scalar. Keep its lexical
+            // spelling; parsing it through a DOM would round large values.
             return writer.RawValue(token.data(), static_cast<rapidjson::SizeType>(token.size()), rapidjson::kNumberType);
         }
         auto normalized = normalizeJsonLosslessly(token);
         if (!normalized)
             return false;
+        // This path accepts a quoted string or a bare scalar only.
         const auto type = normalized->front() == '"' ? rapidjson::kStringType :
             normalized->front() == 't' ? rapidjson::kTrueType :
             normalized->front() == 'f' ? rapidjson::kFalseType :
@@ -391,7 +394,6 @@ std::optional<std::string> normalizeSingleNativeValue(const std::string& arg) {
 
 std::optional<std::string> Gemma4ToolParser::parseNativeArgumentsBody(const std::string& argumentsBody) {
     const std::string jsonCandidate = "{" + argumentsBody + "}";
-    (void)jsonCandidate;
     rapidjson::StringBuffer buffer;
     JsonWriter writer(buffer);
     NativeValueParser parser(argumentsBody, writer);
@@ -640,6 +642,8 @@ std::optional<Delta> Gemma4ToolParser::parseChunk(const std::string& chunk, cons
     if (parseNewContent()) {
         if (currentState == State::ToolCallEnded) {
             if (currentCallValid && !toolCall.arguments.empty()) {
+                // An emitted header cannot be retracted from SSE or the unary
+                // accumulator. Publish the complete call only after validation.
                 auto delta = ToolCallDelta{++toolCallIndex, toolCall.id, toolCall.name, toolCall.arguments};
                 toolCall = {};
                 return delta;
