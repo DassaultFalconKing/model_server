@@ -6,7 +6,8 @@ param(
     [int]$RestPort = 8000,
     [string[]]$OvmsArgs = @(),
     [int]$HealthcheckSeconds = 90,
-    [switch]$NoHealthcheck
+    [switch]$NoHealthcheck,
+    [switch]$AllowUnverifiedModules
 )
 
 $ErrorActionPreference = 'Stop'
@@ -17,6 +18,10 @@ function Require-File([string]$Path, [string]$Label) {
     return (Resolve-Path -LiteralPath $Path).Path
 }
 
+function Get-Hash([string]$Path) {
+    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+}
+
 function Test-PortFree([int]$Port) {
     try {
         $listeners = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction Stop
@@ -24,21 +29,6 @@ function Test-PortFree([int]$Port) {
     } catch {
         return $true
     }
-}
-
-function Test-HashManifest([string]$Root, [string]$ShaFile) {
-    $bad = New-Object System.Collections.Generic.List[string]
-    foreach ($line in Get-Content -LiteralPath $ShaFile -Encoding ASCII) {
-        if ([string]::IsNullOrWhiteSpace($line)) { continue }
-        if ($line -notmatch '^([0-9a-fA-F]{64})\s+(.+)$') { $bad.Add("malformed: $line"); continue }
-        $expected = $Matches[1].ToLowerInvariant()
-        $rel = $Matches[2].Trim()
-        $path = Join-Path $Root $rel
-        if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { $bad.Add("missing: $rel"); continue }
-        $actual = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-        if ($actual -ne $expected) { $bad.Add("sha mismatch: $rel manifest=$expected actual=$actual") }
-    }
-    if ($bad.Count -gt 0) { throw "Candidate hash manifest failed:`n$($bad -join "`n")" }
 }
 
 function Invoke-ModelsHealthcheck([int]$Port, [int]$Seconds, [string]$OutPath) {
@@ -63,13 +53,10 @@ function Invoke-ModelsHealthcheck([int]$Port, [int]$Seconds, [string]$OutPath) {
 
 $candidate = (Resolve-Path -LiteralPath $CandidateRoot).Path
 $manifestPath = Require-File (Join-Path $candidate 'manifest.json') 'candidate manifest'
-$shaPath = Require-File (Join-Path $candidate 'SHA256SUMS.txt') 'candidate SHA256SUMS.txt'
-Test-HashManifest $candidate $shaPath
-
 $manifest = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
-if ($manifest.candidate_kind -ne 'stable-2026.4-rc2-refit') {
-    throw "Wrong candidate_kind '$($manifest.candidate_kind)'. This launcher accepts only stable-2026.4-rc2-refit packages."
-}
+$verifier = Require-File (Join-Path $PSScriptRoot 'Test-StableCandidate.ps1') 'candidate verifier'
+& $verifier -CandidateRoot $candidate -ExpectedSourceSha ([string]$manifest.source_sha) -ExpectedRuntimeProfile ([string]$manifest.runtime_profile) | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'Candidate verifier failed before launch.' }
 
 $ovmsDir = Join-Path $candidate 'ovms'
 $ovmsExe = Require-File (Join-Path $ovmsDir 'ovms.exe') 'packaged ovms.exe'
@@ -114,18 +101,19 @@ try {
 }
 
 [ordered]@{
-    schema_version = 1
+    schema_version = 2
     launched_at_utc = [DateTime]::UtcNow.ToString('o')
     pid = $proc.Id
     candidate_root = $candidate
     source_sha = [string]$manifest.source_sha
+    runtime_profile = [string]$manifest.runtime_profile
     binary_path = $ovmsExe
-    binary_sha256 = (Get-FileHash -LiteralPath $ovmsExe -Algorithm SHA256).Hash.ToLowerInvariant()
+    binary_sha256 = Get-Hash $ovmsExe
     model_path = $model
     model_name = $ModelName
     rest_port = $RestPort
     command = $ovmsExe + ' ' + ($argList -join ' ')
-    path_policy = 'candidate ovms/ prepended for process launch; loaded module check follows'
+    path_policy = 'candidate ovms/ prepended; loaded OpenVINO/GenAI/Tokenizers/TBB modules must resolve inside package'
     stdout_log = $stdoutLog
     stderr_log = $stderrLog
     healthcheck = if ($NoHealthcheck) { 'NOT_RUN' } else { $healthJson }
@@ -134,29 +122,51 @@ try {
 
 if (-not $NoHealthcheck) {
     $ok = Invoke-ModelsHealthcheck -Port $RestPort -Seconds $HealthcheckSeconds -OutPath $healthJson
-    if (-not $ok) { Write-Warning "Healthcheck failed or timed out. See $healthJson" }
+    if (-not $ok) {
+        Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+        throw "Candidate failed healthcheck. Process stopped. Evidence: $healthJson"
+    }
 }
 
 try {
-    $modules = Get-Process -Id $proc.Id -ErrorAction Stop | ForEach-Object {
-        $_.Modules | Where-Object { $_.ModuleName -match 'openvino|genai|tokenizer|tbb' } |
-            Select-Object ModuleName,FileName
+    $process = Get-Process -Id $proc.Id -ErrorAction Stop
+    $modules = @($process.Modules | Where-Object { $_.ModuleName -match 'openvino|genai|tokenizer|tbb' })
+    if ($modules.Count -lt 4) {
+        throw "Loaded module inspection returned only $($modules.Count) relevant module(s); expected at least OpenVINO, GenAI, Tokenizers and TBB."
     }
-    $modules | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $modulesJson -Encoding UTF8
-    foreach ($module in $modules) {
+
+    $records = foreach ($module in $modules) {
         $fileName = [string]$module.FileName
-        if ($fileName -and -not $fileName.StartsWith($ovmsDir, [System.StringComparison]::OrdinalIgnoreCase)) {
-            throw "Loaded runtime module outside candidate package: $fileName"
+        if ([string]::IsNullOrWhiteSpace($fileName)) { throw "Loaded module has no file path: $($module.ModuleName)" }
+        $resolved = (Resolve-Path -LiteralPath $fileName).Path
+        if (-not $resolved.StartsWith($ovmsDir, [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "Loaded runtime module outside candidate package: $resolved"
         }
+        $hash = Get-Hash $resolved
+        $expectedProperty = $manifest.package.dll_sha256.PSObject.Properties[[string]$module.ModuleName]
+        if ($null -ne $expectedProperty) {
+            $expected = ([string]$expectedProperty.Value).ToLowerInvariant()
+            if ($hash -ne $expected) { throw "Loaded runtime module hash mismatch: $($module.ModuleName) expected=$expected actual=$hash path=$resolved" }
+        }
+        [ordered]@{ module = [string]$module.ModuleName; path = $resolved; sha256 = $hash; inside_candidate = $true }
     }
+    [ordered]@{status='PASS';pid=$proc.Id;checked_at_utc=[DateTime]::UtcNow.ToString('o');modules=@($records)} |
+        ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $modulesJson -Encoding UTF8
 } catch {
-    if ($_.Exception.Message -like 'Loaded runtime module outside*') { throw }
-    Write-Warning "Could not inspect loaded modules: $($_.Exception.Message)"
+    [ordered]@{status='FAIL';pid=$proc.Id;checked_at_utc=[DateTime]::UtcNow.ToString('o');error=$_.Exception.Message} |
+        ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $modulesJson -Encoding UTF8
+    if (-not $AllowUnverifiedModules) {
+        Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue
+        throw "Runtime module provenance could not be proven; process stopped. $($_.Exception.Message)"
+    }
+    Write-Warning "UNSAFE OVERRIDE: runtime module provenance not proven. $($_.Exception.Message)"
 }
 
 Write-Host 'GEMMAMONSTER STABLE CANDIDATE LAUNCHED'
-Write-Host "  PID:           $($proc.Id)"
-Write-Host "  SOURCE_SHA:    $($manifest.source_sha)"
-Write-Host "  CANDIDATE:     $candidate"
-Write-Host "  LAUNCH_JSON:   $launchJson"
-Write-Host "  MODULES_JSON:  $modulesJson"
+Write-Host "  PID:              $($proc.Id)"
+Write-Host "  SOURCE_SHA:       $($manifest.source_sha)"
+Write-Host "  RUNTIME_PROFILE:  $($manifest.runtime_profile)"
+Write-Host "  CANDIDATE:        $candidate"
+Write-Host "  LAUNCH_JSON:      $launchJson"
+Write-Host "  MODULES_JSON:     $modulesJson"
+Write-Host '  STATUS:            RUNTIME_PROVENANCE_VERIFIED_NOT_ACCEPTED'
