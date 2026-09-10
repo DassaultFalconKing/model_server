@@ -43,6 +43,7 @@ $mergeBase = (Git @('merge-base',$Ancestor,$head)).Output
 if ($mergeBase -ne $Ancestor) { throw "Unexpected merge-base: expected=$Ancestor actual=$mergeBase" }
 
 $advancedAvailable = (Git @('cat-file','-e',"$AdvancedRef^{commit}") -AllowFailure).ExitCode -eq 0
+$berichtPath = 'docs/gemmamonster/Bericht-Provenance-Descendance-diff.md'
 
 $runtimeFiles = @(
     'src/llm/apis/openai_api_handler.hpp',
@@ -86,6 +87,8 @@ $contractFiles = @(
 )
 
 $buildReadyFiles = @(
+    $berichtPath,
+    'docs/gemmamonster/STABLE-2026.4-REFIT-HANDOFF.md',
     'scripts/gemmamonster/stable-runtime-profiles.ps1',
     'scripts/gemmamonster/Test-StableCandidate.ps1',
     'scripts/gemmamonster/audit-stable-refit.ps1',
@@ -130,6 +133,16 @@ foreach ($path in $buildReadyFiles) {
     $rows.Add([ordered]@{path=$path;class='build-ready';present=$present;changed_from_ancestor=if($present){Changed-FromAncestor $path}else{$false}})
 }
 
+if ($advancedAvailable -and (File-ExistsAtHead $berichtPath)) {
+    $currentBerichtBlob = Blob-At 'HEAD' $berichtPath
+    $advancedBerichtBlob = Blob-At $AdvancedRef $berichtPath
+    if ($null -eq $advancedBerichtBlob) {
+        $failures.Add("advanced ref does not contain required provenance Bericht: $berichtPath")
+    } elseif ($currentBerichtBlob -ne $advancedBerichtBlob) {
+        $failures.Add("provenance Bericht is not byte-exact with $AdvancedRef: current=$currentBerichtBlob advanced=$advancedBerichtBlob")
+    }
+}
+
 $versionsPath = Join-Path $root 'versions.mk'
 $versionsText = Get-Content -LiteralPath $versionsPath -Raw -Encoding UTF8
 $rc2 = Get-GemmamonsterStableRuntimeProfile -Name 'maintainer-rc2'
@@ -150,7 +163,7 @@ $dirty = @(& git -C $root status --porcelain)
 if ($dirty.Count -gt 0) { $failures.Add("working tree is dirty: $($dirty -join '; ')") }
 
 $report = [ordered]@{
-    schema_version = 1
+    schema_version = 2
     checked_at_utc = [DateTime]::UtcNow.ToString('o')
     repository = 'DassaultFalconKing/model_server'
     branch = $branch
@@ -160,7 +173,13 @@ $report = [ordered]@{
     merge_base = $mergeBase
     advanced_ref = $AdvancedRef
     advanced_ref_available = $advancedAvailable
-    authority_note = 'Bericht provenance union is broader than current diff; this gate validates the active functional/build-ready subset and reports byte relation to fde0762 where available.'
+    bericht = [ordered]@{
+        path = $berichtPath
+        present = File-ExistsAtHead $berichtPath
+        head_blob = if (File-ExistsAtHead $berichtPath) { Blob-At 'HEAD' $berichtPath } else { $null }
+        advanced_blob = if ($advancedAvailable) { Blob-At $AdvancedRef $berichtPath } else { $null }
+    }
+    authority_note = 'Bericht provenance union is broader than current diff; this gate validates the active functional/build-ready subset and requires the exact fde0762 Bericht when that ref is available.'
     rows = @($rows)
     failures = @($failures)
     verdict = if ($failures.Count -eq 0) { 'BUILD_READY_SOURCE_AUDIT_PASS' } else { 'BUILD_READY_SOURCE_AUDIT_FAIL' }
@@ -177,6 +196,7 @@ Write-Host "GEMMAMONSTER_STABLE_REFIT_AUDIT verdict=$($report.verdict)"
 Write-Host "  HEAD:         $head"
 Write-Host "  ancestor:     $Ancestor"
 Write-Host "  advanced_ref: $AdvancedRef available=$advancedAvailable"
+Write-Host "  Bericht:      $($report.bericht.head_blob)"
 Write-Host "  report:       $OutputPath"
 if ($failures.Count -gt 0) {
     foreach ($failure in $failures) { Write-Host "  FAIL: $failure" }
