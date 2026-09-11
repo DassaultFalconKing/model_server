@@ -6,6 +6,10 @@ Updated: 2026-09-11 (Europe/Berlin, CEST)
 
 Canonical snapshot ref for this record:
 
+`state/gemmamonster-current-2026-09-11-env-preflight`
+
+Previous snapshot:
+
 `state/gemmamonster-current-2026-09-11`
 
 The snapshot ref, rather than a self-referential SHA written into this file, is the immutable-by-convention anchor for this state.
@@ -47,7 +51,7 @@ Until the local unified branch is pushed, this document records its identity but
 | 2026.5 protocol donor | `integration/gemma4-protocol-hardening-2026.5` | `5d995cfafdb2ec90578678aa15714dedebc843b8` | 2026-09-09 18:57:45 | Parser/generator/streamer/protocol donor line |
 | 2026.5 forward-port donor | `integration/ovms-2026.5-forward-port` | `ad19fc6d3934b5255be34059b07e52e0276e7168` | 2026-09-09 14:53:13 | Previous full 2026.5 migration/reference line |
 | Evidence-only orphan | `Testrun_2026-09-11-gemmamonster-frankenstein-c5115ba` | `60494feae321811e356b9231b1030419e3b2a01a` | 2026-09-11 10:55:57 | Evidence only, not product lineage |
-| State snapshot | `state/gemmamonster-current-2026-09-11` | resolve ref | 2026-09-11 | Human-readable snapshot of this state; do not move after finalization |
+| State snapshot | `state/gemmamonster-current-2026-09-11-env-preflight` | resolve ref | 2026-09-11 | Current state plus mandatory sanitized environment gate |
 
 ## Current acceptance facts
 
@@ -65,23 +69,65 @@ Until the local unified branch is pushed, this document records its identity but
 - `max_whitespace_cnt=2`
 - This is a separate guided-generation gate and must not be blamed for GPU `CL_OUT_OF_RESOURCES` without direct evidence.
 
+## Mandatory environment pre-flight
+
+Before any Gemmamonster dependency install, build, test, package, or runtime acceptance work, run:
+
+```powershell
+.\scripts\gemmamonster\Enter-GemmamonsterEnv.ps1
+```
+
+Run it in the same PowerShell process that will perform the work. Do not launch it in a disposable `powershell.exe -File ...` child process and then continue in another shell.
+
+For build/test/package work after dependencies have already been bootstrapped, require the canonical RC2 runtime root as well:
+
+```powershell
+.\scripts\gemmamonster\Enter-GemmamonsterEnv.ps1 -RequireRuntimeRoot
+```
+
+The pre-flight is fail-closed and deliberately ordered:
+
+1. **SANITIZE** process-scope selectors from prior OpenVINO/GenAI/Gemmamonster/Bazel/Python/Conda/venv work.
+2. Remove stale OpenVINO, packaged OVMS, candidate, old `C:\g54*`, Python and MSYS entries from the inherited `PATH` while preserving unrelated system/tool paths.
+3. Assert the stale build/runtime selectors are actually gone.
+4. **INITIALIZE** the exact `maintainer-rc2` toolchain and dependency pins.
+5. **VERIFY** active Bazel/Python versions, source identity, `versions.mk` authority, canonical paths, and optional runtime-root presence.
+6. Proceed only when the script reports `ENV_PREFLIGHT = PASS`.
+
+The script changes only the current process environment. It must not mutate User or Machine environment state. A new shell must run the pre-flight again.
+
+Canonical pre-flight authority:
+
+- Bazel `6.1.1`
+- Python `3.12.10`
+- MSVC Build Tools root `C:\BuildTools`, toolset `14.44.35207`
+- short/runtime root `C:\g54r2`
+- OpenVINO `227c33757d1ef95d4da506d00686f923fdd2a535`
+- GenAI `7ea2546852a382cd16bd22dea0cfad2db70ed744`
+- Tokenizers `a04accf6282d9b304214b492694b18c3979f667a`
+- binary runtime line `2026.4.0.0rc2`
+
+If the environment gate fails, do not build, test, package, or run acceptance until the mismatch is resolved. Environment provenance is part of build provenance.
+
 ## Branch policy
 
 For future work:
 
 1. Treat this document as the starting state index.
-2. Prefer one active integration branch plus narrowly-scoped donor/evidence branches.
-3. Do not create another integration branch merely to record state.
-4. When the local unified branch is pushed, update the next dated state record with its exact full SHA and remote branch name.
-5. Never call an uncommitted working tree a reproducible HEAD.
-6. Record package SHA256, dependency pins, pipeline type, runtime profile, and acceptance verdict for every promoted candidate.
-7. Evidence-only branches must remain explicitly marked as non-product lineage.
-8. Do not move `state/gemmamonster-current-2026-09-11` after finalization; create a new dated state snapshot when the canonical state materially changes.
+2. Run the mandatory sanitized environment pre-flight before any build/test/runtime work.
+3. Prefer one active integration branch plus narrowly-scoped donor/evidence branches.
+4. Do not create another integration branch merely to record state.
+5. When the local unified branch is pushed, update the next dated state record with its exact full SHA and remote branch name.
+6. Never call an uncommitted working tree a reproducible HEAD.
+7. Record package SHA256, dependency pins, pipeline type, runtime profile, and acceptance verdict for every promoted candidate.
+8. Evidence-only branches must remain explicitly marked as non-product lineage.
+9. Do not move historical state snapshot refs after finalization; create a new dated or suffixed state snapshot when the canonical state materially changes.
 
 ## Promotion rule
 
 A candidate may replace the frozen known-good only after all of the following are true:
 
+- mandatory environment pre-flight passes in the same process that performs the build/acceptance work;
 - immutable source SHA exists on remote;
 - package/provenance contracts pass;
 - exact OpenVINO / GenAI / Tokenizers / XGrammar pins are recorded;
