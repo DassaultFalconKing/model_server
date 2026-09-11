@@ -1,0 +1,12 @@
+---
+description: Mandatory Gemmamonster authority bootstrap
+alwaysApply: true
+---
+
+Before the first repository tool call, read `/AGENTS.md` completely and obey its `BEFORE THE FIRST TOOL CALL` section.
+
+Then read the canonical authority index and negative contract referenced by `AGENTS.md`.
+
+Do not use shell, Git, search, build, test, edit, patch, or network tools for repository work before bootstrap is complete.
+
+Do not duplicate or override the canonical authority data in this rule.
