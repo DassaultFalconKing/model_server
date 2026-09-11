@@ -87,7 +87,13 @@ $defaultArgs = @(
 $argList = if (@($OvmsArgs).Count -gt 0) { $OvmsArgs } else { $defaultArgs }
 
 $oldPath = $env:PATH
+$oldPythonHome = $env:PYTHONHOME
+$oldOvmsDir = $env:OVMS_DIR
 try {
+    # Spawned ovms dies bare with 0xC0000005 (same proven setupvars-env cause
+    # as builder/package checks): it needs OVMS_DIR/PYTHONHOME, not just PATH.
+    $env:OVMS_DIR = $ovmsDir
+    $env:PYTHONHOME = Join-Path $ovmsDir 'python'
     $env:PATH = "$ovmsDir;$oldPath"
     Push-Location $ovmsDir
     try {
@@ -97,6 +103,8 @@ try {
     }
 } finally {
     $env:PATH = $oldPath
+    if ($null -eq $oldPythonHome) { Remove-Item Env:PYTHONHOME -ErrorAction SilentlyContinue } else { $env:PYTHONHOME = $oldPythonHome }
+    if ($null -eq $oldOvmsDir) { Remove-Item Env:OVMS_DIR -ErrorAction SilentlyContinue } else { $env:OVMS_DIR = $oldOvmsDir }
 }
 
 [ordered]@{
