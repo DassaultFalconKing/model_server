@@ -91,10 +91,12 @@ $oldPythonHome = $env:PYTHONHOME
 $oldOvmsDir = $env:OVMS_DIR
 try {
     # Spawned ovms dies bare with 0xC0000005 (same proven setupvars-env cause
-    # as builder/package checks): it needs OVMS_DIR/PYTHONHOME, not just PATH.
+    # as builder/package checks): it needs OVMS_DIR/PYTHONHOME and, critically,
+    # ovms/python on PATH (python312.dll) — proven by bisect: identical 26B
+    # serve AVs without it, lives with it. Path added, not replaced.
     $env:OVMS_DIR = $ovmsDir
     $env:PYTHONHOME = Join-Path $ovmsDir 'python'
-    $env:PATH = "$ovmsDir;$oldPath"
+    $env:PATH = "$ovmsDir;$($env:PYTHONHOME);$($env:PYTHONHOME)\Scripts;$oldPath"
     Push-Location $ovmsDir
     try {
         $proc = Start-Process -FilePath $ovmsExe -ArgumentList $argList -RedirectStandardOutput $stdoutLog -RedirectStandardError $stderrLog -PassThru -WindowStyle Hidden
