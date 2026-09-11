@@ -1,0 +1,6 @@
+{
+  "pid": 10168,
+  "pid_alive": true,
+  "models_status": 200,
+  "models_body": "{\"data\":[{\"id\":\"gemma4-26-heretic\",\"object\":\"model\",\"created\":1789116478,\"owned_by\":\"OVMS\"}],\"object\":\"list\"}"
+}

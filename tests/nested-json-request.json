@@ -1,0 +1,62 @@
+{
+  "parallel_tool_calls": true,
+  "max_tokens": 256,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "plan_trip",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "route",
+            "stops",
+            "passengers",
+            "note"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "note": {
+              "type": "string"
+            },
+            "stops": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "passengers": {
+              "type": "integer"
+            },
+            "route": {
+              "type": "object",
+              "required": [
+                "from",
+                "to"
+              ],
+              "properties": {
+                "to": {
+                  "type": "string"
+                },
+                "from": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "description": "Create a trip plan."
+      }
+    }
+  ],
+  "tool_choice": "required",
+  "temperature": 0,
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call plan_trip with route from Berlin to Paris, stops [Cologne,Brussels], passengers 2, and note weekend. No prose."
+    }
+  ],
+  "stream": false
+}

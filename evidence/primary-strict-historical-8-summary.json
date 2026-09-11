@@ -1,0 +1,11 @@
+{
+  "case": "primary-strict-historical-8",
+  "status": "HTTP_OK",
+  "http_status": 200,
+  "elapsed_s": 18.765,
+  "finish_reason": "tool_calls",
+  "completion_tokens": 416,
+  "tool_call_count": 8,
+  "valid_json_arguments": 8,
+  "content": ""
+}

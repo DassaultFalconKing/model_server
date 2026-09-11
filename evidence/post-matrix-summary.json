@@ -1,0 +1,23 @@
+{
+  "server_pid": 33812,
+  "pid_survived": true,
+  "models": 200,
+  "post_chat": {
+    "body": "{\"error\":\"Mediapipe execution failed. MP status - UNAVAILABLE: CalculatorGraph::Run() failed: \\nCalculator::Process() for node \\\"LLMExecutor\\\" failed: LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required\"}",
+    "status": 400,
+    "case": "post-matrix-chat"
+  },
+  "post_tool": {
+    "body": "{\"error\":\"Mediapipe execution failed. MP status - UNAVAILABLE: CalculatorGraph::Run() failed: \\nCalculator::Process() for node \\\"LLMExecutor\\\" failed: LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required\"}",
+    "status": 400,
+    "case": "post-matrix-single-tool"
+  },
+  "tab_loop": {
+    "tab_newline_pairs": 172,
+    "decoded_consecutive_whitespace_chars": 344,
+    "generated_tokens": 256,
+    "trace_file": "C:\\gemmamonster-artifacts\\releases\\2026.5\\c5115ba-g5-gemma4-self-contained-20260911T101242Z\\restart-monitor-20260911T104037Z\\ovms.trace.log",
+    "finish_reason": "length",
+    "trace_lines": "9536-9705"
+  }
+}

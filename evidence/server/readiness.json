@@ -1,0 +1,9 @@
+{
+  "status": "READY",
+  "startup_seconds": 7232.106,
+  "ovms_pid": [
+    33812
+  ],
+  "models": "{\"data\":[{\"id\":\"gemma4-26-heretic\",\"object\":\"model\",\"created\":1789116068,\"owned_by\":\"OVMS\"}],\"object\":\"list\"}",
+  "checked_at_utc": "2026-09-11T08:41:09.1160328Z"
+}

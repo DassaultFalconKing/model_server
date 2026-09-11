@@ -1,0 +1,35 @@
+{
+  "tool_choice": "required",
+  "stream": true,
+  "parallel_tool_calls": true,
+  "model": "gemma4-26-heretic",
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "description": "Get weather",
+        "name": "weather"
+      },
+      "type": "function"
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Use weather for Berlin."
+    }
+  ],
+  "max_tokens": 256,
+  "temperature": 0
+}

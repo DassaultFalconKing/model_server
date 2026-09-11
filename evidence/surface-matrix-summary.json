@@ -1,0 +1,113 @@
+[
+  {
+    "case": "prompt-strict-temp0",
+    "status": "HTTP_OK",
+    "elapsed_s": 12.609,
+    "finish_reason": "length",
+    "calls": 0,
+    "valid_json": 0,
+    "names": [],
+    "expected": 3,
+    "content": ""
+  },
+  {
+    "case": "prompt-natural-temp0",
+    "status": "HTTP_OK",
+    "elapsed_s": 3.316,
+    "finish_reason": "tool_calls",
+    "calls": 3,
+    "valid_json": 3,
+    "names": [
+      "weather",
+      "calculator",
+      "search"
+    ],
+    "expected": 3,
+    "content": ""
+  },
+  {
+    "case": "prompt-minimal-temp0",
+    "status": "HTTP_OK",
+    "elapsed_s": 3.265,
+    "finish_reason": "tool_calls",
+    "calls": 3,
+    "valid_json": 3,
+    "names": [
+      "weather",
+      "calculator",
+      "search"
+    ],
+    "expected": 3,
+    "content": ""
+  },
+  {
+    "case": "parallel-2-temp0",
+    "status": "HTTP_OK",
+    "elapsed_s": 10.86,
+    "finish_reason": "length",
+    "calls": 0,
+    "valid_json": 0,
+    "names": [],
+    "expected": 2,
+    "content": ""
+  },
+  {
+    "case": "parallel-3-temp0",
+    "status": "HTTP_OK",
+    "elapsed_s": 10.986,
+    "finish_reason": "length",
+    "calls": 0,
+    "valid_json": 0,
+    "names": [],
+    "expected": 3,
+    "content": ""
+  },
+  {
+    "case": "parallel-4-temp0",
+    "status": "HTTP_OK",
+    "elapsed_s": 11.563,
+    "finish_reason": "length",
+    "calls": 0,
+    "valid_json": 0,
+    "names": [],
+    "expected": 4,
+    "content": ""
+  },
+  {
+    "case": "repeated-same-weather",
+    "status": "HTTP_OK",
+    "elapsed_s": 10.647,
+    "finish_reason": "length",
+    "calls": 0,
+    "valid_json": 0,
+    "names": [],
+    "expected": 2,
+    "content": ""
+  },
+  {
+    "case": "nested-json",
+    "status": "HTTP_OK",
+    "elapsed_s": 4.203,
+    "finish_reason": "tool_calls",
+    "calls": 1,
+    "valid_json": 1,
+    "names": [
+      "plan_trip"
+    ],
+    "expected": 1,
+    "content": ""
+  },
+  {
+    "case": "real-empty-object",
+    "status": "HTTP_OK",
+    "elapsed_s": 0.82,
+    "finish_reason": "tool_calls",
+    "calls": 1,
+    "valid_json": 1,
+    "names": [
+      "ping"
+    ],
+    "expected": 1,
+    "content": ""
+  }
+]

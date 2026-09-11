@@ -1,0 +1,32 @@
+[
+  {
+    "case": "strict-temp-03",
+    "temperature": 0.3,
+    "status": "HTTP_OK",
+    "elapsed_s": 15.319,
+    "finish_reason": "tool_calls",
+    "completion_tokens": 381,
+    "tool_call_count": 8,
+    "valid_json_arguments": 8
+  },
+  {
+    "case": "strict-temp-07",
+    "temperature": 0.7,
+    "status": "HTTP_OK",
+    "elapsed_s": 17.47,
+    "finish_reason": "tool_calls",
+    "completion_tokens": 418,
+    "tool_call_count": 8,
+    "valid_json_arguments": 8
+  },
+  {
+    "case": "strict-temp-10",
+    "temperature": 1.0,
+    "status": "HTTP_OK",
+    "elapsed_s": 17.349,
+    "finish_reason": "tool_calls",
+    "completion_tokens": 416,
+    "tool_call_count": 8,
+    "valid_json_arguments": 8
+  }
+]

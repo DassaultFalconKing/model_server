@@ -1,0 +1,66 @@
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call both weather for Berlin and calculator to add 17 and 31. Return exactly two tool calls and no prose."
+    }
+  ],
+  "max_tokens": 256,
+  "parallel_tool_calls": true,
+  "temperature": 0,
+  "model": "gemma4-26-heretic",
+  "tools": [
+    {
+      "function": {
+        "description": "Return weather for a city.",
+        "name": "weather",
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "function"
+    },
+    {
+      "function": {
+        "description": "Perform arithmetic.",
+        "name": "calculator",
+        "parameters": {
+          "required": [
+            "a",
+            "b",
+            "op"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "b": {
+              "type": "number"
+            },
+            "a": {
+              "type": "number"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "add",
+                "subtract",
+                "multiply",
+                "divide"
+              ]
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "function"
+    }
+  ]
+}

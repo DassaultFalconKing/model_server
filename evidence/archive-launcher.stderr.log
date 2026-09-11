@@ -1,0 +1,11 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1789116461.560307   31268 calculator_graph.cc:898] UNAVAILABLE: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required
+E0000 00:00:1789116461.638948   17932 calculator_graph.cc:898] UNAVAILABLE: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required
+E0000 00:00:1789116461.701471   20052 calculator_graph.cc:898] UNAVAILABLE: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required
+E0000 00:00:1789116551.822376   25964 calculator_graph.cc:898] UNAVAILABLE: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required
+E0000 00:00:1789116551.843095   15592 calculator_graph.cc:898] UNAVAILABLE: CalculatorGraph::Run() failed: 
+Calculator::Process() for node "LLMExecutor" failed: LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required

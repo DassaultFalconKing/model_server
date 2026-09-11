@@ -1,0 +1,33 @@
+{
+  "parallel_tool_calls": false,
+  "max_tokens": 256,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "ping",
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {}
+        },
+        "description": "Perform a parameterless health ping."
+      }
+    }
+  ],
+  "tool_choice": {
+    "type": "function",
+    "function": {
+      "name": "ping"
+    }
+  },
+  "temperature": 0,
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call ping now. It accepts no arguments. Do not add arguments or prose."
+    }
+  ],
+  "stream": false
+}

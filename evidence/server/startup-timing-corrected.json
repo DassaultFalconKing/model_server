@@ -1,0 +1,11 @@
+{
+  "status": "READY",
+  "ovms_pid": 33812,
+  "launch_timestamp_utc": "2026-09-11T08:40:37.0000000+02:00",
+  "process_start_local": "2026-09-11T10:40:37.7608869+02:00",
+  "available_log_timestamp_local": "2026-09-11T10:41:08.5090000",
+  "startup_seconds_to_available": 30.748,
+  "endpoint": "http://127.0.0.1:8006/v1/models",
+  "model": "gemma4-26-heretic",
+  "available_log_line": "[2026-09-11 10:41:08.509][36572][modelmanager][info][pipelinedefinitionstatus.hpp:61] Mediapipe: gemma4-26-heretic state changed to: AVAILABLE after handling: ValidationPassedEvent: "
+}

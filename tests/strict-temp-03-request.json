@@ -1,0 +1,91 @@
+{
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Perform a forensic inspection of the Gemma4 tool-calling implementation. Do not answer from memory and do not summarize yet. In this single assistant turn, issue all independent tool calls needed to: (1) read gemma4_tool_parser.cpp, gemma4_reasoning_parser.cpp, output_parser.cpp, and generation_config_builder.hpp; (2) retrieve Git history for gemma4_tool_parser.cpp and generation_config_builder.hpp; and (3) compare gemma4_tool_parser.cpp and generation_config_builder.hpp between refs freeze/gemmamonster-2026.4-known-good and integration/gemma4-protocol-hardening-2026.5. These operations are independent, so issue them in parallel in the same assistant turn. You must produce exactly 8 tool calls and no prose answer."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "read_source_file",
+        "description": "Read one source file from the repository.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "purpose": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "purpose"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "git_file_history",
+        "description": "Retrieve Git history for exactly one repository file.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "max_commits": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          },
+          "required": [
+            "path",
+            "max_commits"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "compare_file_refs",
+        "description": "Compare one file between two Git refs.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "base_ref": {
+              "type": "string"
+            },
+            "head_ref": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "base_ref",
+            "head_ref"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ],
+  "tool_choice": "required",
+  "parallel_tool_calls": true,
+  "stream": false,
+  "max_tokens": 1200,
+  "temperature": 0.3
+}

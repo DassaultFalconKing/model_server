@@ -1,0 +1,11 @@
+{
+  "case": "single-weather",
+  "status": "HTTP_OK",
+  "http_status": 200,
+  "elapsed_s": 1.503,
+  "finish_reason": "tool_calls",
+  "completion_tokens": 16,
+  "tool_call_count": 1,
+  "valid_json_arguments": 1,
+  "content": ""
+}

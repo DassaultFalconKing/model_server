@@ -1,0 +1,29 @@
+{
+  "streaming": [
+    {
+      "curl_exit": 0,
+      "case": "stream-single-tool",
+      "done": false,
+      "elapsed_s": 0.047,
+      "tool_signal": false,
+      "raw_file": "stream-single-tool-response.sse",
+      "data_frames": 0
+    },
+    {
+      "curl_exit": 0,
+      "case": "stream-parallel-3",
+      "done": false,
+      "elapsed_s": 0.037,
+      "tool_signal": false,
+      "raw_file": "stream-parallel-3-response.sse",
+      "data_frames": 0
+    }
+  ],
+  "multiturn": {
+    "elapsed_s": 0,
+    "finish_reason": "",
+    "status": "ERROR",
+    "calls": 0,
+    "valid_json": 0
+  }
+}

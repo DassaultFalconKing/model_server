@@ -1,0 +1,11 @@
+{
+  "case": "basic-chat",
+  "status": "HTTP_OK",
+  "http_status": 200,
+  "elapsed_s": 0.541,
+  "finish_reason": "stop",
+  "completion_tokens": 4,
+  "tool_call_count": 0,
+  "valid_json_arguments": 0,
+  "content": "BASIC_OK"
+}

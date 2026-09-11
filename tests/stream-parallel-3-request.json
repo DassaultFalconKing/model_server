@@ -1,0 +1,81 @@
+{
+  "tool_choice": "required",
+  "stream": true,
+  "parallel_tool_calls": true,
+  "model": "gemma4-26-heretic",
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "description": "Get weather",
+        "name": "weather"
+      },
+      "type": "function"
+    },
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "a",
+            "b",
+            "op"
+          ],
+          "properties": {
+            "b": {
+              "type": "number"
+            },
+            "op": {
+              "type": "string"
+            },
+            "a": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "description": "Calculate",
+        "name": "calculator"
+      },
+      "type": "function"
+    },
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "description": "Search",
+        "name": "search"
+      },
+      "type": "function"
+    }
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "content": "Use weather for Berlin, calculate 17 plus 25, and search OpenVINO."
+    }
+  ],
+  "max_tokens": 512,
+  "temperature": 0
+}

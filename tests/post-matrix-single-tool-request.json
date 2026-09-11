@@ -1,0 +1,31 @@
+{
+  "max_tokens": 64,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Use weather for Berlin."
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "parameters": {
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "required": [
+            "city"
+          ]
+        },
+        "name": "weather"
+      }
+    }
+  ],
+  "temperature": 0,
+  "tool_choice": "required"
+}

@@ -1,0 +1,1 @@
+{"choices":[{"finish_reason":"tool_calls","index":0,"logprobs":null,"message":{"content":"","role":"assistant","tool_calls":[{"id":"j43hl9PZ7","type":"function","function":{"name":"ping","arguments":"{}"}}]}}],"created":1789116394,"model":"gemma4-26-heretic","object":"chat.completion","usage":{"prompt_tokens":114,"completion_tokens":7,"total_tokens":121}}

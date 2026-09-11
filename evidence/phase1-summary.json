@@ -1,0 +1,46 @@
+[
+  {
+    "case": "basic-chat",
+    "status": "HTTP_OK",
+    "http_status": 200,
+    "elapsed_s": 0.541,
+    "finish_reason": "stop",
+    "completion_tokens": 4,
+    "tool_call_count": 0,
+    "valid_json_arguments": 0,
+    "content": "BASIC_OK"
+  },
+  {
+    "case": "single-weather",
+    "status": "HTTP_OK",
+    "http_status": 200,
+    "elapsed_s": 1.503,
+    "finish_reason": "tool_calls",
+    "completion_tokens": 16,
+    "tool_call_count": 1,
+    "valid_json_arguments": 1,
+    "content": ""
+  },
+  {
+    "case": "parallel-2",
+    "status": "HTTP_OK",
+    "http_status": 200,
+    "elapsed_s": 2.808,
+    "finish_reason": "tool_calls",
+    "completion_tokens": 45,
+    "tool_call_count": 2,
+    "valid_json_arguments": 2,
+    "content": ""
+  },
+  {
+    "case": "primary-strict-historical-8",
+    "status": "HTTP_OK",
+    "http_status": 200,
+    "elapsed_s": 18.765,
+    "finish_reason": "tool_calls",
+    "completion_tokens": 416,
+    "tool_call_count": 8,
+    "valid_json_arguments": 8,
+    "content": ""
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "case": "parallel-2",
+  "status": "HTTP_OK",
+  "http_status": 200,
+  "elapsed_s": 2.808,
+  "finish_reason": "tool_calls",
+  "completion_tokens": 45,
+  "tool_call_count": 2,
+  "valid_json_arguments": 2,
+  "content": ""
+}

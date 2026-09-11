@@ -1,0 +1,11 @@
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "Reply exactly: BASIC_OK"
+    }
+  ],
+  "max_tokens": 32,
+  "model": "gemma4-26-heretic",
+  "temperature": 0
+}

@@ -1,0 +1,35 @@
+{
+  "parallel_tool_calls": true,
+  "max_tokens": 256,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "weather",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "city"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "Get weather."
+      }
+    }
+  ],
+  "tool_choice": "required",
+  "temperature": 0,
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call weather twice: once for Berlin and once for Paris. Exactly two weather calls and no prose."
+    }
+  ],
+  "stream": false
+}

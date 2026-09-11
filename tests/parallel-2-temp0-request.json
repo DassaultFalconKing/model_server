@@ -1,0 +1,68 @@
+{
+  "parallel_tool_calls": true,
+  "max_tokens": 256,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "weather",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "city"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          }
+        },
+        "description": "Get weather."
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "calculator",
+        "parameters": {
+          "type": "object",
+          "required": [
+            "a",
+            "b",
+            "op"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "op": {
+              "enum": [
+                "add",
+                "subtract",
+                "multiply",
+                "divide"
+              ],
+              "type": "string"
+            },
+            "b": {
+              "type": "number"
+            },
+            "a": {
+              "type": "number"
+            }
+          }
+        },
+        "description": "Calculate."
+      }
+    }
+  ],
+  "tool_choice": "required",
+  "temperature": 0,
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call weather for Berlin and calculator for 17 plus 31. Exactly two calls, no prose."
+    }
+  ],
+  "stream": false
+}

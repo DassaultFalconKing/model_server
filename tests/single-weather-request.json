@@ -1,0 +1,39 @@
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call weather for Berlin. Do not answer with prose."
+    }
+  ],
+  "parallel_tool_calls": false,
+  "max_tokens": 256,
+  "tool_choice": {
+    "function": {
+      "name": "weather"
+    },
+    "type": "function"
+  },
+  "temperature": 0,
+  "model": "gemma4-26-heretic",
+  "tools": [
+    {
+      "function": {
+        "description": "Return weather for a city.",
+        "name": "weather",
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "function"
+    }
+  ]
+}

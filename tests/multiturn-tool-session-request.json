@@ -1,0 +1,56 @@
+{
+  "temperature": 0,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Use weather for Berlin."
+    },
+    {
+      "content": "",
+      "role": "assistant",
+      "tool_calls": [
+        {
+          "id": "6WcRg6wEt",
+          "type": "function",
+          "function": {
+            "name": "weather",
+            "arguments": "{\"city\":\"Berlin\"}"
+          }
+        }
+      ]
+    },
+    {
+      "tool_call_id": "6WcRg6wEt",
+      "name": "weather",
+      "role": "tool",
+      "content": "{\"city\":\"Berlin\",\"temperature_c\":17,\"condition\":\"sunny\"}"
+    },
+    {
+      "role": "user",
+      "content": "Now use weather for Paris."
+    }
+  ],
+  "tools": [
+    {
+      "function": {
+        "parameters": {
+          "required": [
+            "city"
+          ],
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object"
+        },
+        "description": "Get weather",
+        "name": "weather"
+      },
+      "type": "function"
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "max_tokens": 128
+}

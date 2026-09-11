@@ -1,0 +1,11 @@
+{
+  "max_tokens": 16,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Reply only: OK"
+    }
+  ],
+  "model": "gemma4-26-heretic",
+  "temperature": 0
+}
