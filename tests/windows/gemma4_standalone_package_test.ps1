@@ -31,7 +31,19 @@ foreach ($required in @(
     if (-not (Test-Path -LiteralPath $required -PathType Leaf)) { throw "Missing candidate envelope entry: $required" }
 }
 
+$manifest = Get-Content -LiteralPath (Join-Path $root 'manifest.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+# optimum_bundled missing (old manifests) means bundled: early candidates always had it.
+$optimumBundled = $true
+$optimumFlag = $manifest.tooling.PSObject.Properties['optimum_bundled']
+if ($null -ne $optimumFlag) { $optimumBundled = [bool]$optimumFlag.Value }
+
 Push-Location $ovmsDir
+# Packaged ovms.exe dies bare with 0xC0000005; it needs its setupvars env
+# (same proven cause as the builder version capture).
+$pkgPythonHome = [Environment]::GetEnvironmentVariable('PYTHONHOME', 'Process')
+$pkgPath = [Environment]::GetEnvironmentVariable('PATH', 'Process')
+[Environment]::SetEnvironmentVariable('PYTHONHOME', (Join-Path $ovmsDir 'python'), 'Process')
+[Environment]::SetEnvironmentVariable('PATH', "$ovmsDir;$ovmsDir\python;$ovmsDir\python\Scripts;$pkgPath", 'Process')
 try {
     $version = & $ovmsExe --version 2>&1
     if ($LASTEXITCODE -ne 0) { throw 'Packaged ovms.exe --version failed.' }
@@ -44,9 +56,15 @@ try {
 
     & (Join-Path $ovmsDir 'python\python.exe') --version | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Bundled python.exe --version failed.' }
-    & (Join-Path $ovmsDir 'tools\optimum\optimum-cli.cmd') --help | Out-Null
-    if ($LASTEXITCODE -ne 0) { throw 'Bundled optimum-cli --help failed.' }
+    if ($optimumBundled) {
+        & (Join-Path $ovmsDir 'tools\optimum\optimum-cli.cmd') --help | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw 'Bundled optimum-cli --help failed.' }
+    } else {
+        Write-Host 'Optimum tooling not bundled (lean flavor); skipping optimum-cli check.'
+    }
 } finally {
+    if ($null -eq $pkgPythonHome) { Remove-Item 'Env:PYTHONHOME' -ErrorAction SilentlyContinue } else { [Environment]::SetEnvironmentVariable('PYTHONHOME', $pkgPythonHome, 'Process') }
+    [Environment]::SetEnvironmentVariable('PATH', $pkgPath, 'Process')
     Pop-Location
 }
 
