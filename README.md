@@ -1,6 +1,16 @@
-# OpenVINO&trade; Model Server
+# Project Gemmamonster — OpenVINO Model Server for Gemma 4+ Agents
 
-**High-performance model serving for Generative AI and classic deep learning — powered by [OpenVINO](https://github.com/openvinotoolkit/openvino) and optimized for Intel hardware.**
+**A specialized OpenVINO Model Server (OVMS) fork for Gemma 4+ agentic AI, reliable tool calling, structured output, reasoning, and multi-turn agent loops.**
+
+Project Gemmamonster exists for users who specifically need **OVMS with Gemma agents**. It takes a proven OVMS checkout and concentrates production experience, Google Gemma research, competitor behavior, parser hardening, grammar constraints, and real agent-loop testing into the strongest Gemma 4+ integration we can build.
+
+This is intentionally based on the fast and stable **OVMS 2026.4** line. We spent two days migrating to OVMS 2026.5 and then porting the resulting Gemma functionality back after 2026.5 proved unstable for this workload. The version difference from upstream is therefore deliberate, documented, and tested—not neglect.
+
+If you need general-purpose OpenVINO Model Server or support for unrelated model families, use the [official OpenVINO Model Server](https://github.com/openvinotoolkit/model_server). If you need **OpenVINO Model Server for Gemma 4+, tool calling, or an agentic loop**, this is the Project Gemmamonster fork.
+
+This fork is temporary by design. Its preferred end state is for the useful Gemma work to be accepted upstream so that Project Gemmamonster no longer needs to exist as a separate server.
+
+The underlying server remains OpenVINO Model Server, with its original project history, attribution, and Apache 2.0 license.
 
 [![Apache License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://github.com/openvinotoolkit/model_server/blob/main/LICENSE)
 [![Docker Pulls](https://img.shields.io/docker/pulls/openvino/model_server.svg)](https://hub.docker.com/r/openvino/model_server)
