@@ -14,6 +14,7 @@
 // limitations under the License.
 //*****************************************************************************
 
+#include <chrono>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -42,6 +43,20 @@
 #include "servable.hpp"
 
 namespace ovms {
+namespace {
+
+constexpr std::chrono::milliseconds EXECUTOR_FAULT_POLL_INTERVAL{1};
+
+absl::Status executorUnavailableStatus(const std::shared_ptr<LLMExecutorWrapper>& executor) {
+    if (executor != nullptr && executor->isFaulted()) {
+        SPDLOG_LOGGER_ERROR(llm_calculator_logger,
+            "Rejecting request for quarantined LLM executor: class={}; health={}; reason={}",
+            runtimeFaultClassName(executor->faultClass()), static_cast<int>(executor->health()), executor->faultReason());
+    }
+    return absl::UnavailableError("LLM executor is unavailable after a GPU runtime fault; model reload/recreation is required");
+}
+
+}  // namespace
 
 void ContinuousBatchingServable::logPerfMetrics(ov::genai::PerfMetrics& perfMetrics) {
     const size_t inputTokenCount = perfMetrics.get_num_input_tokens();
@@ -112,6 +127,14 @@ absl::Status ContinuousBatchingServable::scheduleExecution(std::shared_ptr<GenAi
         return absl::CancelledError();
     }
 
+    if (properties->llmExecutorWrapper == nullptr) {
+        return absl::UnavailableError("LLM executor is not initialized");
+    }
+    properties->llmExecutorWrapper->setGemma4CircuitBreakerEnabled(isGemma4CircuitBreakerEnabled(properties->toolParserName));
+    if (properties->llmExecutorWrapper->isFaulted()) {
+        return executorUnavailableStatus(properties->llmExecutorWrapper);
+    }
+
     auto status = addRequestToPipeline(cbExecutionContext);
     if (!status.ok()) {
         return status;
@@ -141,6 +164,23 @@ absl::Status ContinuousBatchingServable::readCompleteExecutionResults(std::share
         return absl::CancelledError();
     }
 
+    // read_all() is blocking. Once a fatal step() error quarantines the executor there
+    // may be no subsequent GenAI step capable of waking that queue, so wait on the
+    // non-blocking status/fault surfaces first.
+    while (cbExecutionContext->generationHandle->get_status() == ov::genai::GenerationStatus::RUNNING) {
+        if (properties->llmExecutorWrapper != nullptr && properties->llmExecutorWrapper->isFaulted()) {
+            return executorUnavailableStatus(properties->llmExecutorWrapper);
+        }
+        if (cbExecutionContext->payload.client->isDisconnected()) {
+            return absl::CancelledError();
+        }
+        std::this_thread::sleep_for(EXECUTOR_FAULT_POLL_INTERVAL);
+    }
+
+    if (properties->llmExecutorWrapper != nullptr && properties->llmExecutorWrapper->isFaulted()) {
+        return executorUnavailableStatus(properties->llmExecutorWrapper);
+    }
+
     cbExecutionContext->generationOutputs = cbExecutionContext->generationHandle->read_all();
     if (cbExecutionContext->generationHandle->get_status() == ov::genai::GenerationStatus::STOP) {
         return absl::CancelledError();
@@ -156,6 +196,25 @@ absl::Status ContinuousBatchingServable::readPartialExecutionResults(std::shared
     if (cbExecutionContext->payload.client->isDisconnected()) {
         return absl::CancelledError();
     }
+
+    // Streaming read() is also blocking. Preserve its wait-for-next-result behavior,
+    // but poll the OVMS-owned executor fault state so a quarantined pipeline cannot
+    // strand the request forever.
+    while (cbExecutionContext->generationHandle->get_status() == ov::genai::GenerationStatus::RUNNING &&
+           !cbExecutionContext->generationHandle->can_read()) {
+        if (properties->llmExecutorWrapper != nullptr && properties->llmExecutorWrapper->isFaulted()) {
+            return executorUnavailableStatus(properties->llmExecutorWrapper);
+        }
+        if (cbExecutionContext->payload.client->isDisconnected()) {
+            return absl::CancelledError();
+        }
+        std::this_thread::sleep_for(EXECUTOR_FAULT_POLL_INTERVAL);
+    }
+
+    if (properties->llmExecutorWrapper != nullptr && properties->llmExecutorWrapper->isFaulted()) {
+        return executorUnavailableStatus(properties->llmExecutorWrapper);
+    }
+
     // Streaming scenario
     // Each iteration is single execution of Process() method in the calculator
     if (cbExecutionContext->generationHandle->get_status() == ov::genai::GenerationStatus::STOP) {
