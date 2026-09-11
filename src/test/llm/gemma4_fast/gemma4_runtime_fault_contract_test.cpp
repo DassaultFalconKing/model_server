@@ -16,7 +16,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../../../llm/language_model/continuous_batching/runtime_fault.hpp"
+#include "../../../llm/language_model/continuous_batching/llm_executor.hpp"
 
 namespace ovms {
 namespace {
