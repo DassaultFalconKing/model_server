@@ -1,0 +1,339 @@
+{
+  "exp1": [
+    {
+      "temp": 0.0,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 12.285
+    },
+    {
+      "temp": 0.3,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 10.917
+    },
+    {
+      "temp": 0.7,
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "weather",
+          "arguments": {
+            "city": "Paris"
+          },
+          "arguments_raw": "{\"city\":\"Paris\"}",
+          "empty": false
+        },
+        {
+          "name": "calculator",
+          "arguments": {
+            "a": 3,
+            "b": 5,
+            "op": "add"
+          },
+          "arguments_raw": "{\"a\":3,\"b\":5,\"op\":\"add\"}",
+          "empty": false
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "query": "python tutorial"
+          },
+          "arguments_raw": "{\"query\":\"python tutorial\"}",
+          "empty": false
+        }
+      ],
+      "tool_call_count": 3,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 74,
+        "total_tokens": 477
+      },
+      "http_status": 200,
+      "elapsed_s": 3.197
+    },
+    {
+      "temp": 1.0,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 10.761
+    }
+  ],
+  "exp2": [
+    {
+      "label": "strict",
+      "prompt": "Call weather for Paris, calculator to add 3 and 5, and search for 'python tutorial'. Do not answer in prose.",
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 10.937
+    },
+    {
+      "label": "natural",
+      "prompt": "I need to check the weather in Paris, calculate 3+5, and find a Python tutorial.",
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "weather",
+          "arguments": {
+            "city": "Paris"
+          },
+          "arguments_raw": "{\"city\":\"Paris\"}",
+          "empty": false
+        },
+        {
+          "name": "calculator",
+          "arguments": {
+            "a": 3,
+            "b": 5,
+            "op": "add"
+          },
+          "arguments_raw": "{\"a\":3,\"b\":5,\"op\":\"add\"}",
+          "empty": false
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "query": "Python tutorial"
+          },
+          "arguments_raw": "{\"query\":\"Python tutorial\"}",
+          "empty": false
+        }
+      ],
+      "tool_call_count": 3,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 397,
+        "completion_tokens": 58,
+        "total_tokens": 455
+      },
+      "http_status": 200,
+      "elapsed_s": 3.006
+    },
+    {
+      "label": "minimal",
+      "prompt": "weather Paris, calculator 3+5, search python tutorial",
+      "finish_reason": "tool_calls",
+      "tool_calls": [
+        {
+          "name": "weather",
+          "arguments": {
+            "city": "Paris"
+          },
+          "arguments_raw": "{\"city\":\"Paris\"}",
+          "empty": false
+        },
+        {
+          "name": "calculator",
+          "arguments": {
+            "a": 3,
+            "b": 5,
+            "op": "add"
+          },
+          "arguments_raw": "{\"a\":3,\"b\":5,\"op\":\"add\"}",
+          "empty": false
+        },
+        {
+          "name": "search",
+          "arguments": {
+            "query": "python tutorial"
+          },
+          "arguments_raw": "{\"query\":\"python tutorial\"}",
+          "empty": false
+        }
+      ],
+      "tool_call_count": 3,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 388,
+        "completion_tokens": 50,
+        "total_tokens": 438
+      },
+      "http_status": 200,
+      "elapsed_s": 2.684
+    },
+    {
+      "label": "question",
+      "prompt": "What tools would you need to check Paris weather, add 3+5, and search for Python tutorials?",
+      "finish_reason": "stop",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 398,
+        "completion_tokens": 60,
+        "total_tokens": 458
+      },
+      "http_status": 200,
+      "elapsed_s": 2.99
+    }
+  ],
+  "exp3": [
+    {
+      "parallelism": 2,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 298,
+        "completion_tokens": 256,
+        "total_tokens": 554
+      },
+      "http_status": 200,
+      "elapsed_s": 11.082
+    },
+    {
+      "parallelism": 3,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 12.083
+    },
+    {
+      "parallelism": 4,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 510,
+        "completion_tokens": 256,
+        "total_tokens": 766
+      },
+      "http_status": 200,
+      "elapsed_s": 12.367
+    }
+  ],
+  "exp4": [
+    {
+      "run": 0,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 11.281
+    },
+    {
+      "run": 1,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 10.595
+    },
+    {
+      "run": 2,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 10.851
+    },
+    {
+      "run": 3,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 11.048
+    },
+    {
+      "run": 4,
+      "finish_reason": "length",
+      "tool_calls": [],
+      "tool_call_count": 0,
+      "all_empty": false,
+      "any_empty": false,
+      "usage": {
+        "prompt_tokens": 403,
+        "completion_tokens": 256,
+        "total_tokens": 659
+      },
+      "http_status": 200,
+      "elapsed_s": 11.237
+    }
+  ],
+  "exp5": {
+    "status": "skipped",
+    "reason": "parser-only, run separately"
+  }
+}

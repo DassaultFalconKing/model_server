@@ -1,0 +1,14 @@
+{
+  "finish_reason": "stop",
+  "tool_calls": [],
+  "tool_call_count": 0,
+  "all_empty": false,
+  "any_empty": false,
+  "usage": {
+    "prompt_tokens": 398,
+    "completion_tokens": 60,
+    "total_tokens": 458
+  },
+  "http_status": 200,
+  "elapsed_s": 2.99
+}

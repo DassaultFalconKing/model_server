@@ -1,0 +1,88 @@
+{
+  "model": "gemma4-26-heretic",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Call weather for Paris, calculator to add 3 and 5, and search for 'python tutorial'. Do not answer in prose."
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "weather",
+        "description": "Get current weather for a city.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "city": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "city"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "calculator",
+        "description": "Calculate with integer inputs.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "type": "integer"
+            },
+            "b": {
+              "type": "integer"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "add",
+                "multiply"
+              ]
+            }
+          },
+          "required": [
+            "a",
+            "b",
+            "op"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search",
+        "description": "Search the web for information.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "limit": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "parallel_tool_calls": true,
+  "max_tokens": 256,
+  "temperature": 0,
+  "seed": 102,
+  "chat_template_kwargs": {
+    "enable_thinking": false
+  }
+}
