@@ -219,11 +219,11 @@ struct LLMExecutor {
 class LLMExecutorWrapper {
     LLMExecutor llmExecutor;
     RuntimeFaultState runtimeFaultState;
-    bool gemma4CircuitBreakerEnabled = false;
+    std::atomic<bool> gemma4CircuitBreakerEnabled{false};
     std::thread llmExecutorThread;
     std::atomic<bool> finishExecutorThread = false;
 
-    static void run(LLMExecutor* llmExecutor, RuntimeFaultState* runtimeFaultState, bool gemma4CircuitBreakerEnabled, std::atomic<bool>* receivedEndSignal) {
+    static void run(LLMExecutor* llmExecutor, RuntimeFaultState* runtimeFaultState, std::atomic<bool>* gemma4CircuitBreakerEnabled, std::atomic<bool>* receivedEndSignal) {
         const uint8_t printMetricsEveryNumberOfSteps = 10;
         uint8_t stepCounter = 0;
         while (!(*receivedEndSignal)) {
@@ -241,12 +241,13 @@ class LLMExecutorWrapper {
                 }
             } catch (const std::exception& e) {
                 const RuntimeFaultClass faultClass = classifyRuntimeFault(e.what());
-                if (shouldContainRuntimeFault(faultClass, gemma4CircuitBreakerEnabled)) {
+                const bool gemma4BreakerActive = gemma4CircuitBreakerEnabled->load(std::memory_order_acquire);
+                if (shouldContainRuntimeFault(faultClass, gemma4BreakerActive)) {
                     runtimeFaultState->trip(faultClass, e.what());
                     runtimeFaultState->requireRecovery();
                     SPDLOG_LOGGER_ERROR(llm_executor_logger,
                         "Contained LLM executor runtime fault: class={}; gemma4_breaker={}; executor quarantined; model reload/recreation required. Original error: {}",
-                        runtimeFaultClassName(faultClass), gemma4CircuitBreakerEnabled, e.what());
+                        runtimeFaultClassName(faultClass), gemma4BreakerActive, e.what());
                     return;
                 }
                 SPDLOG_LOGGER_ERROR(llm_executor_logger, "Error occurred in LLM executor: {}.", e.what());
@@ -256,16 +257,19 @@ class LLMExecutorWrapper {
     }
 
 public:
-    LLMExecutorWrapper(std::shared_ptr<ov::genai::ContinuousBatchingPipeline> pipe, bool isDynamicKVCache = false, bool enableGemma4CircuitBreaker = false) :
-        llmExecutor(std::move(pipe), isDynamicKVCache),
-        gemma4CircuitBreakerEnabled(enableGemma4CircuitBreaker) {
-        llmExecutorThread = std::thread(LLMExecutorWrapper::run, &llmExecutor, &runtimeFaultState, gemma4CircuitBreakerEnabled, &finishExecutorThread);
+    LLMExecutorWrapper(std::shared_ptr<ov::genai::ContinuousBatchingPipeline> pipe, bool isDynamicKVCache = false) :
+        llmExecutor(std::move(pipe), isDynamicKVCache) {
+        llmExecutorThread = std::thread(LLMExecutorWrapper::run, &llmExecutor, &runtimeFaultState, &gemma4CircuitBreakerEnabled, &finishExecutorThread);
     }
 
     ~LLMExecutorWrapper() {
         finishExecutorThread = true;
         llmExecutor.notify();
         llmExecutorThread.join();
+    }
+
+    void setGemma4CircuitBreakerEnabled(bool enabled) {
+        gemma4CircuitBreakerEnabled.store(enabled, std::memory_order_release);
     }
 
     void notifyNewRequestArrived() {
