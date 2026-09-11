@@ -109,19 +109,32 @@ Canonical pre-flight authority:
 
 If the environment gate fails, do not build, test, package, or run acceptance until the mismatch is resolved. Environment provenance is part of build provenance.
 
+## Canonical manual build runbook
+
+The authoritative Windows manual-build procedure is:
+
+`docs/GEMMAMONSTER-WINDOWS-MANUAL-BUILD.md`
+
+It defines the required order:
+
+`sanitize environment -> initialize exact pins -> verify source/toolchain -> bootstrap RC2 dependencies -> select the correct XGrammar profile -> build OVMS -> package -> hash runtime -> prove loaded modules -> runtime acceptance`.
+
+Use that runbook instead of reconstructing commands from old chat logs. In particular, never mix the frozen known-good `XGrammar v0.1.31` reference with the current `v0.2.6 / max_whitespace_cnt=2` acceptance profile.
+
 ## Branch policy
 
 For future work:
 
 1. Treat this document as the starting state index.
 2. Run the mandatory sanitized environment pre-flight before any build/test/runtime work.
-3. Prefer one active integration branch plus narrowly-scoped donor/evidence branches.
-4. Do not create another integration branch merely to record state.
-5. When the local unified branch is pushed, update the next dated state record with its exact full SHA and remote branch name.
-6. Never call an uncommitted working tree a reproducible HEAD.
-7. Record package SHA256, dependency pins, pipeline type, runtime profile, and acceptance verdict for every promoted candidate.
-8. Evidence-only branches must remain explicitly marked as non-product lineage.
-9. Do not move historical state snapshot refs after finalization; create a new dated or suffixed state snapshot when the canonical state materially changes.
+3. Use `docs/GEMMAMONSTER-WINDOWS-MANUAL-BUILD.md` as the build authority rather than ad-hoc command reconstruction.
+4. Prefer one active integration branch plus narrowly-scoped donor/evidence branches.
+5. Do not create another integration branch merely to record state.
+6. When the local unified branch is pushed, update the next dated state record with its exact full SHA and remote branch name.
+7. Never call an uncommitted working tree a reproducible HEAD.
+8. Record package SHA256, dependency pins, pipeline type, runtime profile, and acceptance verdict for every promoted candidate.
+9. Evidence-only branches must remain explicitly marked as non-product lineage.
+10. Do not move historical state snapshot refs after finalization; create a new dated or suffixed state snapshot when the canonical state materially changes.
 
 ## Promotion rule
 
