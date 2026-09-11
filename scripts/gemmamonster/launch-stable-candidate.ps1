@@ -139,27 +139,31 @@ if (-not $NoHealthcheck) {
 
 try {
     $process = Get-Process -Id $proc.Id -ErrorAction Stop
-    $modules = @($process.Modules | Where-Object { $_.ModuleName -match 'openvino|genai|tokenizer|tbb' })
-    if ($modules.Count -lt 4) {
-        throw "Loaded module inspection returned only $($modules.Count) relevant module(s); expected at least OpenVINO, GenAI, Tokenizers and TBB."
-    }
-
-    $records = foreach ($module in $modules) {
-        $fileName = [string]$module.FileName
-        if ([string]::IsNullOrWhiteSpace($fileName)) { throw "Loaded module has no file path: $($module.ModuleName)" }
+    # Provenance covers exactly the 4 shipped runtime binaries pinned in the
+    # manifest. A broad openvino* regex over-matches system driver shims
+    # (e.g. openvino_intel_npu_compiler_loader.dll from DriverStore), which can
+    # never live inside the package — that made the check unpassable on NPU
+    # machines. Driver shims are reported informationally, never FAIL.
+    $wanted = @('openvino.dll','openvino_genai.dll','openvino_tokenizers.dll','tbb12.dll')
+    $records = foreach ($name in $wanted) {
+        $module = @($process.Modules | Where-Object { $_.ModuleName -eq $name })
+        if ($module.Count -lt 1) { throw "Required runtime module not loaded: $name" }
+        $fileName = [string]$module[0].FileName
+        if ([string]::IsNullOrWhiteSpace($fileName)) { throw "Loaded module has no file path: $name" }
         $resolved = (Resolve-Path -LiteralPath $fileName).Path
         if (-not $resolved.StartsWith($ovmsDir, [System.StringComparison]::OrdinalIgnoreCase)) {
             throw "Loaded runtime module outside candidate package: $resolved"
         }
         $hash = Get-Hash $resolved
-        $expectedProperty = $manifest.package.dll_sha256.PSObject.Properties[[string]$module.ModuleName]
+        $expectedProperty = $manifest.package.dll_sha256.PSObject.Properties[$name]
         if ($null -ne $expectedProperty) {
             $expected = ([string]$expectedProperty.Value).ToLowerInvariant()
-            if ($hash -ne $expected) { throw "Loaded runtime module hash mismatch: $($module.ModuleName) expected=$expected actual=$hash path=$resolved" }
+            if ($hash -ne $expected) { throw "Loaded runtime module hash mismatch: $name expected=$expected actual=$hash path=$resolved" }
         }
-        [ordered]@{ module = [string]$module.ModuleName; path = $resolved; sha256 = $hash; inside_candidate = $true }
+        [ordered]@{ module = $name; path = $resolved; sha256 = $hash; inside_candidate = $true }
     }
-    [ordered]@{status='PASS';pid=$proc.Id;checked_at_utc=[DateTime]::UtcNow.ToString('o');modules=@($records)} |
+    $extras = @($process.Modules | Where-Object { ($_.ModuleName -match 'openvino|genai|tokenizer|tbb') -and ($_.ModuleName -notin $wanted) } | ForEach-Object { [ordered]@{ module = [string]$_.ModuleName; path = [string]$_.FileName } })
+    [ordered]@{status='PASS';pid=$proc.Id;checked_at_utc=[DateTime]::UtcNow.ToString('o');modules=@($records);extra_runtime_modules=@($extras)} |
         ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $modulesJson -Encoding UTF8
 } catch {
     [ordered]@{status='FAIL';pid=$proc.Id;checked_at_utc=[DateTime]::UtcNow.ToString('o');error=$_.Exception.Message} |
