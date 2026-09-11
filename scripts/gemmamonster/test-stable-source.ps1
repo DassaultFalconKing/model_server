@@ -49,6 +49,7 @@ if ([string]::IsNullOrWhiteSpace($LogPath)) {
 
 $targets = @(
     '//src/test/llm/gemma4_fast:gemma4_parser_contract_test',
+    '//src/test/llm/gemma4_fast:gemma4_runtime_fault_contract_test',
     '//src/test/llm/generation_config:gemma4_generation_contract_test',
     '//src/test/llm/generation_config:gemma4_prompt_state_generation_contract_test',
     '//src/test/llm/generation_config:openai_parallel_tool_calls_contract_test',
